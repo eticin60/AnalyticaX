@@ -1,274 +1,125 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AnalyticaX – Yapay Zekâ Kripto Grafik Analizi</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      --neon: #00E5FF;
-      --magenta: #FF4DFF;
+      --neon: #00e5ff;
+      --magenta: #ff4dff;
       --bg-dark: #020617;
-      --panel: #111827;
-      --text-soft: #A0AEC0;
+      --panel: #0b1020;
+      --panel-soft: #111827;
+      --text-soft: #a0aec0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
       font-family: "Poppins", sans-serif;
-      background: var(--bg-dark);
-      color: white;
+      background: radial-gradient(circle at top, #04101f 0, #020617 45%, #000 100%);
+      color: #ffffff;
+      overflow-x: hidden;
     }
 
-    a { color: white; text-decoration: none; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-    /* Navbar */
+    /* ===== BACKGROUND GRID & GLOWS ===== */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0.03) 1px,
+          transparent 1px
+        ),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    .bg-glow {
+      position: fixed;
+      width: 460px;
+      height: 460px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.65;
+      pointer-events: none;
+      z-index: -1;
+      mix-blend-mode: screen;
+      animation: float 18s ease-in-out infinite alternate;
+    }
+
+    .bg-glow.cyan {
+      background: radial-gradient(circle, rgba(0, 229, 255, 0.9), transparent 60%);
+      top: -80px;
+      left: -60px;
+    }
+
+    .bg-glow.magenta {
+      background: radial-gradient(circle, rgba(255, 77, 255, 0.9), transparent 60%);
+      bottom: -120px;
+      right: -50px;
+      animation-delay: 5s;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translate(0, 0);
+      }
+      100% {
+        transform: translate(40px, -30px);
+      }
+    }
+
+    /* ===== NAVBAR ===== */
     .navbar {
-      width: 100%;
-      padding: 15px 5%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       position: fixed;
       top: 0;
       left: 0;
-      background: rgba(0,0,0,0.4);
-      backdrop-filter: blur(8px);
-      z-index: 999;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      width: 100%;
+      padding: 12px 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(3, 7, 18, 0.88), rgba(3, 7, 18, 0.35));
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      z-index: 50;
     }
 
-    .logo {
+    .nav-left {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 20px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
     }
 
-    .logo-icon {
+    .logo-img {
       width: 40px;
       height: 40px;
       border-radius: 12px;
-      background: linear-gradient(135deg, var(--neon), var(--magenta));
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      color: #000;
-      box-shadow: 0 0 12px var(--neon);
+      object-fit: contain;
+      background: radial-gradient(circle, rgba(0, 229, 255, 0.12), transparent 70%);
+      padding: 3px;
+      box-shadow: 0 0 18px rgba(0, 229, 255, 0.45);
     }
 
-    /* Hero Section */
-    .hero {
-      padding-top: 140px;
-      padding-bottom: 80px;
-      width: 85%;
-      margin: auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-    }
-
-    .hero-title {
-      font-size: 48px;
+    .logo-text-main {
+      font-size: 18px;
       font-weight: 600;
-      line-height: 1.15;
-    }
-
-    .gradient-text {
-      background: linear-gradient(90deg, var(--neon), var(--magenta));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero-btn {
-      background: linear-gradient(90deg, var(--neon), var(--magenta));
-      border: none;
-      padding: 14px 30px;
-      margin-top: 15px;
-      font-size: 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      box-shadow: 0 0 15px rgba(0,255,255,0.35);
-      color: #000;
-    }
-
-    /* AI Output Card */
-    .ai-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      padding: 25px;
-      border-radius: 16px;
-      box-shadow: inset 0 0 25px rgba(0,255,255,0.1);
-    }
-
-    /* Pricing */
-    .pricing {
-      margin-top: 80px;
-      width: 85%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .pricing-container {
-      margin-top: 40px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 25px;
-    }
-
-    .price-card {
-      background: rgba(255,255,255,0.04);
-      padding: 25px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .highlight {
-      border: 1px solid var(--neon);
-      box-shadow: 0 0 15px rgba(0,255,255,0.25);
-      background: rgba(0,255,255,0.05);
-    }
-
-    .price-btn {
-      background: var(--neon);
-      border: none;
-      padding: 10px 18px;
-      font-size: 14px;
-      border-radius: 10px;
-      margin-top: 20px;
-      cursor: pointer;
-      font-weight: 600;
-      color: #000;
-      width: 100%;
-    }
-
-    /* Legal Area */
-    .legal {
-      margin-top: 80px;
-      padding: 30px;
-      background: rgba(255,0,0,0.07);
-      border-left: 5px solid #ff3b3b;
-      width: 85%;
-      margin-left: auto;
-      margin-right: auto;
-      border-radius: 12px;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    footer {
-      margin-top: 40px;
-      padding: 20px;
-      text-align: center;
-      font-size: 12px;
-      opacity: 0.6;
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- NAVBAR -->
-  <div class="navbar">
-    <div class="logo">
-      <div class="logo-icon">X</div>
-      Analytica<span style="color:var(--neon);">X</span>
-    </div>
-
-    <div class="nav-links">
-      <a href="#pricing">Paketler</a>
-      <a href="#legal">Yasal Uyarı</a>
-      <a href="login.html">Giriş</a>
-      <a href="register.html">Kayıt Ol</a>
-    </div>
-  </div>
-
-  <!-- HERO -->
-  <section class="hero">
-    <div>
-      <h1 class="hero-title">
-        TradingView grafiğini yükle,  
-        <span class="gradient-text">AnalyticaX</span>  
-        analiz etsin.
-      </h1>
-
-      <p style="opacity:0.8; margin-top:15px; font-size:16px;">
-        Yapay zekâ destekli grafik okuma teknolojisi ile trend, destek/direnç,
-        likidite bölgeleri ve fiyat senaryolarını otomatik olarak çıkar.
-        <br><br>
-        <strong style="color:var(--neon);">3 analiz ücretsiz.</strong>
-      </p>
-
-      <button class="hero-btn">Grafik Yükle ➜</button>
-    </div>
-
-    <!-- AI Example Card -->
-    <div class="ai-card">
-      <h3 style="font-size:17px; opacity:0.8;">BTCUSDT • 1H Analizi</h3>
-      <p style="font-size:14px; margin-top:10px;">
-        Fiyat güçlü bir destek üzerinde akümülasyonda. 
-        <br><br>
-        <span style="color:#00ffa6; font-weight:600;">Yukarı yön ihtimali: %58</span><br>
-        97.200 → 99.800 hedef aralığı.
-        <br><br>
-        <span style="color:#ff4d4d; font-weight:600;">Aşağı yön: %15</span><br>
-        94.000 altı kapanış senaryoyu değiştirir.
-      </p>
-    </div>
-  </section>
-
-  <!-- PRICING -->
-  <section class="pricing" id="pricing">
-    <h2 style="font-size:32px;">Paketler</h2>
-    <p style="opacity:0.75;">Her kullanıcıya 3 analiz ücretsiz.</p>
-
-    <div class="pricing-container">
-
-      <div class="price-card">
-        <h3>Ücretsiz</h3>
-        <p style="opacity:0.7;">3 analiz</p>
-        <p style="font-size:26px; margin-top:10px;">0$</p>
-        <button class="price-btn">Başla</button>
-      </div>
-
-      <div class="price-card highlight">
-        <h3>Pro Paket</h3>
-        <p style="opacity:0.7;">10 analiz</p>
-        <p style="font-size:26px; margin-top:10px;">50$</p>
-        <button class="price-btn">Satın Al</button>
-      </div>
-
-      <div class="price-card">
-        <h3>Elite Paket</h3>
-        <p style="opacity:0.7;">25 analiz</p>
-        <p style="font-size:26px; margin-top:10px;">100$</p>
-        <button class="price-btn">Satın Al</button>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- LEGAL -->
-  <section class="legal" id="legal">
-    <strong>Yatırım Tavsiyesi Değildir</strong>
-    <p>
-      AnalyticaX tarafından sunulan tüm analizler yalnızca eğitim ve genel bilgi amaçlıdır.
-      Site, alım-satım sinyali veya yatırım tavsiyesi vermez.  
-      Kripto piyasası yüksek risk içerir; tüm kararlar kullanıcıya aittir.
-    </p>
-  </section>
-
-  <footer>
-    © 2025 AnalyticaX • Tüm hakları saklıdır.
-  </footer>
-
-</body>
-</html>
+      letter-spacing: 0.04em;
