@@ -123,3 +123,676 @@
       font-size: 18px;
       font-weight: 600;
       letter-spacing: 0.04em;
+    }
+
+    .logo-x {
+      color: var(--neon);
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .nav-links a {
+      position: relative;
+      padding-bottom: 3px;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--neon), var(--magenta));
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+      font-size: 12px;
+    }
+
+    .btn-outline {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 7px 16px;
+      background: rgba(15, 23, 42, 0.7);
+      color: #e5e7eb;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 18px;
+      background: linear-gradient(90deg, var(--neon), var(--magenta));
+      color: #020617;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 0 18px rgba(0, 229, 255, 0.5);
+    }
+
+    /* ===== LAYOUT ===== */
+    .container {
+      width: 88%;
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    main {
+      padding-top: 110px;
+      padding-bottom: 80px;
+    }
+
+    section {
+      margin-top: 60px;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: center;
+    }
+
+    /* ===== HERO ===== */
+    .hero-title {
+      font-size: 42px;
+      line-height: 1.15;
+      font-weight: 600;
+    }
+
+    .hero-title span.gradient {
+      background: linear-gradient(90deg, var(--neon), var(--magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      margin-top: 14px;
+      font-size: 15px;
+      color: var(--text-soft);
+      max-width: 540px;
+    }
+
+    .hero-highlight {
+      color: var(--neon);
+      font-weight: 600;
+    }
+
+    .hero-actions {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .hero-secondary {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    /* Hero right – video + overlay */
+    .hero-right-card {
+      position: relative;
+      background: radial-gradient(circle at top left, rgba(0, 229, 255, 0.2), transparent 70%),
+        rgba(15, 23, 42, 0.96);
+      border-radius: 22px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      box-shadow: 0 20px 55px rgba(15, 23, 42, 0.9);
+      overflow: hidden;
+    }
+
+    .hero-video-wrap {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      margin: 14px;
+    }
+
+    .hero-video {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 18px;
+      filter: saturate(1.1) contrast(1.08);
+    }
+
+    .hero-video-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0));
+    }
+
+    .hero-video-label {
+      position: absolute;
+      left: 16px;
+      bottom: 16px;
+      background: rgba(15, 23, 42, 0.85);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot-green {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding: 12px 16px 16px;
+      font-size: 11px;
+    }
+
+    .metric-card {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      padding: 10px;
+    }
+
+    .metric-label {
+      color: var(--text-soft);
+      font-size: 10px;
+      margin-bottom: 4px;
+    }
+
+    .metric-value-main {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .metric-sub {
+      margin-top: 4px;
+      color: var(--text-soft);
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .section-title {
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--text-soft);
+      max-width: 600px;
+    }
+
+    .steps-grid {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .step-card {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      padding: 14px 16px 16px;
+      font-size: 13px;
+    }
+
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      border-radius: 999px;
+      padding: 4px 9px;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+    }
+
+    .step-title {
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .step-text {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    /* ===== PRICING ===== */
+    .pricing-grid {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+    }
+
+    .price-card {
+      background: rgba(15, 23, 42, 0.94);
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 18px 18px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .price-card.highlight {
+      border-color: var(--neon);
+      box-shadow: 0 0 26px rgba(0, 229, 255, 0.5);
+    }
+
+    .price-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 10px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--neon), var(--magenta));
+      color: #020617;
+      font-weight: 600;
+    }
+
+    .price-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .price-desc {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+
+    .price-value {
+      font-size: 26px;
+      font-weight: 600;
+    }
+
+    .price-unit {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .price-features {
+      list-style: none;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .price-features li {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--neon);
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .price-btn {
+      margin-top: 16px;
+      width: 100%;
+      border-radius: 999px;
+      border: none;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      background: rgba(248, 250, 252, 0.05);
+      color: #e5e7eb;
+    }
+
+    .price-card.highlight .price-btn {
+      background: linear-gradient(90deg, var(--neon), var(--magenta));
+      color: #020617;
+      box-shadow: 0 0 18px rgba(0, 229, 255, 0.55);
+    }
+
+    /* ===== LEGAL ===== */
+    .legal-box {
+      margin-top: 30px;
+      background: rgba(127, 29, 29, 0.28);
+      border-radius: 14px;
+      border-left: 4px solid #f97373;
+      padding: 18px 18px 16px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #fecaca;
+    }
+
+    .legal-box strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      padding: 22px 6% 26px;
+      font-size: 11px;
+      color: var(--text-soft);
+      border-top: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 40px;
+    }
+
+    footer span {
+      opacity: 0.9;
+    }
+
+    footer .right {
+      float: right;
+    }
+
+    /* ===== ANIMATIONS (SCROLL) ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 960px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-right-card {
+        order: -1;
+      }
+      .hero-title {
+        font-size: 32px;
+      }
+      .navbar {
+        padding-inline: 4%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links {
+        display: none;
+      }
+      .hero-title {
+        font-size: 28px;
+      }
+      .container {
+        width: 92%;
+      }
+      .hero-video {
+        height: 200px;
+      }
+      footer .right {
+        float: none;
+        display: block;
+        margin-top: 6px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- BACKGROUND EFFECTS -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow cyan"></div>
+  <div class="bg-glow magenta"></div>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-left">
+      <img src="assets/AnalyticaX.png" alt="AnalyticaX Logo" class="logo-img" />
+      <div>
+        <div class="logo-text-main">
+          Analytica<span class="logo-x">X</span>
+        </div>
+        <div class="logo-sub">AI Powered Crypto Chart Analysis</div>
+      </div>
+    </div>
+
+    <nav class="nav-links">
+      <a href="#how">Nasıl Çalışır?</a>
+      <a href="#pricing">Paketler</a>
+      <a href="#legal">Yasal Uyarı</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="btn-outline">Giriş</button>
+      <button class="btn-primary">Ücretsiz Başla</button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="container">
+      <!-- HERO -->
+      <section class="hero-grid reveal">
+        <div>
+          <h1 class="hero-title">
+            TradingView grafiğini yükle, <br />
+            <span class="gradient">AnalyticaX</span> senin yerine analiz etsin.
+          </h1>
+          <p class="hero-desc">
+            Yapay zekâ destekli sistemimiz; trend, destek/direnç, likidite bölgeleri ve olası
+            fiyat senaryolarını TradingView ekran görüntüsünden otomatik olarak çıkarır.
+            <br /><br />
+            <span class="hero-highlight">Her üyeye 3 grafik analizi ücretsiz.</span>
+          </p>
+
+          <div class="hero-actions">
+            <button class="btn-primary">Grafik Yükle ➜</button>
+            <span class="hero-secondary">
+              Kredi kartı gerekmez • Sadece analiz, yatırım tavsiyesi değildir
+            </span>
+          </div>
+        </div>
+
+        <!-- HERO RIGHT -->
+        <div class="hero-right-card">
+          <div class="hero-video-wrap">
+            <!-- BURAYA KENDİ VİDEONU KOYABİLİRSİN -->
+            <!-- assets/analyticax-hero.mp4 dosyası eklersen direkt çalışır -->
+            <video class="hero-video" autoplay muted loop playsinline>
+              <source src="assets/analyticax-hero.mp4" type="video/mp4" />
+              <!-- Eğer video yoksa, boş bırakılır; sadece koyu arka plan görünür -->
+            </video>
+            <div class="hero-video-overlay"></div>
+            <div class="hero-video-label">
+              <span class="dot-green"></span>
+              Canlı örnek: BTCUSDT 1H analizi
+            </div>
+          </div>
+
+          <div class="hero-metrics">
+            <div class="metric-card">
+              <div class="metric-label">Yukarı Senaryo</div>
+              <div class="metric-value-main" style="color:#22c55e;">58%</div>
+              <div class="metric-sub">Hedef bölge: 97.200 → 99.800</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Yatay Senaryo</div>
+              <div class="metric-value-main" style="color:#facc15;">27%</div>
+              <div class="metric-sub">95.000 – 97.200 aralığında sıkışma</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Aşağı Senaryo</div>
+              <div class="metric-value-main" style="color:#f97373;">15%</div>
+              <div class="metric-sub">94.000 altı → 90.700 desteği</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section id="how" class="reveal">
+        <h2 class="section-title">AnalyticaX nasıl çalışır?</h2>
+        <p class="section-subtitle">
+          Sistem, yüklediğin TradingView ekran görüntüsünü bilgisayarlı görü ve teknik analiz
+          kurallarıyla tarar; trend yapısını, kilit seviyeleri ve olası fiyat senaryolarını
+          olasılıklarla birlikte çıkarır. Sadece analiz üretir, hiçbir şekilde otomatik alım-satım emri vermez.
+        </p>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-badge">Adım 1</div>
+            <div class="step-title">Grafiğini yükle</div>
+            <p class="step-text">
+              TradingView’de grafiğini aç, ekran görüntüsü al ve AnalyticaX’e yükle. PNG/JPEG
+              formatı yeterli.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-badge">Adım 2</div>
+            <div class="step-title">Yapay zekâ grafiği okur</div>
+            <p class="step-text">
+              Model; trend, yapı kırılımları, destek/direnç zonları, mum formasyonları ve hacim
+              davranışını analiz eder.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-badge">Adım 3</div>
+            <div class="step-title">Olası senaryoları gör</div>
+            <p class="step-text">
+              Yukarı, yatay ve aşağı yön ihtimalleri; hedef bölgeler ve “senaryo geçersiz olur”
+              seviyeleri net ve sade bir rapor halinde gösterilir.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-badge">Adım 4</div>
+            <div class="step-title">Son karar her zaman sende</div>
+            <p class="step-text">
+              AnalyticaX, yatırım tavsiyesi vermez. Üretilen rapor yalnızca sana fikir verir;
+              risk yönetimi ve pozisyon kararı tamamen sana aittir.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRICING -->
+      <section id="pricing" class="reveal">
+        <h2 class="section-title">Paketler & analiz hakları</h2>
+        <p class="section-subtitle">
+          Her yeni üyeye <strong>3 adet ücretsiz analiz</strong> tanımlanır. Daha fazla ihtiyaç
+          duyduğunda kredi paketleriyle devam edebilirsin.
+        </p>
+
+        <div class="pricing-grid">
+          <div class="price-card">
+            <div class="price-name">Ücretsiz</div>
+            <div class="price-desc">Başlangıç ve deneme için ideal.</div>
+            <div>
+              <span class="price-value">0$</span>
+              <span class="price-unit"> / 3 analiz</span>
+            </div>
+            <ul class="price-features">
+              <li><span class="dot"></span>3 adet grafik analizi</li>
+              <li><span class="dot"></span>BTC, ETH ve majör pariteler</li>
+              <li><span class="dot"></span>Teknik + yapay zekâ yorumu</li>
+            </ul>
+            <button class="price-btn">Ücretsiz Başla</button>
+          </div>
+
+          <div class="price-card highlight">
+            <div class="price-badge">En Popüler</div>
+            <div class="price-name">Pro Paket</div>
+            <div class="price-desc">Düzenli işlem yapan traderlar için.</div>
+            <div>
+              <span class="price-value">50$</span>
+              <span class="price-unit"> / 10 analiz</span>
+            </div>
+            <ul class="price-features">
+              <li><span class="dot"></span>10 adet detaylı analiz hakkı</li>
+              <li><span class="dot"></span>Öncelikli analiz kuyruğu</li>
+              <li><span class="dot"></span>Ekstra senaryo ayrıntıları</li>
+            </ul>
+            <button class="price-btn">Bu Paketi Seç</button>
+          </div>
+
+          <div class="price-card">
+            <div class="price-name">Elite Paket</div>
+            <div class="price-desc">Profesyonel trader ve ekipler için.</div>
+            <div>
+              <span class="price-value">100$</span>
+              <span class="price-unit"> / 25 analiz</span>
+            </div>
+            <ul class="price-features">
+              <li><span class="dot"></span>25 adet gelişmiş analiz</li>
+              <li><span class="dot"></span>Özel rapor formatı</li>
+              <li><span class="dot"></span>Öncelikli destek</li>
+            </ul>
+            <button class="price-btn">Bu Paketi Seç</button>
+          </div>
+        </div>
+
+        <div id="legal" class="legal-box">
+          <strong>Yasal Uyarı – Yatırım Tavsiyesi Değildir</strong>
+          AnalyticaX tarafından üretilen tüm analizler yalnızca eğitim ve genel bilgi amaçlıdır.
+          Bu platform; alım-satım sinyali, yatırım tavsiyesi, portföy yöneticiliği veya benzeri
+          hiçbir lisanslı finansal hizmet sunmaz. Kripto paralar ve kaldıraçlı işlemler yüksek
+          risk içerir, sermayenizin tamamını kaybedebilirsiniz. Nihai yatırım kararı ve risk,
+          tamamen kullanıcıya aittir.
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2025 AnalyticaX • Tüm hakları saklıdır.</span>
+    <span class="right">Bu site yalnızca analiz ve eğitim amaçlıdır.</span>
+  </footer>
+
+  <!-- SCROLL REVEAL JS -->
+  <script>
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
