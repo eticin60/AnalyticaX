@@ -3,574 +3,578 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AnalyticaX – Yapay Zekâ Kripto Grafik Analizi</title>
+  <title>AnalyticaX – AI Powered Crypto Chart Analysis</title>
 
   <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    :root {
-      --neon: #00e5ff;
-      --magenta: #ff4dff;
-      --bg-dark: #020617;
-      --panel: #0b1020;
-      --panel-soft: #111827;
-      --text-soft: #a0aec0;
+    :root{
+      --neon:#00E5FF;
+      --magenta:#FF4DFF;
+      --bg:#020617;
+      --panel:#0b1020;
+      --panel-soft:#111827;
+      --text-soft:#A0AEC0;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
     }
 
-    body {
-      font-family: "Poppins", sans-serif;
-      background: radial-gradient(circle at top, #04101f 0, #020617 45%, #000 100%);
-      color: #ffffff;
-      overflow-x: hidden;
+    body{
+      font-family:"Poppins",sans-serif;
+      background:radial-gradient(circle at top,#061525 0,var(--bg) 45%,#000 100%);
+      color:#fff;
+      overflow-x:hidden;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    a{color:inherit;text-decoration:none;}
+
+    /* === GLOBAL CONTAINER === */
+    .container{
+      width:88%;
+      max-width:1240px;
+      margin:0 auto;
     }
 
-    /* ===== BACKGROUND GRID & GLOWS ===== */
-    .bg-grid {
-      position: fixed;
-      inset: 0;
-      background-image: linear-gradient(
-          to right,
-          rgba(255, 255, 255, 0.03) 1px,
-          transparent 1px
-        ),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
-      opacity: 0.35;
-      pointer-events: none;
-      z-index: -2;
+    main{
+      padding-top:110px;
+      padding-bottom:80px;
     }
 
-    .bg-glow {
-      position: fixed;
-      width: 460px;
-      height: 460px;
-      border-radius: 50%;
-      filter: blur(120px);
-      opacity: 0.65;
-      pointer-events: none;
-      z-index: -1;
-      mix-blend-mode: screen;
-      animation: float 18s ease-in-out infinite alternate;
+    section{
+      margin-top:70px;
     }
 
-    .bg-glow.cyan {
-      background: radial-gradient(circle, rgba(0, 229, 255, 0.9), transparent 60%);
-      top: -80px;
-      left: -60px;
+    /* === BACKGROUND: PARTICLES + GRID + GLOWS === */
+
+    canvas#bgParticles{
+      position:fixed;
+      inset:0;
+      z-index:-3;
     }
 
-    .bg-glow.magenta {
-      background: radial-gradient(circle, rgba(255, 77, 255, 0.9), transparent 60%);
-      bottom: -120px;
-      right: -50px;
-      animation-delay: 5s;
+    .bg-grid{
+      position:fixed;
+      inset:0;
+      background-image:
+        linear-gradient(to right,rgba(255,255,255,.04) 1px,transparent 1px),
+        linear-gradient(to bottom,rgba(255,255,255,.04) 1px,transparent 1px);
+      background-size:50px 50px;
+      opacity:.22;
+      pointer-events:none;
+      z-index:-2;
     }
 
-    @keyframes float {
-      0% {
-        transform: translate(0, 0);
+    .bg-glow{
+      position:fixed;
+      width:480px;
+      height:480px;
+      border-radius:50%;
+      filter:blur(120px);
+      opacity:.7;
+      mix-blend-mode:screen;
+      pointer-events:none;
+      z-index:-1;
+      animation:glowFloat 18s ease-in-out infinite alternate;
+    }
+
+    .bg-glow.cyan{
+      background:radial-gradient(circle,rgba(0,229,255,.9),transparent 60%);
+      top:-90px;
+      left:-60px;
+    }
+    .bg-glow.magenta{
+      background:radial-gradient(circle,rgba(255,77,255,.9),transparent 60%);
+      bottom:-130px;
+      right:-80px;
+      animation-delay:6s;
+    }
+
+    @keyframes glowFloat{
+      0%{transform:translate(0,0);}
+      100%{transform:translate(40px,-35px);}
+    }
+
+    /* === NAVBAR === */
+    .navbar{
+      position:fixed;
+      top:0;left:0;
+      width:100%;
+      padding:12px 6%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      backdrop-filter:blur(14px);
+      background:linear-gradient(to bottom,rgba(3,7,18,.92),rgba(3,7,18,.35));
+      border-bottom:1px solid rgba(148,163,184,.3);
+      z-index:50;
+    }
+
+    .nav-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .logo-img{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      object-fit:contain;
+      padding:4px;
+      background:radial-gradient(circle,rgba(0,229,255,.15),transparent 70%);
+      box-shadow:0 0 18px rgba(0,229,255,.55);
+    }
+
+    .logo-main{
+      font-size:18px;
+      font-weight:600;
+      letter-spacing:.06em;
+    }
+    .logo-main span{color:var(--neon);}
+    .logo-sub{
+      font-size:11px;
+      color:var(--text-soft);
+    }
+
+    .nav-links{
+      display:flex;
+      gap:22px;
+      font-size:13px;
+      color:var(--text-soft);
+    }
+
+    .nav-links a{
+      position:relative;
+      padding-bottom:3px;
+    }
+    .nav-links a::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:0;
+      width:0;
+      height:2px;
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      transition:width .25s ease;
+    }
+    .nav-links a:hover::after{width:100%;}
+
+    .nav-actions{
+      display:flex;
+      gap:10px;
+      font-size:12px;
+    }
+
+    .btn-outline{
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      padding:7px 16px;
+      background:rgba(15,23,42,.7);
+      color:#e5e7eb;
+      cursor:pointer;
+    }
+
+    .btn-primary{
+      border-radius:999px;
+      border:none;
+      padding:8px 18px;
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      color:#020617;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow:0 0 20px rgba(0,229,255,.6);
+    }
+
+    /* === HERO === */
+    .hero-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);
+      gap:40px;
+      align-items:center;
+    }
+
+    .hero-title{
+      font-size:42px;
+      line-height:1.15;
+      font-weight:600;
+    }
+
+    .hero-title span.gradient{
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .hero-desc{
+      margin-top:14px;
+      font-size:15px;
+      color:var(--text-soft);
+      max-width:540px;
+    }
+
+    .hero-desc strong{color:var(--neon);}
+
+    .hero-actions{
+      margin-top:24px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      align-items:center;
+    }
+
+    .hero-secondary{
+      font-size:11px;
+      color:var(--text-soft);
+    }
+
+    /* === ELECTRIC BORDER CARD === */
+    .hero-card-wrap{
+      position:relative;
+      width:100%;
+      max-width:520px;
+      margin-top:12px;
+    }
+
+    .electric-svg{
+      width:100%;
+      height:100%;
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+    }
+
+    .hero-card{
+      position:relative;
+      background:radial-gradient(circle at top left,rgba(0,229,255,.12),transparent 55%), rgba(15,23,42,.96);
+      border-radius:24px;
+      padding:20px 22px 22px;
+      border:1px solid rgba(148,163,184,.65);
+      box-shadow:0 26px 60px rgba(15,23,42,.95);
+      overflow:hidden;
+      transform-style:preserve-3d;
+      transition:transform .2s ease-out, box-shadow .2s ease-out;
+    }
+
+    .hero-card::before{
+      content:"AI ANALYSIS";
+      position:absolute;
+      top:14px;
+      right:18px;
+      font-size:10px;
+      padding:3px 9px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.8);
+      background:rgba(15,23,42,.9);
+      color:var(--text-soft);
+      letter-spacing:.11em;
+    }
+
+    .hero-card-heading{
+      font-size:16px;
+      margin-bottom:10px;
+    }
+
+    .hero-card-row{
+      display:flex;
+      gap:12px;
+      margin-top:10px;
+      font-size:12px;
+      color:var(--text-soft);
+    }
+
+    .hero-label{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:var(--text-soft);
+      margin-bottom:3px;
+    }
+
+    .hero-value{
+      font-size:18px;
+      font-weight:600;
+    }
+    .hero-value.green{color:#22c55e;}
+    .hero-value.red{color:#fb7185;}
+    .hero-value.yellow{color:#facc15;}
+
+    .hero-pill{
+      margin-top:16px;
+      padding:7px 11px;
+      border-radius:12px;
+      background:rgba(15,23,42,.96);
+      border:1px solid rgba(148,163,184,.5);
+      font-size:11px;
+      color:var(--text-soft);
+      display:flex;
+      align-items:center;
+      gap:7px;
+    }
+
+    .hero-pill-dot{
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      background:#22c55e;
+      box-shadow:0 0 10px rgba(34,197,94,.8);
+    }
+
+    /* === FEATURES 3D CAROUSEL === */
+    .section-title{
+      font-size:24px;
+      margin-bottom:6px;
+    }
+    .section-subtitle{
+      font-size:13px;
+      color:var(--text-soft);
+      max-width:620px;
+    }
+
+    .carousel-wrap{
+      margin-top:26px;
+      perspective:1100px;
+    }
+
+    .carousel{
+      position:relative;
+      width:100%;
+      height:260px;
+      transform-style:preserve-3d;
+      animation:carouselRotate 18s linear infinite;
+    }
+
+    @keyframes carouselRotate{
+      0%{transform:rotateY(0deg);}
+      100%{transform:rotateY(360deg);}
+    }
+
+    .carousel-card{
+      position:absolute;
+      top:0;left:50%;
+      width:260px;
+      max-width:70vw;
+      transform-style:preserve-3d;
+      padding:16px 18px 18px;
+      border-radius:22px;
+      background:linear-gradient(135deg,rgba(15,23,42,.98),rgba(15,23,42,.96));
+      border:1px solid rgba(148,163,184,.65);
+      box-shadow:0 20px 50px rgba(15,23,42,.9);
+      color:#fff;
+      font-size:12px;
+    }
+
+    .carousel-card h3{
+      font-size:14px;
+      margin-bottom:6px;
+    }
+
+    .carousel-card p{
+      color:var(--text-soft);
+      line-height:1.5;
+    }
+
+    .carousel-card small{
+      display:block;
+      margin-top:12px;
+      color:var(--neon);
+      font-size:11px;
+    }
+
+    /* positions */
+    .carousel-card:nth-child(1){transform:rotateY(0deg) translateZ(360px);}
+    .carousel-card:nth-child(2){transform:rotateY(120deg) translateZ(360px);}
+    .carousel-card:nth-child(3){transform:rotateY(240deg) translateZ(360px);}
+
+    /* subtle gradient edges */
+    .carousel-card::after{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      border-radius:inherit;
+      background:linear-gradient(120deg,rgba(0,229,255,.3),rgba(255,77,255,.1),rgba(0,229,255,.3));
+      mix-blend-mode:screen;
+      opacity:.18;
+      pointer-events:none;
+    }
+
+    /* === HOW IT WORKS STEPS === */
+    .steps-grid{
+      margin-top:26px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:16px;
+    }
+
+    .step-card{
+      background:rgba(15,23,42,.9);
+      border-radius:18px;
+      border:1px solid rgba(148,163,184,.45);
+      padding:14px 16px 16px;
+      font-size:13px;
+    }
+
+    .step-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.85);
+      padding:3px 10px;
+      color:var(--text-soft);
+      margin-bottom:7px;
+    }
+
+    .step-title{font-weight:500;margin-bottom:4px;}
+    .step-text{font-size:12px;color:var(--text-soft);}
+
+    /* === PRICING === */
+    .pricing-grid{
+      margin-top:30px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:18px;
+    }
+
+    .price-card{
+      position:relative;
+      background:rgba(15,23,42,.96);
+      border-radius:20px;
+      border:1px solid rgba(148,163,184,.55);
+      padding:18px 18px 20px;
+      font-size:13px;
+      overflow:hidden;
+    }
+
+    .price-card.highlight{
+      border-color:var(--neon);
+      box-shadow:0 0 28px rgba(0,229,255,.6);
+    }
+
+    .price-badge{
+      position:absolute;
+      top:10px;
+      right:10px;
+      font-size:10px;
+      padding:4px 10px;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      color:#020617;
+      font-weight:600;
+    }
+
+    .price-name{font-weight:600;margin-bottom:4px;}
+    .price-desc{font-size:12px;color:var(--text-soft);margin-bottom:10px;}
+
+    .price-value{font-size:26px;font-weight:600;}
+    .price-unit{font-size:11px;color:var(--text-soft);}
+
+    .price-features{
+      list-style:none;
+      margin-top:12px;
+      color:var(--text-soft);
+      font-size:12px;
+    }
+    .price-features li{
+      display:flex;
+      gap:6px;
+      margin-top:6px;
+    }
+    .dot{
+      width:6px;height:6px;border-radius:999px;
+      background:var(--neon);
+      margin-top:5px;flex-shrink:0;
+    }
+
+    .price-btn{
+      margin-top:16px;
+      width:100%;
+      border-radius:999px;
+      border:none;
+      padding:9px 14px;
+      font-size:13px;
+      font-weight:600;
+      cursor:pointer;
+      background:rgba(248,250,252,.07);
+      color:#e5e7eb;
+    }
+    .price-card.highlight .price-btn{
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      color:#020617;
+      box-shadow:0 0 20px rgba(0,229,255,.65);
+    }
+
+    /* === LEGAL BOX === */
+    .legal-box{
+      margin-top:32px;
+      background:rgba(127,29,29,.3);
+      border-radius:16px;
+      border-left:4px solid #f97373;
+      padding:18px 18px 16px;
+      font-size:12px;
+      line-height:1.6;
+      color:#fecaca;
+    }
+    .legal-box strong{
+      display:block;
+      margin-bottom:6px;
+    }
+
+    /* === FOOTER === */
+    footer{
+      padding:22px 6% 26px;
+      font-size:11px;
+      color:var(--text-soft);
+      border-top:1px solid rgba(148,163,184,.35);
+      margin-top:40px;
+    }
+
+    footer .right{
+      float:right;
+    }
+
+    /* === REVEAL ANIMATION === */
+    .reveal{
+      opacity:0;
+      transform:translateY(26px);
+      transition:opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    /* === RESPONSIVE === */
+    @media(max-width:960px){
+      .hero-grid{
+        grid-template-columns:1fr;
       }
-      100% {
-        transform: translate(40px, -30px);
-      }
-    }
-
-    /* ===== NAVBAR ===== */
-    .navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      padding: 12px 6%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      backdrop-filter: blur(14px);
-      background: linear-gradient(to bottom, rgba(3, 7, 18, 0.88), rgba(3, 7, 18, 0.35));
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      z-index: 50;
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo-img {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      object-fit: contain;
-      background: radial-gradient(circle, rgba(0, 229, 255, 0.12), transparent 70%);
-      padding: 3px;
-      box-shadow: 0 0 18px rgba(0, 229, 255, 0.45);
-    }
-
-    .logo-text-main {
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-    }
-
-    .logo-x {
-      color: var(--neon);
-    }
-
-    .logo-sub {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 22px;
-      font-size: 13px;
-      color: var(--text-soft);
-    }
-
-    .nav-links a {
-      position: relative;
-      padding-bottom: 3px;
-    }
-
-    .nav-links a::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--neon), var(--magenta));
-      transition: width 0.25s ease;
-    }
-
-    .nav-links a:hover::after {
-      width: 100%;
-    }
-
-    .nav-actions {
-      display: flex;
-      gap: 10px;
-      font-size: 12px;
-    }
-
-    .btn-outline {
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      padding: 7px 16px;
-      background: rgba(15, 23, 42, 0.7);
-      color: #e5e7eb;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      border-radius: 999px;
-      border: none;
-      padding: 8px 18px;
-      background: linear-gradient(90deg, var(--neon), var(--magenta));
-      color: #020617;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 0 18px rgba(0, 229, 255, 0.5);
-    }
-
-    /* ===== LAYOUT ===== */
-    .container {
-      width: 88%;
-      max-width: 1240px;
-      margin: 0 auto;
-    }
-
-    main {
-      padding-top: 110px;
-      padding-bottom: 80px;
-    }
-
-    section {
-      margin-top: 60px;
-    }
-
-    .flex {
-      display: flex;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      gap: 40px;
-      align-items: center;
-    }
-
-    /* ===== HERO ===== */
-    .hero-title {
-      font-size: 42px;
-      line-height: 1.15;
-      font-weight: 600;
-    }
-
-    .hero-title span.gradient {
-      background: linear-gradient(90deg, var(--neon), var(--magenta));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero-desc {
-      margin-top: 14px;
-      font-size: 15px;
-      color: var(--text-soft);
-      max-width: 540px;
-    }
-
-    .hero-highlight {
-      color: var(--neon);
-      font-weight: 600;
-    }
-
-    .hero-actions {
-      margin-top: 22px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .hero-secondary {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    /* Hero right – video + overlay */
-    .hero-right-card {
-      position: relative;
-      background: radial-gradient(circle at top left, rgba(0, 229, 255, 0.2), transparent 70%),
-        rgba(15, 23, 42, 0.96);
-      border-radius: 22px;
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      box-shadow: 0 20px 55px rgba(15, 23, 42, 0.9);
-      overflow: hidden;
-    }
-
-    .hero-video-wrap {
-      position: relative;
-      overflow: hidden;
-      border-radius: 18px;
-      margin: 14px;
-    }
-
-    .hero-video {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 18px;
-      filter: saturate(1.1) contrast(1.08);
-    }
-
-    .hero-video-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0));
-    }
-
-    .hero-video-label {
-      position: absolute;
-      left: 16px;
-      bottom: 16px;
-      background: rgba(15, 23, 42, 0.85);
-      border-radius: 999px;
-      padding: 6px 14px;
-      font-size: 11px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .dot-green {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
-    }
-
-    .hero-metrics {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      padding: 12px 16px 16px;
-      font-size: 11px;
-    }
-
-    .metric-card {
-      background: rgba(15, 23, 42, 0.9);
-      border-radius: 14px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      padding: 10px;
-    }
-
-    .metric-label {
-      color: var(--text-soft);
-      font-size: 10px;
-      margin-bottom: 4px;
-    }
-
-    .metric-value-main {
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .metric-sub {
-      margin-top: 4px;
-      color: var(--text-soft);
-    }
-
-    /* ===== HOW IT WORKS ===== */
-    .section-title {
-      font-size: 24px;
-      margin-bottom: 6px;
-    }
-
-    .section-subtitle {
-      font-size: 13px;
-      color: var(--text-soft);
-      max-width: 600px;
-    }
-
-    .steps-grid {
-      margin-top: 24px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-    }
-
-    .step-card {
-      background: rgba(15, 23, 42, 0.9);
-      border-radius: 16px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      padding: 14px 16px 16px;
-      font-size: 13px;
-    }
-
-    .step-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      border-radius: 999px;
-      padding: 4px 9px;
-      color: var(--text-soft);
-      margin-bottom: 8px;
-    }
-
-    .step-title {
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-
-    .step-text {
-      font-size: 12px;
-      color: var(--text-soft);
-    }
-
-    /* ===== PRICING ===== */
-    .pricing-grid {
-      margin-top: 28px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 18px;
-    }
-
-    .price-card {
-      background: rgba(15, 23, 42, 0.94);
-      border-radius: 18px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      padding: 18px 18px 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .price-card.highlight {
-      border-color: var(--neon);
-      box-shadow: 0 0 26px rgba(0, 229, 255, 0.5);
-    }
-
-    .price-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 10px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--neon), var(--magenta));
-      color: #020617;
-      font-weight: 600;
-    }
-
-    .price-name {
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .price-desc {
-      font-size: 12px;
-      color: var(--text-soft);
-      margin-bottom: 10px;
-    }
-
-    .price-value {
-      font-size: 26px;
-      font-weight: 600;
-    }
-
-    .price-unit {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    .price-features {
-      list-style: none;
-      margin-top: 12px;
-      font-size: 12px;
-      color: var(--text-soft);
-    }
-
-    .price-features li {
-      display: flex;
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: var(--neon);
-      margin-top: 5px;
-      flex-shrink: 0;
-    }
-
-    .price-btn {
-      margin-top: 16px;
-      width: 100%;
-      border-radius: 999px;
-      border: none;
-      padding: 9px 14px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      background: rgba(248, 250, 252, 0.05);
-      color: #e5e7eb;
-    }
-
-    .price-card.highlight .price-btn {
-      background: linear-gradient(90deg, var(--neon), var(--magenta));
-      color: #020617;
-      box-shadow: 0 0 18px rgba(0, 229, 255, 0.55);
-    }
-
-    /* ===== LEGAL ===== */
-    .legal-box {
-      margin-top: 30px;
-      background: rgba(127, 29, 29, 0.28);
-      border-radius: 14px;
-      border-left: 4px solid #f97373;
-      padding: 18px 18px 16px;
-      font-size: 12px;
-      line-height: 1.6;
-      color: #fecaca;
-    }
-
-    .legal-box strong {
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    /* ===== FOOTER ===== */
-    footer {
-      padding: 22px 6% 26px;
-      font-size: 11px;
-      color: var(--text-soft);
-      border-top: 1px solid rgba(148, 163, 184, 0.35);
-      margin-top: 40px;
-    }
-
-    footer span {
-      opacity: 0.9;
-    }
-
-    footer .right {
-      float: right;
-    }
-
-    /* ===== ANIMATIONS (SCROLL) ===== */
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 960px) {
-      .hero-grid {
-        grid-template-columns: 1fr;
-      }
-      .hero-right-card {
-        order: -1;
-      }
-      .hero-title {
-        font-size: 32px;
-      }
-      .navbar {
-        padding-inline: 4%;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .nav-links {
-        display: none;
-      }
-      .hero-title {
-        font-size: 28px;
-      }
-      .container {
-        width: 92%;
-      }
-      .hero-video {
-        height: 200px;
-      }
-      footer .right {
-        float: none;
-        display: block;
-        margin-top: 6px;
-      }
+      .hero-title{font-size:32px;}
+      .hero-card-wrap{margin:20px auto 0;}
+      .navbar{padding-inline:4%;}
+      .nav-links{display:none;}
+    }
+
+    @media(max-width:640px){
+      .container{width:92%;}
+      .hero-title{font-size:27px;}
+      footer .right{float:none;display:block;margin-top:6px;}
+      .hero-card{padding:18px 16px 18px;}
+      .carousel{height:280px;}
+      .carousel-card{width:230px;}
     }
   </style>
 </head>
-
 <body>
-  <!-- BACKGROUND EFFECTS -->
+  <!-- BACKGROUND LAYERS -->
+  <canvas id="bgParticles"></canvas>
   <div class="bg-grid"></div>
   <div class="bg-glow cyan"></div>
   <div class="bg-glow magenta"></div>
@@ -578,17 +582,16 @@
   <!-- NAVBAR -->
   <header class="navbar">
     <div class="nav-left">
-      <img src="assets/AnalyticaX.png" alt="AnalyticaX Logo" class="logo-img" />
+      <img src="assets/AnalyticaX.png" alt="AnalyticaX Logo" class="logo-img">
       <div>
-        <div class="logo-text-main">
-          Analytica<span class="logo-x">X</span>
-        </div>
+        <div class="logo-main">Analytica<span>X</span></div>
         <div class="logo-sub">AI Powered Crypto Chart Analysis</div>
       </div>
     </div>
 
     <nav class="nav-links">
       <a href="#how">Nasıl Çalışır?</a>
+      <a href="#features">Özellikler</a>
       <a href="#pricing">Paketler</a>
       <a href="#legal">Yasal Uyarı</a>
     </nav>
@@ -602,18 +605,19 @@
   <!-- MAIN -->
   <main>
     <div class="container">
+
       <!-- HERO -->
       <section class="hero-grid reveal">
         <div>
           <h1 class="hero-title">
-            TradingView grafiğini yükle, <br />
+            TradingView grafiğini yükle, <br>
             <span class="gradient">AnalyticaX</span> senin yerine analiz etsin.
           </h1>
           <p class="hero-desc">
-            Yapay zekâ destekli sistemimiz; trend, destek/direnç, likidite bölgeleri ve olası
-            fiyat senaryolarını TradingView ekran görüntüsünden otomatik olarak çıkarır.
-            <br /><br />
-            <span class="hero-highlight">Her üyeye 3 grafik analizi ücretsiz.</span>
+            Yapay zekâ destekli sistem; trend yapısını, destek/direnç bölgelerini, likidite alanlarını
+            ve olası fiyat senaryolarını ekran görüntüsünden otomatik olarak yorumlar.
+            <br><br>
+            <strong>Her üye için 3 grafik analizi ücretsiz.</strong>
           </p>
 
           <div class="hero-actions">
@@ -622,40 +626,112 @@
               Kredi kartı gerekmez • Sadece analiz, yatırım tavsiyesi değildir
             </span>
           </div>
-        </div>
 
-        <!-- HERO RIGHT -->
-        <div class="hero-right-card">
-          <div class="hero-video-wrap">
-            <!-- BURAYA KENDİ VİDEONU KOYABİLİRSİN -->
-            <!-- assets/analyticax-hero.mp4 dosyası eklersen direkt çalışır -->
-            <video class="hero-video" autoplay muted loop playsinline>
-              <source src="assets/analyticax-hero.mp4" type="video/mp4" />
-              <!-- Eğer video yoksa, boş bırakılır; sadece koyu arka plan görünür -->
-            </video>
-            <div class="hero-video-overlay"></div>
-            <div class="hero-video-label">
-              <span class="dot-green"></span>
-              Canlı örnek: BTCUSDT 1H analizi
+          <!-- Electric border hero card -->
+          <div class="hero-card-wrap tilt">
+            <!-- SVG electric border -->
+            <svg class="electric-svg" viewBox="0 0 520 220" preserveAspectRatio="none">
+              <defs>
+                <filter id="electric">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="3" result="noise"/>
+                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="15" xChannelSelector="R" yChannelSelector="G"/>
+                  <feColorMatrix type="matrix"
+                    values="1 0 0 0 0
+                            0 1 0 0 0
+                            0 0 1 0 0
+                            0 0 0 1 0"/>
+                </filter>
+
+                <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#00E5FF"/>
+                  <stop offset="50%" stop-color="#FF4DFF"/>
+                  <stop offset="100%" stop-color="#00E5FF"/>
+                </linearGradient>
+              </defs>
+
+              <rect x="12" y="12" width="496" height="196" rx="28" ry="28"
+                    fill="transparent"
+                    stroke="url(#borderGrad)"
+                    stroke-width="2.5"
+                    filter="url(#electric)">
+                <animate attributeName="stroke-dashoffset"
+                         from="0" to="1200"
+                         dur="10s"
+                         repeatCount="indefinite"/>
+              </rect>
+            </svg>
+
+            <!-- CONTENT CARD -->
+            <div class="hero-card">
+              <div class="hero-card-heading">BTCUSDT • 1 Saatlik Yapay Zekâ Tahmini</div>
+
+              <div class="hero-card-row">
+                <div style="flex:1;">
+                  <div class="hero-label">Yukarı Senaryo</div>
+                  <div class="hero-value green">58%</div>
+                  <div style="font-size:11px;color:var(--text-soft);">
+                    97.200 → 99.800 hedef bölgesi<br>Üst banda kadar kademeli yükseliş.
+                  </div>
+                </div>
+                <div style="flex:1;">
+                  <div class="hero-label">Yatay Senaryo</div>
+                  <div class="hero-value yellow">27%</div>
+                  <div style="font-size:11px;color:var(--text-soft);">
+                    95.000 – 97.200 aralığında akümülasyon
+                  </div>
+                </div>
+                <div style="flex:1;">
+                  <div class="hero-label">Aşağı Senaryo</div>
+                  <div class="hero-value red">15%</div>
+                  <div style="font-size:11px;color:var(--text-soft);">
+                    94.000 altı kapanış → 90.700 desteği
+                  </div>
+                </div>
+              </div>
+
+              <div class="hero-pill">
+                <span class="hero-pill-dot"></span>
+                Sistem yalnızca olasılık üretir; pozisyon kararı ve risk tamamen kullanıcıya aittir.
+              </div>
             </div>
           </div>
+        </div>
 
-          <div class="hero-metrics">
-            <div class="metric-card">
-              <div class="metric-label">Yukarı Senaryo</div>
-              <div class="metric-value-main" style="color:#22c55e;">58%</div>
-              <div class="metric-sub">Hedef bölge: 97.200 → 99.800</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Yatay Senaryo</div>
-              <div class="metric-value-main" style="color:#facc15;">27%</div>
-              <div class="metric-sub">95.000 – 97.200 aralığında sıkışma</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Aşağı Senaryo</div>
-              <div class="metric-value-main" style="color:#f97373;">15%</div>
-              <div class="metric-sub">94.000 altı → 90.700 desteği</div>
-            </div>
+        <!-- 3D CAROUSEL (ÖZELLİKLER) -->
+        <div id="features" class="carousel-wrap">
+          <h2 class="section-title">Neleri analiz eder?</h2>
+          <p class="section-subtitle">
+            AnalyticaX, klasik indikatörlerin ötesine geçerek yapı bozulmaları, likidite avı
+            hareketleri ve volatilite bölgelerini de hesaba katar.
+          </p>
+
+          <div class="carousel">
+            <article class="carousel-card">
+              <h3>Yapı & Trend Analizi</h3>
+              <p>
+                Fiyatın iç içe geçmiş higher-high / lower-low yapısını analiz eder,
+                aktif trend yönünü çıkarır ve olası trend dönüş bölgelerini işaretler.
+              </p>
+              <small>Örnek: "Günlük trend aşağı, saatlikte geçici tepki."</small>
+            </article>
+
+            <article class="carousel-card">
+              <h3>Likidite & Bölge Tespiti</h3>
+              <p>
+                Fiyatın sık dokunduğu seviyeleri, boşlukları ve stop avı bölgelerini tarar;
+                bunları destek/direnç yerine "likidite havuzları" olarak raporlar.
+              </p>
+              <small>Örnek: "Son iğneler 95K üstündeki long likiditesini temizledi."</small>
+            </article>
+
+            <article class="carousel-card">
+              <h3>Senaryo & Risk Çerçevesi</h3>
+              <p>
+                Yukarı / yatay / aşağı yön için yüzdesel senaryo üretir, her senaryonun
+                geçersiz olacağı fiyat seviyesini belirtir.
+              </p>
+              <small>Örnek: "Bu senaryo 94K günlük kapanış altında geçersiz olur."</small>
+            </article>
           </div>
         </div>
       </section>
@@ -664,42 +740,42 @@
       <section id="how" class="reveal">
         <h2 class="section-title">AnalyticaX nasıl çalışır?</h2>
         <p class="section-subtitle">
-          Sistem, yüklediğin TradingView ekran görüntüsünü bilgisayarlı görü ve teknik analiz
-          kurallarıyla tarar; trend yapısını, kilit seviyeleri ve olası fiyat senaryolarını
-          olasılıklarla birlikte çıkarır. Sadece analiz üretir, hiçbir şekilde otomatik alım-satım emri vermez.
+          Sisteme sadece TradingView ekran görüntünü yüklersin. AnalyticaX, görüntüyü bilgisayarlı görü
+          ile okur, mumları, seviyeleri ve yapıyı çözümler; sonrasında teknik analiz kuralları ve
+          yapay zekâ ile text formatında bir rapor üretir.
         </p>
 
         <div class="steps-grid">
           <div class="step-card">
             <div class="step-badge">Adım 1</div>
-            <div class="step-title">Grafiğini yükle</div>
+            <div class="step-title">Grafiği hazırla</div>
             <p class="step-text">
-              TradingView’de grafiğini aç, ekran görüntüsü al ve AnalyticaX’e yükle. PNG/JPEG
-              formatı yeterli.
+              TradingView'de istediğin pariteyi ve zaman dilimini aç; destek/dirençlerini,
+              çizgilerini, kutularını kendine göre çiz ve ekran görüntüsü al.
             </p>
           </div>
           <div class="step-card">
             <div class="step-badge">Adım 2</div>
-            <div class="step-title">Yapay zekâ grafiği okur</div>
+            <div class="step-title">AnalyticaX'e yükle</div>
             <p class="step-text">
-              Model; trend, yapı kırılımları, destek/direnç zonları, mum formasyonları ve hacim
-              davranışını analiz eder.
+              PNG/JPEG ekran görüntüsünü sisteme yüklersin. Görüntü, mumlar, seviyeler ve yazılar
+              şeklinde parçalara ayrılır, modelin anlayabileceği hale getirilir.
             </p>
           </div>
           <div class="step-card">
             <div class="step-badge">Adım 3</div>
-            <div class="step-title">Olası senaryoları gör</div>
+            <div class="step-title">AI raporunu oku</div>
             <p class="step-text">
-              Yukarı, yatay ve aşağı yön ihtimalleri; hedef bölgeler ve “senaryo geçersiz olur”
-              seviyeleri net ve sade bir rapor halinde gösterilir.
+              Sistem; trend yönü, olası hedefler, riskli bölgeler ve üç farklı fiyat senaryosu
+              (yukarı, yatay, aşağı) için olasılık yüzdesiyle birlikte sana rapor sunar.
             </p>
           </div>
           <div class="step-card">
             <div class="step-badge">Adım 4</div>
-            <div class="step-title">Son karar her zaman sende</div>
+            <div class="step-title">Karar her zaman sende</div>
             <p class="step-text">
-              AnalyticaX, yatırım tavsiyesi vermez. Üretilen rapor yalnızca sana fikir verir;
-              risk yönetimi ve pozisyon kararı tamamen sana aittir.
+              AnalyticaX hiçbir zaman otomatik al-sat yapmaz ve "şuradan long gir" demez.
+              Üretilen analiz, sadece piyasa resmini daha net görmene yardım eder.
             </p>
           </div>
         </div>
@@ -709,14 +785,14 @@
       <section id="pricing" class="reveal">
         <h2 class="section-title">Paketler & analiz hakları</h2>
         <p class="section-subtitle">
-          Her yeni üyeye <strong>3 adet ücretsiz analiz</strong> tanımlanır. Daha fazla ihtiyaç
-          duyduğunda kredi paketleriyle devam edebilirsin.
+          Her kullanıcıya <strong>3 adet ücretsiz analiz</strong> tanımlanır. Sürekli kullananlar
+          için analiz kredisi paketleri ile sistemi dilediğin kadar kullanabilirsin.
         </p>
 
         <div class="pricing-grid">
           <div class="price-card">
             <div class="price-name">Ücretsiz</div>
-            <div class="price-desc">Başlangıç ve deneme için ideal.</div>
+            <div class="price-desc">Sistemi tanımak için ideal başlangıç.</div>
             <div>
               <span class="price-value">0$</span>
               <span class="price-unit"> / 3 analiz</span>
@@ -754,7 +830,7 @@
             </div>
             <ul class="price-features">
               <li><span class="dot"></span>25 adet gelişmiş analiz</li>
-              <li><span class="dot"></span>Özel rapor formatı</li>
+              <li><span class="dot"></span>Özel rapor şablonu</li>
               <li><span class="dot"></span>Öncelikli destek</li>
             </ul>
             <button class="price-btn">Bu Paketi Seç</button>
@@ -764,10 +840,9 @@
         <div id="legal" class="legal-box">
           <strong>Yasal Uyarı – Yatırım Tavsiyesi Değildir</strong>
           AnalyticaX tarafından üretilen tüm analizler yalnızca eğitim ve genel bilgi amaçlıdır.
-          Bu platform; alım-satım sinyali, yatırım tavsiyesi, portföy yöneticiliği veya benzeri
-          hiçbir lisanslı finansal hizmet sunmaz. Kripto paralar ve kaldıraçlı işlemler yüksek
-          risk içerir, sermayenizin tamamını kaybedebilirsiniz. Nihai yatırım kararı ve risk,
-          tamamen kullanıcıya aittir.
+          Bu platform; alım-satım sinyali, yatırım tavsiyesi, portföy yöneticiliği veya benzeri hiçbir
+          lisanslı finansal hizmet sunmaz. Kripto paralar ve kaldıraçlı işlemler yüksek risk içerir,
+          sermayenizin tamamını kaybedebilirsiniz. Nihai yatırım kararı ve risk tamamen kullanıcıya aittir.
         </div>
       </section>
     </div>
@@ -779,20 +854,90 @@
     <span class="right">Bu site yalnızca analiz ve eğitim amaçlıdır.</span>
   </footer>
 
-  <!-- SCROLL REVEAL JS -->
+  <!-- JS: PARTICLES + REVEAL + TILT -->
   <script>
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
+    // === PARTICLE BACKGROUND ===
+    const canvas = document.getElementById("bgParticles");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+    const PARTICLE_COUNT = 80;
 
-    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+    function resizeCanvas(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function createParticles(){
+      particles = [];
+      for(let i=0;i<PARTICLE_COUNT;i++){
+        particles.push({
+          x: Math.random()*canvas.width,
+          y: Math.random()*canvas.height,
+          r: Math.random()*2+0.5,
+          vx:(Math.random()-0.5)*0.2,
+          vy:(Math.random()-0.5)*0.2,
+          alpha: Math.random()*0.6+0.2
+        });
+      }
+    }
+    createParticles();
+
+    function drawParticles(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      for(const p of particles){
+        p.x+=p.vx;
+        p.y+=p.vy;
+
+        if(p.x<0)p.x=canvas.width;
+        if(p.x>canvas.width)p.x=0;
+        if(p.y<0)p.y=canvas.height;
+        if(p.y>canvas.height)p.y=0;
+
+        const gradient = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*6);
+        gradient.addColorStop(0,`rgba(0,229,255,${p.alpha})`);
+        gradient.addColorStop(0.4,`rgba(255,77,255,${p.alpha*0.7})`);
+        gradient.addColorStop(1,"rgba(0,0,0,0)");
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r*6,0,Math.PI*2);
+        ctx.fill();
+      }
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    // === REVEAL ON SCROLL ===
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0.15});
+
+    document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+
+    // === SIMPLE TILT EFFECT ===
+    function addTilt(el){
+      const strength = 10; // derece
+      el.addEventListener("mousemove", e=>{
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const rotateY = ((x / rect.width) - 0.5) * strength;
+        const rotateX = ((y / rect.height) - 0.5) * -strength;
+        el.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+      el.addEventListener("mouseleave", ()=>{
+        el.style.transform = "rotateX(0deg) rotateY(0deg)";
+      });
+    }
+
+    document.querySelectorAll(".tilt").forEach(addTilt);
   </script>
 </body>
 </html>
