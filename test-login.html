@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #1a1a1a; color: #fff; }
+        .test-box { background: #2a2a2a; padding: 20px; border-radius: 10px; margin: 10px 0; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        input { padding: 8px; margin: 5px; width: 300px; }
+        .success { color: #4ade80; }
+        .error { color: #f97373; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Login Debug Test</h1>
+    
+    <div class="test-box">
+        <h3>1. Backend Connection Test</h3>
+        <button onclick="testBackend()">Test Backend</button>
+        <div id="backendResult"></div>
+    </div>
+
+    <div class="test-box">
+        <h3>2. Register Test User</h3>
+        <input type="email" id="regEmail" placeholder="Email" value="test@test.com">
+        <input type="password" id="regPass" placeholder="Password" value="test123">
+        <button onclick="testRegister()">Register</button>
+        <div id="registerResult"></div>
+    </div>
+
+    <div class="test-box">
+        <h3>3. Login Test</h3>
+        <input type="email" id="loginEmail" placeholder="Email" value="test@test.com">
+        <input type="password" id="loginPass" placeholder="Password" value="test123">
+        <button onclick="testLogin()">Login</button>
+        <div id="loginResult"></div>
+    </div>
+
+    <div class="test-box">
+        <h3>4. Console Logs</h3>
+        <div id="consoleLogs" style="background: #000; padding: 10px; font-family: monospace; font-size: 12px; max-height: 300px; overflow-y: auto;"></div>
+    </div>
+
+    <script>
+        const API = "http://localhost:5000";
+        
+        function log(msg, type = "info") {
+            const logs = document.getElementById("consoleLogs");
+            const color = type === "error" ? "#f97373" : type === "success" ? "#4ade80" : "#fff";
+            logs.innerHTML += `<div style="color: ${color}">[${new Date().toLocaleTimeString()}] ${msg}</div>`;
+            logs.scrollTop = logs.scrollHeight;
+            console.log(msg);
+        }
+
+        async function testBackend() {
+            const result = document.getElementById("backendResult");
+            result.innerHTML = "Testing...";
+            log("Testing backend connection...");
+            
+            try {
+                const res = await fetch(API + "/api");
+                const data = await res.json();
+                if (data.ok) {
+                    result.innerHTML = '<span class="success">✅ Backend is running!</span>';
+                    log("✅ Backend is running", "success");
+                } else {
+                    result.innerHTML = '<span class="error">❌ Backend error</span>';
+                    log("❌ Backend error: " + JSON.stringify(data), "error");
+                }
+            } catch (err) {
+                result.innerHTML = '<span class="error">❌ Cannot connect to backend: ' + err.message + '</span>';
+                log("❌ Connection error: " + err.message, "error");
+            }
+        }
+
+        async function testRegister() {
+            const email = document.getElementById("regEmail").value;
+            const password = document.getElementById("regPass").value;
+            const result = document.getElementById("registerResult");
+            result.innerHTML = "Registering...";
+            
+            const deviceId = crypto.randomUUID();
+            const deviceFingerprint = btoa(navigator.userAgent).substring(0,32);
+            
+            log(`Registering: ${email}`);
+            
+            try {
+                const res = await fetch(API + "/api/auth/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password, deviceId, deviceFingerprint })
+                });
+                
+                const data = await res.json();
+                log("Register response: " + JSON.stringify(data));
+                
+                if (data.ok) {
+                    result.innerHTML = '<span class="success">✅ Registered! Token: ' + (data.token ? "Yes" : "No") + '</span>';
+                    log("✅ Registration successful", "success");
+                    if (data.token) {
+                        localStorage.setItem("ax_token", data.token);
+                        log("Token saved to localStorage", "success");
+                    }
+                } else {
+                    result.innerHTML = '<span class="error">❌ ' + (data.message || data.error) + '</span>';
+                    log("❌ Registration failed: " + (data.message || data.error), "error");
+                }
+            } catch (err) {
+                result.innerHTML = '<span class="error">❌ Error: ' + err.message + '</span>';
+                log("❌ Error: " + err.message, "error");
+            }
+        }
+
+        async function testLogin() {
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPass").value;
+            const result = document.getElementById("loginResult");
+            result.innerHTML = "Logging in...";
+            
+            let deviceId = localStorage.getItem("ax_device_id");
+            let deviceFingerprint = localStorage.getItem("ax_fingerprint");
+            
+            if (!deviceId) {
+                deviceId = crypto.randomUUID();
+                localStorage.setItem("ax_device_id", deviceId);
+            }
+            if (!deviceFingerprint) {
+                deviceFingerprint = btoa(navigator.userAgent + navigator.language + screen.width + screen.height).substring(0,32);
+                localStorage.setItem("ax_fingerprint", deviceFingerprint);
+            }
+            
+            log(`Logging in: ${email}`);
+            log(`Device ID: ${deviceId}`);
+            log(`Fingerprint: ${deviceFingerprint}`);
+            
+            try {
+                const res = await fetch(API + "/api/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password, deviceId, deviceFingerprint })
+                });
+                
+                log(`Response status: ${res.status}`);
+                
+                const data = await res.json();
+                log("Login response: " + JSON.stringify(data));
+                
+                if (data.otpRequired) {
+                    result.innerHTML = '<span class="error">⚠️ OTP Required: ' + data.message + '</span>';
+                    log("⚠️ OTP required: " + data.message);
+                } else if (data.ok) {
+                    result.innerHTML = '<span class="success">✅ Login successful! Token: ' + (data.token ? "Yes" : "No") + '</span>';
+                    log("✅ Login successful", "success");
+                    if (data.token) {
+                        localStorage.setItem("ax_token", data.token);
+                        log("Token saved to localStorage", "success");
+                        setTimeout(() => {
+                            window.location.href = "dashboard.html";
+                        }, 1000);
+                    }
+                } else {
+                    result.innerHTML = '<span class="error">❌ ' + (data.message || data.error) + '</span>';
+                    log("❌ Login failed: " + (data.message || data.error), "error");
+                }
+            } catch (err) {
+                result.innerHTML = '<span class="error">❌ Error: ' + err.message + '</span>';
+                log("❌ Error: " + err.message, "error");
+            }
+        }
+
+        // Auto-test backend on load
+        window.addEventListener("load", () => {
+            log("Page loaded. Testing backend...");
+            testBackend();
+        });
+    </script>
+</body>
+</html>
+

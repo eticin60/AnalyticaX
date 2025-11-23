@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Successful | AnalyticaX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --green:#14F195;
+  --bg:#020617;
+  --text-soft:#98A0B3;
+}
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:Poppins, sans-serif;
+  background:radial-gradient(circle at top,#071526 0,var(--bg) 45%,#000 100%);
+  overflow:hidden;color:#fff;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;
+}
+
+canvas#p{position:fixed;inset:0;z-index:-3;}
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);background-size:50px 50px;opacity:.25;z-index:-2;}
+.bg-glow{position:fixed;width:540px;height:540px;border-radius:50%;filter:blur(140px);opacity:.8;mix-blend-mode:screen;z-index:-1;}
+.bg-glow.c1{background:rgba(20,241,149,.9);top:-120px;left:-100px;}
+.bg-glow.c2{background:rgba(0,229,255,.9);bottom:-130px;right:-120px;}
+
+.box{z-index:10;max-width:650px;padding:20px;}
+.logo{width:110px;margin-bottom:12px;}
+.icon{font-size:115px;color:var(--green);text-shadow:0 0 28px rgba(20,241,149,.7);margin-bottom:10px;}
+.title{font-size:30px;font-weight:600;margin-bottom:8px;}
+.desc{font-size:15px;color:var(--text-soft);margin-bottom:26px;}
+
+.btn{
+  padding:12px 28px;border-radius:999px;font-size:14px;font-weight:600;
+  background:linear-gradient(90deg,#14F195,#00E5FF);color:#020617;
+  border:none;cursor:pointer;transition:.25s;box-shadow:0 0 20px rgba(20,241,149,.7);
+}
+.btn:hover{transform:scale(1.05);}
+</style>
+</head>
+
+<body>
+
+<canvas id="p"></canvas>
+<div class="bg-grid"></div>
+<div class="bg-glow c1"></div>
+<div class="bg-glow c2"></div>
+
+<div class="box">
+  <img src="assets/AnalyticaX.png" class="logo">
+  <div class="icon">✓</div>
+
+  <div class="title">Payment Successful</div>
+  <div class="desc">
+    Your credits have been delivered to your AnalyticaX account.<br>
+    You can now continue analyzing charts.
+  </div>
+
+  <button class="btn" onclick="window.location.href='dashboard.html'">Go to Dashboard</button>
+</div>
+
+<script>
+/* particles (green) */
+const c=document.getElementById("p"),x=c.getContext("2d");
+let P=[];function r(){c.width=innerWidth;c.height=innerHeight;}r();onresize=r;
+for(let i=0;i<70;i++){P.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2+1,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4});}
+(function a(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=c.width;if(p.x>c.width)p.x=0;if(p.y<0)p.y=c.height;if(p.y>c.height)p.y=0;x.fillStyle="rgba(20,241,149,0.45)";x.beginPath();x.arc(p.x,p.y,p.r,0,7);x.fill();});requestAnimationFrame(a);})();
+</script>
+
+</body>
+</html>

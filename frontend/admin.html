@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AnalyticaX — Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --neon:#00E5FF;
+  --magenta:#FF4DFF;
+  --green:#14F195;
+  --bg:#020617;
+  --panel:#0b1020;
+  --text-soft:#98A0B3;
+  --border:rgba(148,163,184,.35);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:Poppins, sans-serif;
+  background:radial-gradient(circle at top,#071526 0,var(--bg) 50%,#000 100%);
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* BACKGROUND */
+canvas#particles{position:fixed;inset:0;z-index:-3;}
+.bg-grid{
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:50px 50px;
+  opacity:.22;pointer-events:none;z-index:-2;
+}
+.bg-glow{
+  position:fixed;width:480px;height:480px;border-radius:50%;
+  filter:blur(120px);opacity:.75;mix-blend-mode:screen;
+  animation:float 16s ease-in-out infinite alternate;z-index:-1;
+}
+.bg-glow.c1{background:radial-gradient(circle,rgba(0,229,255,.9),transparent 60%);top:-120px;left:-100px;}
+.bg-glow.c2{background:radial-gradient(circle,rgba(255,77,255,.85),transparent 60%);bottom:-120px;right:-100px;animation-delay:8s;}
+
+@keyframes float{0%{transform:translate(0,0);}100%{transform:translate(50px,-35px);}}
+
+/* NAVBAR */
+.navbar{
+  position:sticky;top:0;z-index:50;width:100%;
+  background:rgba(5,10,25,.85);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(148,163,184,.3);
+  padding:12px 5%;display:flex;justify-content:space-between;align-items:center;
+}
+.nav-title{font-size:20px;font-weight:600;}
+.nav-title span{color:var(--neon);}
+.nav-links{display:flex;gap:20px;font-size:13px;}
+.nav-links a{text-decoration:none;color:var(--text-soft);cursor:pointer;}
+.nav-links a.active{color:#fff;font-weight:600;}
+
+.nav-admin{
+  padding:6px 14px;border-radius:999px;
+  background:rgba(15,23,42,.8);border:1px solid var(--border);
+  font-size:12px;color:var(--neon);
+}
+
+/* PAGE */
+.page{
+  width:92%;max-width:1400px;margin:30px auto;
+}
+.page-title{
+  font-size:26px;font-weight:600;
+  background:linear-gradient(90deg,var(--neon),var(--magenta));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:16px;
+}
+
+/* TABS */
+.tabs{display:flex;gap:10px;margin-bottom:18px;}
+.tab{
+  padding:7px 16px;border-radius:999px;
+  background:rgba(15,23,42,.6);
+  border:1px solid var(--border);
+  cursor:pointer;font-size:13px;
+}
+.tab.active{
+  background:linear-gradient(90deg,var(--neon),var(--magenta));
+  color:#000;font-weight:600;
+}
+
+/* TABLE */
+.table-box{
+  background:rgba(15,23,42,.93);
+  border:1px solid var(--border);
+  border-radius:18px;overflow:hidden;
+}
+table{width:100%;border-collapse:collapse;}
+th{
+  background:rgba(255,255,255,.06);
+  padding:10px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-soft);
+}
+td{
+  padding:10px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);
+}
+tr:hover td{background:rgba(255,255,255,.04);}
+
+/* ACTION BUTTONS */
+.action-btn{
+  padding:4px 8px;font-size:11px;border-radius:6px;
+  border:1px solid var(--neon);color:var(--neon);
+  cursor:pointer;background:rgba(0,229,255,.15);
+}
+.action-btn.red{
+  border-color:#ff4d6b;color:#ff4d6b;background:rgba(255,77,107,.15);
+}
+
+/* SEARCH BOX */
+.search{
+  margin-bottom:12px;padding:10px;border-radius:12px;
+  width:290px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.15);color:#fff;
+}
+
+.hidden{display:none;}
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND -->
+<canvas id="particles"></canvas>
+<div class="bg-grid"></div>
+<div class="bg-glow c1"></div>
+<div class="bg-glow c2"></div>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="nav-title">Analytica<span>X</span> Admin</div>
+
+  <nav class="nav-links">
+    <a class="active" onclick="showTab('users')">Dashboard</a>
+    <a onclick="showTab('users')">Users</a>
+    <a onclick="showTab('payments')">Payments</a>
+    <a onclick="showTab('logs')">AX-ID Logs</a>
+  </nav>
+
+  <div class="nav-admin" id="adminName">Admin</div>
+</header>
+
+<!-- PAGE -->
+<div class="page">
+  <h1 class="page-title">Admin Panel</h1>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('users')">Users</div>
+    <div class="tab" onclick="showTab('payments')">Payments</div>
+    <div class="tab" onclick="showTab('logs')">AX-ID Logs</div>
+  </div>
+
+  <!-- SEARCH -->
+  <input type="text" class="search" id="searchBox" placeholder="Search users, email, ID..." oninput="filterTable()">
+
+  <!-- USERS -->
+  <div id="tab-users">
+    <div class="table-box">
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Credits</th>
+            <th>Premium</th>
+            <th>Analyses</th>
+            <th>IP</th>
+            <th>Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="userList"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PAYMENTS -->
+  <div id="tab-payments" class="hidden">
+    <div class="table-box">
+      <table>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Amount</th>
+            <th>Method</th>
+            <th>TXID</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Confirm</th>
+          </tr>
+        </thead>
+        <tbody id="payList"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- LOGS -->
+  <div id="tab-logs" class="hidden">
+    <div class="table-box">
+      <table>
+        <thead>
+          <tr>
+            <th>AX-ID</th>
+            <th>User</th>
+            <th>Symbol</th>
+            <th>Timeframe</th>
+            <th>Trend</th>
+            <th>Risk</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="logList"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* PARTICLES */
+const c=document.getElementById("particles");
+const ctx=c.getContext("2d");
+let parts=[];
+function resize(){c.width=innerWidth;c.height=innerHeight;}
+resize();onresize=resize;
+
+for(let i=0;i<70;i++){
+  parts.push({
+    x:Math.random()*innerWidth,
+    y:Math.random()*innerHeight,
+    r:Math.random()*2+1,
+    vx:(Math.random()-0.5)*0.4,
+    vy:(Math.random()-0.5)*0.4
+  });
+}
+function draw(){
+  ctx.clearRect(0,0,c.width,c.height);
+  parts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=c.width;
+    if(p.x>c.width)p.x=0;
+    if(p.y<0)p.y=c.height;
+    if(p.y>c.height)p.y=0;
+    ctx.fillStyle="rgba(0,229,255,.4)";
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,7);
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* TAB SYSTEM */
+function showTab(name){
+  document.getElementById("tab-users").classList.add("hidden");
+  document.getElementById("tab-payments").classList.add("hidden");
+  document.getElementById("tab-logs").classList.add("hidden");
+
+  document.getElementById("tab-"+name).classList.remove("hidden");
+
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+
+  document.querySelector(`.tab[onclick="showTab('${name}')"]`).classList.add("active");
+}
+
+/* ADMIN TOKEN */
+const token = localStorage.getItem("ax_admin_token");
+
+/* LOAD USERS */
+async function loadUsers(){
+  const res = await fetch("http://localhost:5000/api/admin/users",{
+    headers:{Authorization:"Bearer "+token}
+  });
+  const list = await res.json();
+
+  const box=document.getElementById("userList");
+  box.innerHTML="";
+
+  list.forEach(u=>{
+    box.innerHTML+=`
+      <tr>
+        <td>${u.email}</td>
+        <td>${u.credits}</td>
+        <td>${u.premium?"Yes":"No"}</td>
+        <td>${u.totalAnalyses}</td>
+        <td>${u.ipAddress||"-"}</td>
+        <td>${new Date(u.createdAt).toLocaleString()}</td>
+        <td>
+          <button class="action-btn" onclick="addCredit('${u._id}')">+Credit</button>
+          <button class="action-btn" onclick="togglePremium('${u._id}')">Premium</button>
+          <button class="action-btn red" onclick="deleteUser('${u._id}')">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+/* LOAD PAYMENTS */
+async function loadPayments(){
+  const res = await fetch("http://localhost:5000/api/admin/payments",{
+    headers:{Authorization:"Bearer "+token}
+  });
+  const list = await res.json();
+
+  const box=document.getElementById("payList");
+  box.innerHTML="";
+
+  list.forEach(p=>{
+    box.innerHTML+=`
+      <tr>
+        <td>${p.userEmail}</td>
+        <td>${p.amount}</td>
+        <td>${p.method}</td>
+        <td>${p.txid}</td>
+        <td>${p.approved?"Approved":"Pending"}</td>
+        <td>${new Date(p.date).toLocaleString()}</td>
+        <td><button class="action-btn" onclick="approvePay('${p._id}')">Approve</button></td>
+      </tr>
+    `;
+  });
+}
+
+/* LOAD LOGS */
+async function loadLogs(){
+  const res = await fetch("http://localhost:5000/api/admin/logs",{
+    headers:{Authorization:"Bearer "+token}
+  });
+  const list = await res.json();
+
+  const box=document.getElementById("logList");
+  box.innerHTML="";
+
+  list.forEach(l=>{
+    box.innerHTML+=`
+      <tr>
+        <td>${l.axid}</td>
+        <td>${l.email}</td>
+        <td>${l.symbol}</td>
+        <td>${l.timeframe}</td>
+        <td>${l.trend}</td>
+        <td>${l.risk}</td>
+        <td>${new Date(l.createdAt).toLocaleString()}</td>
+      </tr>
+    `;
+  });
+}
+
+/* ADMIN ACTIONS */
+async function addCredit(id){
+  const amount = prompt("Kredi miktarı:");
+  if(!amount) return;
+
+  await fetch("http://localhost:5000/api/admin/user/update",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      Authorization:"Bearer "+token},
+    body:JSON.stringify({userId:id,addCredits:Number(amount)})
+  });
+  loadUsers();
+}
+
+async function togglePremium(id){
+  await fetch("http://localhost:5000/api/admin/user/update",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json", Authorization:"Bearer "+token },
+    body:JSON.stringify({userId:id,togglePremium:true})
+  });
+  loadUsers();
+}
+
+async function deleteUser(id){
+  if(!confirm("Delete user?")) return;
+  
+  await fetch(`http://localhost:5000/api/admin/user/delete/${id}`,{
+    method:"DELETE",
+    headers:{Authorization:"Bearer "+token}
+  });
+  loadUsers();
+}
+
+async function approvePay(id){
+  await fetch("http://localhost:5000/api/admin/payment/approve",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json", Authorization:"Bearer "+token },
+    body:JSON.stringify({payId:id})
+  });
+  loadPayments();
+}
+
+/* SEARCH FILTER */
+function filterTable(){
+  const q=document.getElementById("searchBox").value.toLowerCase();
+  document.querySelectorAll("tbody tr").forEach(tr=>{
+    tr.style.display = tr.innerText.toLowerCase().includes(q) ? "" : "none";
+  });
+}
+
+/* INITIAL LOAD */
+loadUsers();
+loadPayments();
+loadLogs();
+
+</script>
+
+</body>
+</html>

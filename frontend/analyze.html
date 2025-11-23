@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AnalyticaX – AI Analysis</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+    min-height: 100vh;
+    background: radial-gradient(circle at center, #1b1f3a, #000014);
+    color: #fff;
+    overflow: hidden;
+    position: relative;
+}
+
+/* PARTİKÜL CANVAS */
+#particles {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1 !important;
+    pointer-events: none;
+    transform: translateZ(0);
+}
+
+/* LOGO */
+.big-logo {
+    width: 260px;
+    position: fixed;
+    top: 4vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30 !important;
+    pointer-events: none;
+}
+
+/* MAIN CONTAINER */
+.container {
+    margin-top: 100px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 95%;
+    max-width: 1480px;
+    max-height: 95vh;
+    overflow-y: auto;
+    padding: 32px 32px 40px;
+    background: radial-gradient(circle at top left, rgba(0,255,200,0.06), transparent 55%),
+                radial-gradient(circle at bottom right, rgba(0,140,255,0.12), transparent 60%),
+                rgba(5, 10, 35, 0.96);
+    backdrop-filter: blur(16px);
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.14);
+    box-shadow: 0 0 50px rgba(0, 140, 255, 0.4);
+    z-index: 10;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,180,255,0.4) transparent;
+}
+.container::-webkit-scrollbar {
+    width: 8px;
+}
+.container::-webkit-scrollbar-track {
+    background: transparent;
+}
+.container::-webkit-scrollbar-thumb {
+    background: rgba(0,180,255,0.4);
+    border-radius: 10px;
+}
+.container::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,180,255,0.7);
+}
+
+.container h2 {
+    text-align: left;
+    margin: 0 0 6px;
+    font-size: 24px;
+    letter-spacing: .03em;
+}
+
+.subtitle {
+    font-size: 13px;
+    opacity: .75;
+    margin-bottom: 18px;
+}
+
+/* MAIN LAYOUT */
+.layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.3fr);
+    gap: 22px;
+    align-items: flex-start;
+}
+
+.left-panel {
+    min-width: 0;
+}
+
+.right-panel {
+    min-width: 0;
+    border-radius: 22px;
+    padding: 18px 18px 20px;
+    background:
+      radial-gradient(circle at top right, rgba(0,255,210,0.16), transparent 60%),
+      radial-gradient(circle at bottom left, rgba(124,0,255,0.18), transparent 60%),
+      rgba(4, 9, 35, 0.98);
+    border: 1px solid rgba(0, 255, 220, 0.35);
+    box-shadow:
+      0 0 24px rgba(0, 255, 210, 0.35),
+      0 0 60px rgba(0, 0, 0, 0.9);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Neon edge glow */
+.right-panel::before{
+    content:"";
+    position:absolute;
+    inset:-40%;
+    background:conic-gradient(from 180deg,
+      rgba(0,255,200,0.15),
+      rgba(0,120,255,0.18),
+      rgba(120,0,255,0.16),
+      rgba(0,255,200,0.15));
+    opacity:0.7;
+    mix-blend-mode:screen;
+    animation: spinGlow 18s linear infinite;
+    pointer-events:none;
+}
+@keyframes spinGlow{
+    to{ transform:rotate(360deg); }
+}
+
+/* Right inner */
+.right-inner{
+    position:relative;
+    z-index:2;
+}
+
+/* TOP INPUT AREA */
+.top-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin: 30px 0 20px;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+.input-area {
+    margin-bottom: 12px;
+}
+
+.input-area label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: #bfe6ff;
+    letter-spacing: 0.02em;
+}
+
+/* DROPZONE */
+.dropzone {
+    width: 100%;
+    height: 170px;
+    border: 2px dashed rgba(0,150,255,0.5);
+    border-radius: 18px;
+    background: rgba(4, 10, 35, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: #bfe6ff;
+    text-align: center;
+    font-size: 15px;
+    transition: 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.dropzone::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top, rgba(0,255,255,0.06), transparent 65%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.dropzone:hover {
+    transform: translateY(-2px);
+    border-color: #00d9ff;
+    box-shadow: 0 0 25px rgba(0,180,255,0.45);
+}
+
+.dropzone:hover::before {
+    opacity: 1;
+}
+
+.dropzone.active {
+    border-color: #00eaff;
+    background: rgba(0,150,255,0.22);
+    box-shadow: 0 0 35px rgba(0,200,255,0.6);
+}
+
+.dropzone.uploaded {
+    border-color: #00ffbb !important;
+    background: rgba(0,255,200,0.12) !important;
+    box-shadow: 0 0 25px rgba(0,255,200,0.5) !important;
+    color: #d9fff3 !important;
+}
+
+.dz-icon {
+    font-size: 30px;
+    margin-bottom: 6px;
+}
+
+.dz-text-main {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.dz-text-sub {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.preview-img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 14px;
+    margin-bottom: 8px;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+/* CONTROL CARD */
+.control-card {
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.16);
+    background: radial-gradient(circle at top left, rgba(0,255,200,0.07), transparent 70%),
+                rgba(10, 16, 48, 0.95);
+    padding: 16px 16px 18px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.35);
+}
+
+select {
+    width: 100%;
+    padding: 11px 12px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.35);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+    outline: none;
+    font-size: 14px;
+}
+select option {
+    background: #0f1730;
+    color: white;
+}
+
+button {
+    width: 100%;
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(92deg, #7c00ff, #009dff);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: .02em;
+    transition: .3s;
+    box-shadow: 0 0 18px rgba(0,150,255,0.55);
+}
+button:hover {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 0 26px rgba(0,150,255,0.8);
+}
+button:active {
+    transform: scale(.99);
+}
+
+/* INFO BAR */
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 6px;
+    font-size: 11px;
+    opacity: .75;
+    flex-wrap: wrap;
+}
+.info-pill {
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.45);
+    border: 1px solid rgba(255,255,255,0.12);
+}
+
+/* LOADING OVERLAY */
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(12px);
+    background: radial-gradient(circle at top, rgba(0,0,40,0.9), rgba(0,0,0,0.96));
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #fff;
+}
+.loading-inner { text-align: center; }
+.loading-title { font-size: 24px; margin-bottom: 6px; }
+.loading-sub { font-size: 13px; opacity: .75; margin-bottom: 22px; }
+.loader-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+}
+.loader {
+    border: 5px solid rgba(255,255,255,0.15);
+    border-top: 5px solid #00d0ff;
+    border-right: 5px solid #7c00ff;
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    animation: spin 1s linear infinite, glow 2s infinite alternate;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes glow {
+    from { box-shadow: 0 0 10px #00d0ff; }
+    to   { box-shadow: 0 0 25px #7c00ff; }
+}
+#aiPulse {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,200,255,0.25), rgba(0,0,40,0.06));
+    box-shadow: 0 0 45px #00d4ff66;
+    animation: pulseAI 2.4s infinite ease-in-out;
+}
+@keyframes pulseAI {
+    0%   { transform: scale(0.9); opacity: .45; }
+    50%  { transform: scale(1.08); opacity: 1; }
+    100% { transform: scale(0.9); opacity: .45; }
+}
+.loading-text {
+    margin-top: 18px;
+    font-size: 16px;
+    text-align: center;
+    animation: fadeIn 0.5s;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* RESULT PANEL */
+#result {
+    display: none;
+    margin-top: 26px;
+}
+.result-box {
+    padding: 18px 4px 4px;
+    border-radius: 20px;
+    background: linear-gradient(130deg, rgba(0,255,190,0.12), rgba(0,120,255,0.20));
+    box-shadow: 0 0 30px rgba(0,150,255,0.45);
+}
+
+/* ANALYSIS GRID */
+.analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    padding: 10px 4px;
+    max-width: 100%;
+}
+
+/* BOXES */
+.analysis-box {
+    background: linear-gradient(135deg, rgba(10,20,60,0.98), rgba(0,10,40,0.95));
+    border: 1px solid rgba(0, 200, 255, 0.4);
+    border-radius: 18px;
+    padding: 20px 18px;
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.6),
+        0 0 30px rgba(0, 180, 255, 0.25);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+.analysis-box::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,255,200,0.08), transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+.analysis-box:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: #00f0ff;
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.7),
+        0 0 45px rgba(0, 200, 255, 0.6);
+}
+.analysis-box:hover::before {
+    opacity: 1;
+}
+.analysis-box.full-width {
+    grid-column: 1 / -1;
+}
+
+.box-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    font-size: 17px;
+    font-weight: 600;
+}
+.box-icon {
+    font-size: 26px;
+}
+.box-title {
+    background: linear-gradient(90deg, #00f0ff, #00ff9d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.value {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 6px 0;
+    color: #e0f8ff;
+}
+.label {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: 4px;
+}
+
+/* TREND SIDE BORDER */
+.trend-up { border-left: 4px solid #00ff9d; }
+.trend-down { border-left: 4px solid #ff4d7d; }
+.trend-neutral { border-left: 4px solid #ffd060; }
+
+/* PREVIEW */
+.preview-box {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.preview-box img {
+    width: 50%;
+    max-width: 420px;
+    border-radius: 10px;
+    border:1px solid rgba(255,255,255,0.2);
+    box-shadow:0 0 15px rgba(0,0,0,0.65);
+    margin-top: 5px;
+}
+
+/* BREAKOUT PROBABILITY */
+.breakout-prob-box {
+    border-radius: 20px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+.breakout-prob-box::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,255,200,0.1), transparent 60%);
+    opacity: 0.6;
+}
+.breakout-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    background: linear-gradient(90deg, #00f0ff, #00ff9d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.breakout-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+.down-text { color: #ff6b6b; }
+.up-text { color: #00ff9d; text-shadow: 0 0 10px rgba(0,255,157,0.5); }
+
+.breakout-summary {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 10px;
+}
+
+.breakout-bar-container {
+    height: 20px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
+}
+.breakout-fill {
+    height: 100%;
+    width: 50%;
+    background: linear-gradient(90deg, #ff4d7d, #ff8c5e, #ffd060, #a0ff80, #00ff9d);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: width 2.2s cubic-bezier(0.22, 1, 0.36, 1), background 1.5s ease;
+}
+.breakout-fill::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 3s infinite;
+    transform: translateX(-100%);
+}
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+.breakout-marker {
+    position: absolute;
+    top: -8px;
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 0 0 15px rgba(0,255,255,0.8);
+    animation: pulseMarker 2s infinite;
+}
+@keyframes pulseMarker {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+.breakout-text-label {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* RISK & HEATMAP BOX */
+.risk-heat-box {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+    gap: 16px;
+}
+@media (max-width: 900px) {
+    .risk-heat-box {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Risk meter */
+.risk-meter-label {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-bottom: 6px;
+}
+.risk-bar-container {
+    height: 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.7);
+}
+.risk-bar-fill {
+    height: 100%;
+    width: 30%;
+    background: linear-gradient(90deg, #00ff9d, #ffd060, #ff4d7d);
+    transition: width 1.4s ease;
+}
+.risk-pointer {
+    position: absolute;
+    top: -6px;
+    font-size: 16px;
+    text-shadow: 0 0 8px rgba(255,255,255,0.8);
+}
+
+/* Heatmap bar */
+.heatmap-bar-container {
+    margin-top: 10px;
+}
+.heatmap-label-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    opacity: 0.85;
+    margin-bottom: 4px;
+}
+.heatmap-bar {
+    height: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.7);
+}
+.heatmap-seg {
+    height: 100%;
+}
+.heatmap-bull {
+    background: linear-gradient(90deg, #00ff9d, #00ffd4);
+}
+.heatmap-neutral {
+    background: linear-gradient(90deg, #ffd060, #ffb347);
+}
+.heatmap-bear {
+    background: linear-gradient(90deg, #ff4d7d, #ff6b6b);
+}
+
+/* Trend histogram */
+.histogram-wrap {
+    margin-top: 6px;
+}
+.hist-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    margin: 4px 0;
+}
+.hist-label {
+    width: 60px;
+    opacity: 0.85;
+}
+.hist-bar {
+    flex: 1;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    overflow: hidden;
+}
+.hist-fill {
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    transition: width 1.5s ease;
+}
+.hist-fill.bull { background: linear-gradient(90deg, #00ff9d, #00ffd4); }
+.hist-fill.neutral { background: linear-gradient(90deg, #ffd060, #ffb347); }
+.hist-fill.bear { background: linear-gradient(90deg, #ff4d7d, #ff6b6b); }
+
+/* AI INSIGHTS */
+.ai-insight-text {
+    font-size: 13px;
+    line-height: 1.6;
+    opacity: 0.92;
+    margin-bottom: 10px;
+}
+.ai-insight-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 11px;
+}
+.ai-tag {
+    padding: 4px 9px;
+    border-radius: 999px;
+    border: 1px solid rgba(0,255,220,0.4);
+    background: rgba(0,0,0,0.4);
+}
+
+/* TRADE PANEL */
+.trade-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 6px;
+}
+.trade-box {
+    border-radius: 14px;
+    padding: 12px 12px 14px;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.15);
+    font-size: 12px;
+}
+.trade-box.long {
+    box-shadow: 0 0 16px rgba(0,255,157,0.35);
+}
+.trade-box.short {
+    box-shadow: 0 0 16px rgba(255,109,109,0.35);
+}
+.trade-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+.trade-body {
+    opacity: 0.94;
+    line-height: 1.5;
+}
+
+/* RIGHT PANEL CONTENT */
+.ai-header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
+}
+.ai-title-block{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+}
+.ai-title{
+    font-size:16px;
+    font-weight:600;
+    letter-spacing:.04em;
+}
+.ai-subtitle{
+    font-size:11px;
+    opacity:.75;
+}
+.ai-badge{
+    padding:5px 10px;
+    border-radius:999px;
+    font-size:11px;
+    background:rgba(0,0,0,0.45);
+    border:1px solid rgba(0,255,220,0.65);
+    box-shadow:0 0 12px rgba(0,255,220,0.4);
+}
+
+/* Robot */
+.ai-hero{
+    margin-top:6px;
+    margin-bottom:14px;
+    display:flex;
+    gap:10px;
+}
+.ai-robot-wrap{
+    flex:0 0 120px;
+    position:relative;
+}
+.ai-robot-ring{
+    position:absolute;
+    inset:-10px;
+    border-radius:50%;
+    border:1px solid rgba(0,255,230,0.55);
+    box-shadow:0 0 25px rgba(0,255,220,0.65);
+    opacity:0.7;
+    animation: ringPulse 3.2s ease-in-out infinite;
+}
+@keyframes ringPulse{
+    0%{ transform:scale(.9); opacity:.4;}
+    50%{ transform:scale(1.05); opacity:1;}
+    100%{ transform:scale(.9); opacity:.4;}
+}
+.ai-robot{
+    width:100%;
+    height:120px;
+    border-radius:50%;
+    overflow:hidden;
+    background:radial-gradient(circle at top, rgba(0,255,220,0.35), rgba(0,0,40,0.9));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.ai-robot-icon{
+    font-size:48px;
+    text-shadow:0 0 20px #00ffe0;
+}
+.ai-hero-text{
+    flex:1;
+    font-size:12px;
+    opacity:.88;
+    line-height:1.4;
+}
+
+/* Metric cards */
+.metric-grid{
+    display:grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap:10px;
+    margin-bottom:12px;
+    margin-top:4px;
+}
+.metric-card{
+    background:rgba(0,0,0,0.42);
+    border-radius:12px;
+    border:1px solid rgba(0,255,220,0.3);
+    padding:8px 10px;
+    font-size:11px;
+}
+.metric-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:4px;
+}
+.metric-label{
+    opacity:.8;
+}
+.metric-symbol{
+    font-weight:600;
+    letter-spacing:.03em;
+}
+.metric-price{
+    font-size:13px;
+    font-weight:600;
+}
+.metric-change.up{ color:#00ff9a;}
+.metric-change.down{ color:#ff5c5c;}
+.sparkline{
+    margin-top:4px;
+    height:18px;
+    border-radius:10px;
+    background:linear-gradient(90deg,rgba(0,0,0,0.6),rgba(0,255,220,0.15));
+    overflow:hidden;
+}
+.sparkline-inner{
+    width:100%;
+    height:100%;
+    background:linear-gradient(90deg,#00ffbf,#00a3ff,#7c00ff);
+    clip-path:polygon(0% 60%,10% 40%,20% 55%,30% 35%,40% 50%,50% 30%,60% 42%,70% 25%,80% 38%,90% 28%,100% 35%);
+    opacity:.85;
+}
+
+/* AI status bars */
+.ai-status{
+    margin-top:10px;
+    border-radius:14px;
+    background:rgba(0,0,0,0.45);
+    border:1px solid rgba(0,255,220,0.3);
+    padding:10px 12px;
+    font-size:11px;
+}
+.ai-status-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:4px;
+}
+.ai-status-label{
+    opacity:.8;
+}
+.ai-status-value{
+    font-weight:600;
+}
+.ai-bar{
+    width:100%;
+    height:8px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.08);
+    overflow:hidden;
+    margin-bottom:6px;
+}
+.ai-bar-fill{
+    height:100%;
+    width:0;
+    background:linear-gradient(90deg,#00ffbf,#00a3ff,#7c00ff);
+}
+
+/* Bias strip */
+.bias-strip{
+    margin-top:10px;
+    padding:8px 10px;
+    border-radius:10px;
+    background:rgba(0,0,0,0.55);
+    border:1px solid rgba(0,255,220,0.35);
+    font-size:11px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.bias-left{
+    display:flex;
+    flex-direction:column;
+}
+.bias-title{
+    font-size:11px;
+    opacity:.8;
+}
+.bias-value{
+    font-size:13px;
+    font-weight:600;
+}
+.bias-pill{
+    padding:3px 8px;
+    border-radius:999px;
+    font-size:10px;
+    background:rgba(0,255,140,0.12);
+    border:1px solid rgba(0,255,140,0.6);
+}
+
+/* Mini heat row */
+.heat-row{
+    margin-top:10px;
+    display:flex;
+    gap:4px;
+}
+.heat-cell{
+    flex:1;
+    height:24px;
+    border-radius:6px;
+    font-size:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    opacity:.9;
+}
+.heat-cell.bull{
+    background:linear-gradient(90deg,rgba(0,255,180,0.25),rgba(0,140,255,0.45));
+}
+.heat-cell.neutral{
+    background:linear-gradient(90deg,rgba(255,210,120,0.25),rgba(255,150,0,0.35));
+}
+.heat-cell.bear{
+    background:linear-gradient(90deg,rgba(255,120,120,0.25),rgba(180,0,60,0.4));
+}
+
+/* RESPONSIVE */
+@media(max-width: 960px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+    .right-panel{
+        margin-top: 10px;
+    }
+}
+@media(max-width: 640px) {
+    .big-logo {
+        width: 220px;
+        top: 18px;
+    }
+    .container {
+        margin-top: 110px;
+        padding: 18px 14px 22px;
+    }
+}
+@media (max-width: 768px) {
+    .analysis-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<img src="assets/AnalyticaX.png" class="big-logo" alt="AnalyticaX Logo">
+<canvas id="particles"></canvas>
+
+<div class="container center-in-screen">
+    <div class="layout">
+        <!-- LEFT PANEL -->
+        <div class="left-panel">
+            <h2>AnalyticaX – AI Chart Analysis</h2>
+            <div class="subtitle">
+                Upload any trading chart and let the AI engine scan trend, volatility, liquidity zones and breakout probabilities.
+            </div>
+
+            <div class="top-row">
+                <div style="text-align:center; max-width: 460px;">
+                    <div class="input-area">
+                        <label>Upload Chart Image</label>
+                        <div id="dropzone" class="dropzone">
+                            <div class="dz-icon">📈</div>
+                            <div class="dz-text-main">Click or drop your chart image here</div>
+                            <div class="dz-text-sub">Candlestick / line / Heikin Ashi screenshots supported</div>
+                            <input type="file" id="chart" accept="image/*" hidden>
+                        </div>
+                    </div>
+
+                    <div class="control-card" style="margin-top: 16px; max-width: 460px;">
+                        <div class="input-area">
+                        </div>
+
+                        <button onclick="analyze()">Start Analysis</button>
+
+                        <div class="info-row" style="justify-content:center; margin-top:10px;">
+                            <div class="info-pill">No API key required</div>
+                            <div class="info-pill">Pattern, EMA, ATR & liquidity zones</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESULT -->
+            <div id="result" class="result-box"></div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <aside class="right-panel neural-panel">
+            <div class="right-inner">
+                <div class="ai-header">
+                    <div class="ai-title-block">
+                        <div class="ai-title">AnalyticaX Neural Engine</div>
+                        <div class="ai-subtitle">Live inference node for pattern & liquidity detection</div>
+                    </div>
+                    <div class="ai-badge" id="ai-badge">v1.0 • IDLE</div>
+                </div>
+
+                <div class="ai-hero">
+                    <div class="ai-robot-wrap">
+                        <div class="ai-robot-ring"></div>
+                        <div class="ai-robot">
+                            <div class="ai-robot-icon">🤖</div>
+                        </div>
+                    </div>
+                    <div class="ai-hero-text" id="ai-hero-text">
+                        AnalyticaX engine simulates order-flow & volatility profiles from your uploaded chart.
+                        <br><br>
+                        It estimates breakout probability, detects trapped liquidity and highlights key reaction zones.
+                    </div>
+                </div>
+
+                <!-- Metric Cards (Gerçek Binance fiyatları ile) -->
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <div class="metric-top">
+                            <div class="metric-label">BTCUSDT</div>
+                            <div class="metric-symbol">BTC</div>
+                        </div>
+                        <div class="metric-price" id="m-btc-price">--</div>
+                        <div class="metric-change" id="m-btc-change">--</div>
+                        <div class="sparkline"><div class="sparkline-inner"></div></div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-top">
+                            <div class="metric-label">ETHUSDT</div>
+                            <div class="metric-symbol">ETH</div>
+                        </div>
+                        <div class="metric-price" id="m-eth-price">--</div>
+                        <div class="metric-change" id="m-eth-change">--</div>
+                        <div class="sparkline"><div class="sparkline-inner"></div></div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-top">
+                            <div class="metric-label">SOLUSDT</div>
+                            <div class="metric-symbol">SOL</div>
+                        </div>
+                        <div class="metric-price" id="m-sol-price">--</div>
+                        <div class="metric-change" id="m-sol-change">--</div>
+                        <div class="sparkline"><div class="sparkline-inner"></div></div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-top">
+                            <div class="metric-label">BNBUSDT</div>
+                            <div class="metric-symbol">BNB</div>
+                        </div>
+                        <div class="metric-price" id="m-bnb-price">--</div>
+                        <div class="metric-change" id="m-bnb-change">--</div>
+                        <div class="sparkline"><div class="sparkline-inner"></div></div>
+                    </div>
+                </div>
+
+                <!-- AI Status -->
+                <div class="ai-status">
+                    <div class="ai-status-row">
+                        <span class="ai-status-label">AI Load</span>
+                        <span class="ai-status-value" id="ai-load-text">0%</span>
+                    </div>
+                    <div class="ai-bar">
+                        <div class="ai-bar-fill" id="ai-load-bar"></div>
+                    </div>
+
+                    <div class="ai-status-row">
+                        <span class="ai-status-label">Signal Clarity</span>
+                        <span class="ai-status-value" id="ai-clarity-text">0%</span>
+                    </div>
+                    <div class="ai-bar">
+                        <div class="ai-bar-fill" id="ai-clarity-bar"></div>
+                    </div>
+                </div>
+
+                <!-- Bias -->
+                <div class="bias-strip">
+                    <div class="bias-left">
+                        <span class="bias-title">Current AI bias (global)</span>
+                        <span class="bias-value" id="bias-value">Waiting for chart...</span>
+                    </div>
+                    <div class="bias-pill" id="bias-pill">
+                        Upload a chart to start
+                    </div>
+                </div>
+
+                <!-- Heat row -->
+                <div class="heat-row">
+                    <div class="heat-cell bull" id="heat-bull">Breakout Radar<br>–</div>
+                    <div class="heat-cell neutral" id="heat-neutral">Ranging / Rebalancing<br>–</div>
+                    <div class="heat-cell bear" id="heat-bear">Distribution Zones<br>–</div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<!-- AI Loading Overlay -->
+<div id="loadingOverlay">
+    <div class="loading-inner">
+        <div class="loading-title">
+            AI is analyzing your chart<span id="dots">.</span>
+        </div>
+        <div class="loading-sub">
+            Scanning trend structure, volatility clusters and liquidity zones...
+        </div>
+        <div class="loader-wrap">
+            <div class="loader"></div>
+            <div id="aiPulse"></div>
+        </div>
+        <div class="loading-text">Analyzing Market Structure</div>
+    </div>
+</div>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<script>
+
+function extractBaseSymbol(raw) {
+    if (!raw) return null;
+
+    let s = raw.toUpperCase();
+
+    s = s.replace(/[^A-Z]/g, "");
+
+    const COINS = [
+        "BTC","ETH","BNB","SOL","XRP","ADA","DOGE","DOT",
+        "LINK","AVAX","TRX","MATIC","OP","ARB"
+    ];
+
+    for (let coin of COINS) {
+        if (s.startsWith(coin)) return coin;
+    }
+
+    return null;
+}
+
+
+const COIN_THEMES = {
+    BTCUSDT: {
+        name: "Bitcoin",
+        color: "#f7931a",
+        glow: "rgba(247,147,26,0.35)",
+        icon: "₿",
+        spark: "linear-gradient(90deg,#f7931a,#ffb347,#ffd280)"
+    },
+    ETHUSDT: {
+        name: "Ethereum",
+        color: "#627eea",
+        glow: "rgba(98,126,234,0.35)",
+        icon: "◆",
+        spark: "linear-gradient(90deg,#627eea,#9bb0ff,#c6d0ff)"
+    },
+    SOLUSDT: {
+        name: "Solana",
+        color: "#14f195",
+        glow: "rgba(20,241,149,0.35)",
+        icon: "◎",
+        spark: "linear-gradient(90deg,#14f195,#00c2ff,#8b5cf6)"
+    },
+    BNBUSDT: {
+        name: "BNB",
+        color: "#f0b90b",
+        glow: "rgba(240,185,11,0.35)",
+        icon: "◇",
+        spark: "linear-gradient(90deg,#f0b90b,#ffce45,#ffe391)"
+    }
+};
+/* PARTICLES BACKGROUND */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+let particles = [];
+
+function resize(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+class Particle{
+  constructor(){
+    this.x = Math.random()*canvas.width;
+    this.y = Math.random()*canvas.height;
+    this.size = Math.random()*2+1;
+    this.speedY = Math.random()*0.6+0.2;
+    this.alpha = Math.random()*0.5+0.25;
+  }
+  update(){
+    this.y += this.speedY;
+    if(this.y > canvas.height) this.y = 0;
+  }
+  draw(){
+    ctx.fillStyle = `rgba(0,150,255,${this.alpha})`;
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fill();
+  }
+}
+
+for(let i=0;i<200;i++) particles.push(new Particle());
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{p.update();p.draw();});
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* DROPZONE LOGIC */
+const dropzone = document.getElementById("dropzone");
+const inputFile = document.getElementById("chart");
+
+dropzone.onclick = () => inputFile.click();
+
+function setUploadedPreview(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+        const base64 = reader.result;
+        dropzone.classList.add("uploaded");
+        dropzone.innerHTML = `
+            <img src="${base64}" class="preview-img">
+            <div class="dz-text-main">Image uploaded</div>
+            <div class="dz-text-sub">Ready for AI analysis</div>
+        `;
+    };
+    reader.readAsDataURL(file);
+}
+inputFile.onchange = () => {
+    if (inputFile.files.length > 0) {
+        setUploadedPreview(inputFile.files[0]);
+    }
+};
+dropzone.ondragover = e => {
+    e.preventDefault();
+    dropzone.classList.add("active");
+};
+dropzone.ondragleave = () => dropzone.classList.remove("active");
+dropzone.ondrop = e => {
+    e.preventDefault();
+    dropzone.classList.remove("active");
+    if (e.dataTransfer.files.length > 0) {
+        inputFile.files = e.dataTransfer.files;
+        setUploadedPreview(e.dataTransfer.files[0]);
+    }
+};
+
+/* INITIAL ENTRANCE ANIMATIONS + MARKET SNAPSHOT */
+window.addEventListener("load", () => {
+    const container = document.querySelector(".container");
+    gsap.from(container, {
+        opacity: 0,
+        y: 30,
+        duration: 0.7,
+        ease: "power2.out"
+    });
+
+    const rightPanel = document.querySelector(".right-panel");
+    gsap.from(rightPanel, {
+        opacity: 0,
+        x: 35,
+        duration: 0.8,
+        delay: 0.15,
+        ease: "power2.out"
+    });
+
+    // Başlangıçta boş animasyon
+    gsap.to("#ai-load-bar", { width:"10%", duration:1.4, delay:0.4, ease:"power3.out" });
+    gsap.to("#ai-clarity-bar", { width:"20%", duration:1.4, delay:0.6, ease:"power3.out" });
+
+    
+    // Gerçek market snapshot
+    fetchMarketSnapshot();
+});
+
+/* Binance'ten gerçek fiyatlar */
+async function fetchSymbol(symbol, priceId, changeId){
+  try{
+    const res = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`);
+    if(!res.ok) return;
+    const data = await res.json();
+    const priceEl = document.getElementById(priceId);
+    const changeEl = document.getElementById(changeId);
+    if(priceEl && changeEl){
+      const price = parseFloat(data.lastPrice).toFixed(2);
+      const change = parseFloat(data.priceChangePercent).toFixed(2);
+      priceEl.textContent = price;
+      changeEl.textContent = (change > 0 ? "+" : "") + change + "%";
+      changeEl.classList.remove("up","down");
+      changeEl.classList.add(change >= 0 ? "up" : "down");
+    }
+  }catch(e){
+    console.error("Binance fetch error for", symbol, e);
+  }
+}
+
+function fetchMarketSnapshot(){
+  fetchSymbol("BTCUSDT","m-btc-price","m-btc-change");
+  fetchSymbol("ETHUSDT","m-eth-price","m-eth-change");
+  fetchSymbol("SOLUSDT","m-sol-price","m-sol-change");
+  fetchSymbol("BNBUSDT","m-bnb-price","m-bnb-change");
+}
+
+function updateMetricCards(symbol) {
+    const cards = document.querySelectorAll(".metric-card");
+    symbol = symbol.toUpperCase();
+
+    cards.forEach(card => {
+        const label = card.querySelector(".metric-label").textContent.toUpperCase();
+
+        let cleanLabel = label.replace(/[^A-Z0-9]/g, "")
+                              .replace(/PERP/g, "")
+                              .replace(/FUTURES/g, "")
+                              .replace(/USDTP/g, "")
+                              .replace(/USDTF/g, "");
+
+        if (cleanLabel.endsWith("USD")) cleanLabel = cleanLabel.replace("USD", "USDT");
+
+        if (cleanLabel === symbol) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
+}
+
+function ensureTheme(sym) {
+    if (!COIN_THEMES[sym]) {
+        COIN_THEMES[sym] = {
+            name: sym,
+            color: "#00eaff",
+            glow: "rgba(0,200,255,0.35)",
+            icon: "📊",
+            spark: "linear-gradient(90deg,#00eaff,#0066ff,#7c00ff)"
+        };
+    }
+}
+
+
+function applyCoinTheme(symbol) {
+        ensureTheme(symbol); 
+    const theme = COIN_THEMES[symbol];
+    if (!theme) return;
+
+    document.querySelector(".ai-robot-icon").textContent = theme.icon;
+
+    document.querySelector(".ai-robot-ring").style.boxShadow =
+        `0 0 30px ${theme.glow}`;
+
+    const priceEl = document.querySelector(".metric-price");
+    if(priceEl) priceEl.style.color = theme.color;
+
+    const spark = document.querySelector(".sparkline-inner");
+    if (spark) spark.style.background = theme.spark;
+
+    document.querySelector(".right-panel").style.borderColor = theme.glow;
+    document.querySelector(".right-panel").style.boxShadow =
+        `0 0 35px ${theme.glow}`;
+}
+
+
+async function fetchLivePrices() {
+    const symbols = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT"];
+
+    const url = `https://api.binance.com/api/v3/ticker/24hr?symbols=${encodeURIComponent(JSON.stringify(symbols))}`;
+
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        data.forEach(ticker => {
+            const symbol = ticker.symbol;
+
+            const price = parseFloat(ticker.lastPrice);
+            const change = parseFloat(ticker.priceChangePercent);
+
+            const priceEl = document.getElementById(`m-${symbol.toLowerCase()}-price`);
+            const changeEl = document.getElementById(`m-${symbol.toLowerCase()}-change`);
+
+            if (!priceEl || !changeEl) return;
+
+            // Fiyat yazdır
+            priceEl.innerText = price.toLocaleString("en-US", { maximumFractionDigits: 4 });
+
+            // Yüzde değişimi
+            changeEl.innerText =
+                (change >= 0 ? "+" : "") + change.toFixed(2) + "%";
+
+            if (change >= 0) {
+                changeEl.classList.add("up");
+                changeEl.classList.remove("down");
+            } else {
+                changeEl.classList.add("down");
+                changeEl.classList.remove("up");
+            }
+        });
+
+    } catch (err) {
+        console.error("Price refresh error:", err);
+    }
+}
+
+setInterval(fetchLivePrices, 1000);
+
+fetchLivePrices();
+
+async function analyze() {
+    const file = inputFile.files[0];
+    if (!file) return alert("Please upload an image.");
+
+    const overlay = document.getElementById("loadingOverlay");
+    overlay.style.display = "flex";
+
+    const token = localStorage.getItem("ax_token");
+    if (!token) {
+        overlay.style.display = "none";
+        alert("Session expired. Please login again.");
+        return window.location.href = "login.html";
+    }
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+        try {
+            const base64 = reader.result;
+
+            const aiRes = await fetch("http://localhost:5000/api/analysis/chart", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token,
+                    "x-device-id": localStorage.getItem("ax_device_id"),
+                    "x-device-fingerprint": localStorage.getItem("ax_fingerprint")
+                },
+                body: JSON.stringify({ imageBase64: base64 })
+            });
+
+            const json = await aiRes.json();
+
+            if (!aiRes.ok || !json.ok) {
+                overlay.style.display = "none";
+                return alert("Frontend Error: " + (json.error || aiRes.statusText));
+            }
+
+            let rawCoin =
+                json.data?.coin   ||
+                json.data?.symbol ||
+                json.symbol       ||
+                json.pair         ||
+                "";
+
+            const base = extractBaseSymbol(rawCoin);
+
+            console.log("RAW COIN FROM AI:", rawCoin, " → BASE:", base);
+
+            if (!base) {
+                overlay.style.display = "none";
+                return alert("Symbol parse failed: " + rawCoin);
+            }
+
+            const sym = base + "USDT";     
+
+            const rawTf = json.data?.timeframe || json.timeframe || "";
+            const tf = normalizeTimeframe(rawTf);
+
+            console.log("FINAL SYMBOL:", sym, "TIMEFRAME:", tf);
+
+            const ohlcData = await fetchOHLC(sym, tf);
+
+            if (!ohlcData || !ohlcData.open || ohlcData.open.length === 0) {
+                overlay.style.display = "none";
+                return alert(`Frontend Error: Unable to fetch OHLC for ${sym}`);
+            }
+
+            updateMetricCards(sym);
+            applyCoinTheme(sym);
+
+            overlay.style.display = "none";
+
+            // Store analysis data
+            if(json.data){
+              localStorage.setItem("last_analysis_data", JSON.stringify(json.data));
+            }
+            
+            updateRightPanelFromAI(json.data, tf);
+            fillResult(json.data, file, tf);
+
+        } catch (err) {
+            overlay.style.display = "none";
+            alert("Frontend Error: " + err.message);
+        }
+    };
+
+    reader.readAsDataURL(file);
+}
+
+
+function normalizeTimeframe(rawTf) {
+    if (!rawTf) return "1h";
+
+    let tf = rawTf.toLowerCase().trim();
+
+    tf = tf.replace(/\s+/g, "")
+           .replace("hr","h")
+           .replace("hours","h")
+           .replace("hour","h")
+            .replace("d","d")
+           .replace("min","m")
+           .replace("mın","m")
+            .replace("dk","m")
+            .replace("sa","h")
+            .replace("g","d"); // TR klavye ihtimali
+
+    const ALLOWED = ["1m","5m","15m","30m","1h","4h","1d"];
+    if (!ALLOWED.includes(tf)) tf = "1h";
+
+    return tf;
+}
+
+
+function updateRightPanelFromAI(ai, timeframe){
+    const badge = document.getElementById("ai-badge");
+    const heroText = document.getElementById("ai-hero-text");
+    const loadBar = document.getElementById("ai-load-bar");
+    const clarBar = document.getElementById("ai-clarity-bar");
+    const loadText = document.getElementById("ai-load-text");
+    const clarText = document.getElementById("ai-clarity-text");
+    const biasValue = document.getElementById("bias-value");
+    const biasPill = document.getElementById("bias-pill");
+    const heatBull = document.getElementById("heat-bull");
+    const heatNeutral = document.getElementById("heat-neutral");
+    const heatBear = document.getElementById("heat-bear");
+
+    const probUp = Number(ai.probUp || 0);
+    const probDown = Number(ai.probDown || 0);
+    const bullH = Number(ai.heatmap?.bull || probUp);
+    const bearH = Number(ai.heatmap?.bear || probDown);
+    let neutralH = Number(ai.heatmap?.neutral || (100 - (bullH + bearH)));
+    if (neutralH < 0) neutralH = 0;
+
+    const risk = (ai.risk || "Medium").toLowerCase();
+
+    // Badge
+    badge.textContent = "v1.0 • ACTIVE";
+
+    // Hero text
+    heroText.textContent =
+        "Neural engine finished inference on your " + timeframe.toUpperCase() +
+        " chart. Liquidity zones, trend structure and probability map have been updated.";
+
+    // AI Load / Clarity
+    let loadVal = 30 + Math.round((bullH + bearH) / 4);
+    if(loadVal > 95) loadVal = 95;
+    let clarVal = 60 + Math.round((100 - Math.abs(probUp - probDown)) / 5);
+    if(clarVal > 95) clarVal = 95;
+
+    loadText.textContent = loadVal + "%";
+    clarText.textContent = clarVal + "%";
+
+    gsap.to(loadBar, { width: loadVal + "%", duration: 1.2, ease: "power3.out" });
+    gsap.to(clarBar, { width: clarVal + "%", duration: 1.2, ease: "power3.out" });
+
+    // Bias
+    let biasLabel = "Balanced";
+    let biasDetail = "Market shows balanced long/short scenarios";
+    if(probUp >= 70){
+        biasLabel = "Strong Bullish";
+        biasDetail = "Long scenarios strongly favoured";
+    } else if(probUp >= 55){
+        biasLabel = "Mild Bullish";
+        biasDetail = "Long setups have slight edge";
+    } else if(probUp <= 30){
+        biasLabel = "Strong Bearish";
+        biasDetail = "Short scenarios dominate";
+    } else if(probUp <= 45){
+        biasLabel = "Mild Bearish";
+        biasDetail = "Short setups have slight edge";
+    }
+
+    biasValue.textContent = biasLabel;
+    biasPill.textContent = biasDetail;
+
+    heatBull.innerHTML = `Breakout Radar<br>${bullH}% Bull Bias`;
+    heatNeutral.innerHTML = `Ranging / Rebalancing<br>${neutralH}% Neutral`;
+    heatBear.innerHTML = `Distribution Zones<br>${bearH}% Bear Pressure`;
+}
+
+async function fetchOHLC(symbol, interval) {
+
+    const url = `http://localhost:5000/api/binance/ohlc?symbol=${symbol}&interval=${interval}`;
+
+    try {
+        const res = await fetch(url);
+        const json = await res.json();
+
+        if (!json.ok) {
+            console.error("Backend OHLC Error:", json.error);
+            return null;
+        }
+
+        const data = json.data;
+
+        return {
+            open: data.map(k => parseFloat(k[1])),
+            high: data.map(k => parseFloat(k[2])),
+            low: data.map(k => parseFloat(k[3])),
+            close: data.map(k => parseFloat(k[4])),
+        };
+    } catch (err) {
+        console.error("OHLC fetch error:", err);
+        return null;
+    }
+}
+
+
+function fillResult(ai, file, timeframe) {
+    const result = document.getElementById("result");
+    result.style.display = "block";
+    document.querySelector('.container').style.maxWidth = '1580px';
+
+    const trendClass =
+        ai.trend.toLowerCase().includes("up") ? "trend-up" :
+        ai.trend.toLowerCase().includes("down") ? "trend-down" :
+        "trend-neutral";
+
+    const probUp = Number(ai.probUp || 0);
+    const probDown = Number(ai.probDown || 0);
+
+    const bullH = Number(ai.heatmap?.bull || probUp);
+    const bearH = Number(ai.heatmap?.bear || probDown);
+    let neutralH = Number(ai.heatmap?.neutral || (100 - (bullH + bearH)));
+    if(neutralH < 0) neutralH = 0;
+
+    // Risk seviyesi → bara map
+    let riskScore = 50;
+    if((ai.risk || "").toLowerCase() === "low") riskScore = 25;
+    else if((ai.risk || "").toLowerCase() === "medium") riskScore = 55;
+    else if((ai.risk || "").toLowerCase() === "high") riskScore = 80;
+
+    // Breakout text
+    let breakoutTone = "Balanced probability – market can expand to either side.";
+    if(probUp >= 70) breakoutTone = "Strong upside breakout bias – bulls are clearly in control.";
+    else if(probUp >= 55) breakoutTone = "Mild upside skew – bullish continuation slightly favoured.";
+    else if(probUp <= 30) breakoutTone = "Strong downside breakout bias – bears dominate order-flow.";
+    else if(probUp <= 45) breakoutTone = "Mild downside skew – increased risk for long positions.";
+
+    result.innerHTML = `
+    <div class="analysis-grid">
+
+                <!-- ANALYSIS ID -->
+        <div class="analysis-box full-width">
+            <div class="box-header">
+                <div class="box-icon">🪪</div>
+                <div class="box-title">Analysis ID</div>
+            </div>
+            <div class="value">${localStorage.getItem("last_query_id") || "N/A"}</div>
+            ${ai.currentPriceUSD ? `
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1);">
+              <div class="label">Current Price (USD): <span style="color:var(--neon);font-weight:600;">$${ai.currentPriceUSD.toFixed(2)}</span></div>
+              ${ai.currentPriceUSDT ? `<div class="label">Current Price (USDT): <span style="color:var(--neon);font-weight:600;">${ai.currentPriceUSDT.toFixed(2)} USDT</span></div>` : ""}
+            </div>
+            ` : ""}
+        </div>
+
+
+        <!-- CHART PREVIEW -->
+        <div class="analysis-box preview-box full-width">
+            <div class="box-header">
+                <div class="box-icon">📸</div>
+                <div class="box-title">Chart Preview (${timeframe.toUpperCase()})</div>
+            </div>
+            <img src="${URL.createObjectURL(file)}" alt="Chart Preview">
+        </div>
+
+        <!-- TREND -->
+        <div class="analysis-box ${trendClass}">
+            <div class="box-header">
+                <div class="box-icon">${ai.trend.toLowerCase().includes("up") ? "🚀" : ai.trend.toLowerCase().includes("down") ? "📉" : "➖"}</div>
+                <div class="box-title">Market Trend</div>
+            </div>
+            <div class="value">${ai.trend}</div>
+            <div class="label">Overall structure detected by AnalyticaX on this timeframe.</div>
+        </div>
+
+        <!-- ATR & VOL -->
+        <div class="analysis-box">
+            <div class="box-header">
+                <div class="box-icon">📊</div>
+                <div class="box-title">ATR & Volatility</div>
+            </div>
+            <div class="value">${ai.atr}</div>
+            <div class="label">Average True Range and volatility context derived from candle behaviour.</div>
+        </div>
+
+        <!-- EMA LEVELS -->
+        <div class="analysis-box">
+            <div class="box-header">
+                <div class="box-icon">📈</div>
+                <div class="box-title">EMA Levels</div>
+            </div>
+            <div class="value">EMA20: ${ai.ema.ema20}</div>
+            <div class="value">EMA50: ${ai.ema.ema50}</div>
+            <div class="value">EMA200: ${ai.ema.ema200}</div>
+            <div class="label">Dynamic moving averages used as trend + mean reversion reference.</div>
+        </div>
+
+        <!-- BOLLINGER -->
+        <div class="analysis-box">
+            <div class="box-header">
+                <div class="box-icon">🪐</div>
+                <div class="box-title">Bollinger Bands</div>
+            </div>
+            <div class="value">Upper: ${ai.bollinger.upper}</div>
+            <div class="value">Middle: ${ai.bollinger.middle}</div>
+            <div class="value">Lower: ${ai.bollinger.lower}</div>
+            <div class="label">Volatility envelope and potential expansion / squeeze areas.</div>
+        </div>
+
+        <!-- KEY LEVELS -->
+        <div class="analysis-box">
+            <div class="box-header">
+                <div class="box-icon">🧱</div>
+                <div class="box-title">Key Support / Resistance</div>
+            </div>
+            <div class="value">Support: ${ai.support.join(" • ")}</div>
+            <div class="value">Resistance: ${ai.resistance.join(" • ")}</div>
+            <div class="label">Liquidity zones where past reactions have been strongest.</div>
+        </div>
+
+        <!-- PATTERN -->
+        <div class="analysis-box">
+            <div class="box-header">
+                <div class="box-icon">🔍</div>
+                <div class="box-title">Detected Pattern</div>
+            </div>
+            <div class="value">${ai.pattern}</div>
+            <div class="label">Structure summary (breakout, accumulation, distribution or pullback waves).</div>
+        </div>
+
+        <!-- FORECAST -->
+        <div class="analysis-box">
+            <div class="box-header">
+                <div class="box-icon">🎯</div>
+                <div class="box-title">AI Forecast Levels</div>
+            </div>
+            <div class="value">Primary target: ${ai.forecast.primary}</div>
+            <div class="value">Secondary target: ${ai.forecast.secondary}</div>
+            <div class="value">Low probability zone: ${ai.forecast.low}</div>
+            ${ai.forecastUSD ? `
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1);">
+              <div class="label" style="font-weight:600;margin-bottom:6px;">USD Forecast:</div>
+              <div class="value" style="font-size:13px;">Primary: ${ai.forecastUSD.primary || ai.forecast.primary}</div>
+              <div class="value" style="font-size:13px;">Secondary: ${ai.forecastUSD.secondary || ai.forecast.secondary}</div>
+            </div>
+            ` : ""}
+            ${ai.forecastUSDT ? `
+            <div style="margin-top:8px;">
+              <div class="label" style="font-weight:600;margin-bottom:6px;">USDT Forecast:</div>
+              <div class="value" style="font-size:13px;">Primary: ${ai.forecastUSDT.primary || ai.forecast.primary}</div>
+              <div class="value" style="font-size:13px;">Secondary: ${ai.forecastUSDT.secondary || ai.forecast.secondary}</div>
+            </div>
+            ` : ""}
+            <div class="label" style="margin-top:12px;">Not financial advice. Purely structural probability zones based on chart context.</div>
+        </div>
+
+        <!-- AI INSIGHTS -->
+        <div class="analysis-box full-width">
+            <div class="box-header">
+                <div class="box-icon">🧠</div>
+                <div class="box-title">AI Insights</div>
+            </div>
+            <div class="ai-insight-text">${ai.aiComment}</div>
+            <div class="ai-insight-tags">
+                <div class="ai-tag">Risk: ${ai.risk}</div>
+                <div class="ai-tag">Suggested leverage: ${ai.leverage}</div>
+                <div class="ai-tag">Timeframe: ${timeframe.toUpperCase()}</div>
+            </div>
+        </div>
+
+        <!-- TRADE PANEL -->
+        <div class="analysis-box full-width">
+            <div class="box-header">
+                <div class="box-icon">📌</div>
+                <div class="box-title">Scenario Planner (Non-advice)</div>
+            </div>
+            <div class="trade-panel">
+                <div class="trade-box long">
+                    <div class="trade-title">Long Scenario</div>
+                    <div class="trade-body">${ai.longIdea}</div>
+                </div>
+                <div class="trade-box short">
+                    <div class="trade-title">Short Scenario</div>
+                    <div class="trade-body">${ai.shortIdea}</div>
+                </div>
+            </div>
+            <div class="label" style="margin-top:8px;">These are structural scenarios only, not signals or guaranteed outcomes.</div>
+        </div>
+
+        <!-- RISK + HEATMAP + HISTOGRAM -->
+        <div class="analysis-box full-width">
+            <div class="box-header">
+                <div class="box-icon">🌡️</div>
+                <div class="box-title">Risk & Sentiment Map</div>
+            </div>
+
+            <div class="risk-heat-box">
+                <!-- LEFT: RISK -->
+                <div>
+                    <div class="risk-meter-label">Overall risk perception from this setup:</div>
+                    <div class="risk-bar-container">
+                        <div class="risk-bar-fill" id="riskBarFill"></div>
+                        <div class="risk-pointer" id="riskPointer">▲</div>
+                    </div>
+                    <div class="label" style="margin-top:8px;">Model risk tag: <b>${ai.risk}</b> • Leverage suggestion: <b>${ai.leverage}</b></div>
+
+                    <div class="histogram-wrap">
+                        <div class="hist-row">
+                            <span class="hist-label">Bullish</span>
+                            <div class="hist-bar"><div class="hist-fill bull" id="histBull"></div></div>
+                            <span>${bullH}%</span>
+                        </div>
+                        <div class="hist-row">
+                            <span class="hist-label">Neutral</span>
+                            <div class="hist-bar"><div class="hist-fill neutral" id="histNeutral"></div></div>
+                            <span>${neutralH}%</span>
+                        </div>
+                        <div class="hist-row">
+                            <span class="hist-label">Bearish</span>
+                            <div class="hist-bar"><div class="hist-fill bear" id="histBear"></div></div>
+                            <span>${bearH}%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: HEATMAP BAR -->
+                <div>
+                    <div class="heatmap-bar-container">
+                        <div class="heatmap-label-row">
+                            <span>Sentiment Heatmap</span>
+                            <span>${bullH}% Bull • ${neutralH}% Neutral • ${bearH}% Bear</span>
+                        </div>
+                        <div class="heatmap-bar">
+                            <div class="heatmap-seg heatmap-bull" style="width:${bullH}%;"></div>
+                            <div class="heatmap-seg heatmap-neutral" style="width:${neutralH}%;"></div>
+                            <div class="heatmap-seg heatmap-bear" style="width:${bearH}%;"></div>
+                        </div>
+                        <div class="label" style="margin-top:8px;">Distribution of bias between continuation, range and reversal pressure.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BREAKOUT PROBABILITY SUPER BAR -->
+        <div class="analysis-box breakout-prob-box full-width">
+            <div class="breakout-title">
+                <span>Breakout Probability</span>
+            </div>
+
+            <div class="breakout-labels">
+                <span class="down-text">Down ${probDown}%</span>
+                <span class="up-text">Up ${probUp}%</span>
+            </div>
+
+            <div class="breakout-summary">${breakoutTone}</div>
+
+            <div class="breakout-bar-container">
+                <div class="breakout-fill" id="dynamicBreakoutBar"></div>
+                <div class="breakout-marker" id="marker">Neutral</div>
+            </div>
+
+            <div class="breakout-text-label" id="breakoutComment">Waiting for evaluation...</div>
+        </div>
+
+    </div>`;
+
+    // Animasyonlar
+    setTimeout(() => {
+        const bar = document.getElementById("dynamicBreakoutBar");
+        const marker = document.getElementById("marker");
+        const breakoutComment = document.getElementById("breakoutComment");
+
+        const upPercent = probUp;
+        bar.style.width = upPercent + "%";
+
+        if (upPercent >= 70) {
+            bar.style.background = "linear-gradient(90deg, #00ff9d, #00ffd4, #00a3ff)";
+            marker.textContent = "Strong Up";
+            breakoutComment.textContent = "Model sees strong upside continuation potential. Tight risk control is still critical.";
+        } else if (upPercent >= 55) {
+            bar.style.background = "linear-gradient(90deg, #a0ff80, #00ff9d, #00ffd4)";
+            marker.textContent = "Bullish Bias";
+            breakoutComment.textContent = "Mild bullish skew – pullbacks into support may offer better entries.";
+        } else if (upPercent <= 30) {
+            bar.style.background = "linear-gradient(90deg, #ff4d7d, #ff6b6b, #ff8c5e)";
+            marker.textContent = "Strong Down";
+            breakoutComment.textContent = "Downside liquidity grabs are more likely. Avoid chasing late longs.";
+        } else if (upPercent <= 45) {
+            bar.style.background = "linear-gradient(90deg, #ff8c5e, #ff6b6b, #ff4d7d)";
+            marker.textContent = "Bearish Bias";
+            breakoutComment.textContent = "Short setups have slight advantage, but volatility can still flip quickly.";
+        } else {
+            bar.style.background = "linear-gradient(90deg, #ff8c5e, #ffd060, #a0ff80)";
+            marker.textContent = "Neutral";
+            breakoutComment.textContent = "Breakout potential is balanced. Patience and confirmation help avoid chop.";
+        }
+
+        marker.style.left = "calc(" + upPercent + "% - 20px)";
+    }, 600);
+
+    // Risk bar + histogram animasyonu
+    setTimeout(() => {
+        const riskBar = document.getElementById("riskBarFill");
+        const riskPointer = document.getElementById("riskPointer");
+        riskBar.style.width = riskScore + "%";
+        riskPointer.style.left = "calc(" + riskScore + "% - 6px)";
+
+        document.getElementById("histBull").style.width = bullH + "%";
+        document.getElementById("histNeutral").style.width = neutralH + "%";
+        document.getElementById("histBear").style.width = bearH + "%";
+    }, 500);
+}
+
+async function getDeviceFingerprint(){
+    const data = [
+        navigator.userAgent,
+        navigator.language,
+        screen.width + "x" + screen.height,
+        screen.colorDepth,
+        Intl.DateTimeFormat().resolvedOptions().timeZone
+    ].join("|");
+
+    return btoa(data).substring(0,32);
+}
+
+async function storeFingerprint(){
+    let deviceId = localStorage.getItem("ax_device_id");
+    let fingerprint = localStorage.getItem("ax_fingerprint");
+
+    if (!deviceId || !fingerprint) {
+        deviceId = crypto.randomUUID();
+        fingerprint = await getDeviceFingerprint();
+
+        localStorage.setItem("ax_device_id", deviceId);
+        localStorage.setItem("ax_fingerprint", fingerprint);
+    }
+}
+
+async function initAnalyzePage(){
+    await storeFingerprint();
+}
+
+initAnalyzePage();
+
+</script>
+
+</body>
+</html>

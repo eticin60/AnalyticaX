@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AnalyticaX — Premium Plans</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --neon:#00E5FF;
+      --magenta:#FF4DFF;
+      --accent-green:#14F195;
+      --accent-yellow:#FCE96A;
+      --bg:#020617;
+      --panel:#0b1020;
+      --text-soft:#A0AEC0;
+      --border-soft:rgba(148,163,184,.35);
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:"Poppins",sans-serif;
+      background:radial-gradient(circle at top,#061525 0,var(--bg) 45%,#000 100%);
+      color:#fff;
+      min-height:100vh;
+      overflow-x:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* BACKGROUND */
+    canvas#bgParticles{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+    }
+    .bg-grid{
+      position:fixed;
+      inset:0;
+      background-image:
+        linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),
+        linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+      background-size:50px 50px;
+      opacity:.22;
+      pointer-events:none;
+      z-index:-2;
+    }
+    .bg-glow{
+      position:fixed;
+      width:480px;
+      height:480px;
+      border-radius:50%;
+      filter:blur(120px);
+      opacity:.75;
+      mix-blend-mode:screen;
+      pointer-events:none;
+      z-index:-1;
+      animation:glowFloat 18s ease-in-out infinite alternate;
+    }
+    .bg-glow.cyan{
+      background:radial-gradient(circle,rgba(0,229,255,.9),transparent 60%);
+      top:-90px;
+      left:-60px;
+    }
+    .bg-glow.magenta{
+      background:radial-gradient(circle,rgba(255,77,255,.9),transparent 60%);
+      bottom:-130px;
+      right:-80px;
+      animation-delay:6s;
+    }
+    @keyframes glowFloat{
+      0%{transform:translate(0,0);}
+      100%{transform:translate(40px,-35px);}
+    }
+
+    /* NAVBAR */
+    .navbar{
+      position:fixed;
+      top:0;left:0;
+      width:100%;
+      padding:10px 6%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      backdrop-filter:blur(14px);
+      background:linear-gradient(to bottom,rgba(3,7,18,.92),rgba(3,7,18,.35));
+      border-bottom:1px solid rgba(148,163,184,.3);
+      z-index:50;
+    }
+    .nav-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .logo-img{
+      width:46px;
+      height:46px;
+      border-radius:16px;
+      object-fit:contain;
+      padding:4px;
+      background:radial-gradient(circle,rgba(0,229,255,.18),transparent 70%);
+      box-shadow:0 0 20px rgba(0,229,255,.6);
+    }
+    .logo-main{
+      font-size:18px;
+      font-weight:600;
+      letter-spacing:.08em;
+    }
+    .logo-main span{color:var(--neon);}
+    .logo-sub{
+      font-size:11px;
+      color:var(--text-soft);
+    }
+    .nav-links{
+      display:flex;
+      gap:18px;
+      font-size:13px;
+      color:var(--text-soft);
+    }
+    .nav-links a{
+      position:relative;
+      padding-bottom:3px;
+      color:inherit;
+      text-decoration:none;
+    }
+    .nav-links a::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:0;
+      width:0;
+      height:2px;
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      transition:width .25s ease;
+    }
+    .nav-links a:hover::after{width:100%;}
+    .nav-links a.active{
+      color:#e5e7eb;
+      font-weight:500;
+    }
+    .nav-links a.active::after{width:100%;}
+
+    .nav-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      font-size:12px;
+    }
+    .nav-credits{
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.8);
+      color:var(--neon);
+      font-size:11px;
+    }
+    .user-pill{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:4px 9px 4px 5px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.9);
+      font-size:11px;
+    }
+    .user-avatar{
+      width:22px;
+      height:22px;
+      border-radius:999px;
+      background:radial-gradient(circle at 30% 0%,#fff,#95f0ff 40%,#1f2937 65%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#020617;
+      font-size:11px;
+      font-weight:600;
+    }
+    .btn-outline{
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      padding:6px 14px;
+      background:rgba(15,23,42,.7);
+      color:#e5e7eb;
+      cursor:pointer;
+      font-size:11px;
+    }
+    .btn-ghost{
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      padding:7px 14px;
+      background:rgba(15,23,42,.8);
+      color:var(--text-soft);
+      cursor:pointer;
+      font-size:11px;
+    }
+
+    @media(max-width:960px){
+      .navbar{padding-inline:4%;}
+      .nav-links{display:none;}
+    }
+
+    /* MAIN AREA */
+    main{
+      padding-top:110px;
+      padding-bottom:40px;
+      width:90%;
+      max-width:1250px;
+      margin:auto;
+    }
+
+    .page-title{
+      font-size:26px;
+      font-weight:600;
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:4px;
+    }
+    .page-sub{
+      font-size:13px;
+      color:var(--text-soft);
+      margin-bottom:28px;
+    }
+
+    /* PLAN GRID */
+    .plan-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:18px;
+    }
+
+    .plan-card{
+      position:relative;
+      border-radius:22px;
+      background:rgba(15,23,42,.96);
+      border:1px solid rgba(148,163,184,.35);
+      padding:18px 20px;
+      overflow:hidden;
+      box-shadow:0 18px 40px rgba(15,23,42,.9);
+      transition:.25s;
+    }
+    .plan-card:hover{
+      transform:translateY(-4px);
+      box-shadow:0 25px 55px rgba(15,23,42,.95);
+    }
+    .plan-card::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:
+        radial-gradient(circle at 0 0,rgba(0,229,255,.22),transparent 55%),
+        radial-gradient(circle at 100% 100%,rgba(255,77,255,.22),transparent 55%);
+      opacity:.35;
+      pointer-events:none;
+      mix-blend-mode:soft-light;
+    }
+    .plan-title{
+      font-size:16px;
+      font-weight:600;
+      margin-bottom:4px;
+    }
+    .plan-price{
+      font-size:30px;
+      font-weight:700;
+      margin-bottom:2px;
+      background:linear-gradient(90deg,var(--accent-yellow),var(--accent-green));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+    .plan-credit{
+      font-size:12px;
+      color:var(--text-soft);
+      margin-bottom:12px;
+    }
+    .btn-buy{
+      border:none;
+      border-radius:999px;
+      padding:8px 16px;
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      color:#020617;
+      font-weight:600;
+      cursor:pointer;
+      width:100%;
+      margin-top:10px;
+      box-shadow:0 0 20px rgba(0,229,255,.5);
+      transition:.3s;
+    }
+    .btn-buy:hover{
+      transform:scale(1.04);
+      box-shadow:0 0 30px rgba(0,229,255,.8);
+    }
+
+    /* PAYMENT OVERLAY */
+    #paymentModal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.75);
+      backdrop-filter:blur(6px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:5000;
+    }
+    .modal-box{
+      width:95%;
+      max-width:620px;
+      background:rgba(15,23,42,.96);
+      border-radius:22px;
+      border:1px solid rgba(148,163,184,.4);
+      padding:24px;
+      box-shadow:0 0 40px rgba(0,0,0,.6);
+      animation:fadeIn .4s ease;
+    }
+    @keyframes fadeIn{
+      from{opacity:0;transform:scale(.85);}
+      to{opacity:1;transform:scale(1);}
+    }
+
+    .pm-header{
+      font-size:18px;
+      font-weight:600;
+      margin-bottom:6px;
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+    .pm-sub{
+      font-size:12px;
+      color:var(--text-soft);
+      margin-bottom:18px;
+    }
+
+    .pay-methods{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:10px;
+    }
+    .pay-item{
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,.35);
+      background:rgba(15,23,42,.7);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .pay-item:hover{
+      background:rgba(15,23,42,.9);
+      border-color:var(--neon);
+    }
+    .pay-title{
+      font-size:13px;
+      font-weight:500;
+    }
+    .pay-subtitle{
+      font-size:11px;
+      color:var(--text-soft);
+    }
+    .status-pill{
+      font-size:9px;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.5);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+    .status-live{
+      border-color:#22c55e;
+      background:rgba(22,163,74,.18);
+      color:#bbf7d0;
+    }
+    .status-new{
+      border-color:#38bdf8;
+      background:rgba(56,189,248,.16);
+      color:#e0f2fe;
+    }
+    .status-closed{
+      border-color:#f97373;
+      background:rgba(220,38,38,.18);
+      color:#fee2e2;
+    }
+
+    .close-btn{
+      margin-top:22px;
+      width:100%;
+      border:none;
+      padding:10px;
+      border-radius:12px;
+      cursor:pointer;
+      background:#333;
+      color:#fff;
+      font-size:13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- BACKGROUND -->
+  <canvas id="bgParticles"></canvas>
+  <div class="bg-grid"></div>
+  <div class="bg-glow cyan"></div>
+  <div class="bg-glow magenta"></div>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-left">
+      <img src="assets/AnalyticaX.png" alt="AnalyticaX Logo" class="logo-img">
+      <div>
+        <div class="logo-main">Analytica<span>X</span></div>
+        <div class="logo-sub">AI Powered Crypto Chart Analysis</div>
+      </div>
+    </div>
+
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="analyze.html">Analyze</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="premium.html" class="active">Premium</a>
+      <a href="history.html">History</a>
+      <a href="settings.html">Settings</a>
+      <a href="index.html">Home</a>
+      <a href="analyze.html">Analyze</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="premium.html" class="active">Premium</a>
+      <a href="verify-payment-real.html">Verify payment</a>
+    </nav>
+
+    <div class="nav-actions">
+      <div class="nav-credits" id="navCredits">Credits: --</div>
+      <div class="user-pill">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div>
+          <div id="userEmail">user@demo.com</div>
+          <div id="userPlan" style="font-size:10px;color:var(--text-soft);">Plan: Free</div>
+        </div>
+        <button class="btn-ghost" onclick="window.location.href='settings.html'">
+          Settings
+        </button>
+      </div>
+      <button class="btn-outline" id="btnLogout">Logout</button>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main>
+    <h1 class="page-title">Premium Credit Packages</h1>
+    <p class="page-sub">
+      Buy credits using <b>USDT / USDC / BTC</b> on multi-chain networks or via secure payment providers.
+    </p>
+
+    <div class="plan-grid">
+      <!-- JS dolduracak -->
+    </div>
+  </main>
+
+  <!-- PAYMENT MODAL -->
+  <div id="paymentModal">
+    <div class="modal-box">
+      <div class="pm-header">Complete Payment</div>
+      <div class="pm-sub">Choose your preferred network or provider, then follow the instructions.</div>
+
+      <div id="selectedPlanInfo" style="margin-bottom:15px;color:#ccc;font-size:13px;"></div>
+
+      <div class="pay-methods">
+        <!-- JS tarafı değil, direkt HTML ile -->
+        <div class="pay-item" onclick="startPayment('TRC20-USDT')">
+          <div>
+            <div class="pay-title">TRC20 (TRON)</div>
+            <div class="pay-subtitle">USDT • Fast & low fee</div>
+          </div>
+          <span class="status-pill status-live">LIVE</span>
+        </div>
+
+        <div class="pay-item" onclick="startPayment('ERC20-USDT')">
+          <div>
+            <div class="pay-title">ERC20 (Ethereum)</div>
+            <div class="pay-subtitle">USDT • High security</div>
+          </div>
+          <span class="status-pill status-live">LIVE</span>
+        </div>
+
+        <div class="pay-item" onclick="startPayment('BEP20-USDT')">
+          <div>
+            <div class="pay-title">BEP20 (BSC)</div>
+            <div class="pay-subtitle">USDT • Low gas on BSC</div>
+          </div>
+          <span class="status-pill status-live">LIVE</span>
+        </div>
+
+        <div class="pay-item" onclick="startPayment('USDC-ERC20')">
+          <div>
+            <div class="pay-title">USDC (BEP20-ERC20)</div>
+            <div class="pay-subtitle">Same address for both</div>
+          </div>
+          <span class="status-pill status-new">NEW</span>
+        </div>
+
+        <div class="pay-item" onclick="startPayment('BTC')">
+          <div>
+            <div class="pay-title">BTC (Bitcoin)</div>
+            <div class="pay-subtitle">Native Bitcoin network</div>
+          </div>
+          <span class="status-pill status-new">NEW</span>
+        </div>
+
+        <div class="pay-item" onclick="startPayment('OXAPAY')">
+          <div>
+            <div class="pay-title">Oxapay Gateway</div>
+            <div class="pay-subtitle">Multi-coin crypto gateway</div>
+          </div>
+          <span class="status-pill status-live">LIVE</span>
+        </div>
+
+        <div class="pay-item" onclick="startPayment('SHOPIER')">
+          <div>
+            <div class="pay-title">Shopier (Secure Payment)</div>
+            <div class="pay-subtitle">Credit / debit card via Shopier</div>
+          </div>
+          <span class="status-pill status-new">NEW</span>
+        </div>
+
+        <div class="pay-item" onclick="startPayment('BINANCE-PAY')">
+          <div>
+            <div class="pay-title">Binance Pay</div>
+            <div class="pay-subtitle">Pay directly from Binance</div>
+          </div>
+          <span class="status-pill status-closed">CLOSED</span>
+        </div>
+      </div>
+
+      <button class="close-btn" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+
+<script>
+/* ====================================================
+   PARTICLES BACKGROUND
+==================================================== */
+const canvas = document.getElementById("bgParticles");
+const ctx = canvas.getContext("2d");
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
+resize();onresize=resize;
+let particles=[];
+for(let i=0;i<80;i++){
+  particles.push({
+    x:Math.random()*innerWidth,
+    y:Math.random()*innerHeight,
+    r:Math.random()*2+0.5,
+    vx:(Math.random()-0.5)*0.2,
+    vy:(Math.random()-0.5)*0.2,
+    a:Math.random()*0.5+0.2
+  });
+}
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0)p.x=canvas.width;
+    if(p.x>canvas.width)p.x=0;
+    if(p.y<0)p.y=canvas.height;
+    if(p.y>canvas.height)p.y=0;
+
+    const grad = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*6);
+    grad.addColorStop(0,`rgba(0,229,255,${p.a})`);
+    grad.addColorStop(1,"transparent");
+    ctx.fillStyle=grad;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r*5,0,Math.PI*2);ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* ====================================================
+   DEVICE FINGERPRINT
+==================================================== */
+async function getDeviceFingerprint() {
+  const data = [
+    navigator.userAgent,
+    navigator.language,
+    screen.width + "x" + screen.height,
+    screen.colorDepth,
+    Intl.DateTimeFormat().resolvedOptions().timeZone
+  ].join(" | ");
+
+  return btoa(data).substring(0,32);
+}
+async function storeFingerprint() {
+  let deviceId = localStorage.getItem("ax_device_id");
+  let fingerprint = localStorage.getItem("ax_fingerprint");
+
+  if (deviceId && fingerprint) return;
+
+  deviceId = crypto.randomUUID();
+  fingerprint = await getDeviceFingerprint();
+
+  localStorage.setItem("ax_device_id", deviceId);
+  localStorage.setItem("ax_fingerprint", fingerprint);
+}
+
+/* ====================================================
+   AUTH + LOAD USER
+==================================================== */
+const API = "http://localhost:5000";
+const token = localStorage.getItem("ax_token");
+if (!token) window.location.href = "login.html";
+
+document.getElementById("btnLogout").onclick = function(){
+  localStorage.removeItem("ax_token");
+  window.location.href = "login.html";
+};
+
+async function loadMe(){
+  const res = await fetch(API + "/api/auth/me", {
+    headers: {
+      "Authorization": "Bearer " + token,
+      "x-device-id": localStorage.getItem("ax_device_id"),
+      "x-device-fingerprint": localStorage.getItem("ax_fingerprint")
+    }
+  });
+
+  const d = await res.json();
+  console.log("ME DATA:", d);
+
+  if (!d.ok) {
+    localStorage.removeItem("ax_token");
+    return (window.location.href = "login.html");
+  }
+
+  document.getElementById("userEmail").textContent = d.email;
+  document.getElementById("userAvatar").textContent = d.email[0].toUpperCase();
+  document.getElementById("navCredits").textContent = "Credits: " + (d.credits || 0);
+
+  const planTag = document.getElementById("userPlan");
+  if (planTag) {
+    planTag.textContent = "Plan: " + (d.plan || "Free");
+  }
+}
+
+/* ====================================================
+   PREMIUM PACKAGE LIST (15 PACKAGES)
+==================================================== */
+const plans = [
+  {name:"Basic Startup", price:19, credits:15},
+  {name:"Basic Plus", price:29, credits:25},
+  {name:"Starter Pro", price:49, credits:40},
+  {name:"Trader Pack", price:79, credits:65},
+  {name:"Trader Max", price:99, credits:80},
+  {name:"Pro Entry", price:129, credits:110},
+  {name:"Pro Max", price:149, credits:130},
+  {name:"Ultra Lite", price:199, credits:160},
+  {name:"Ultra Trader", price:249, credits:200},
+  {name:"Elite Entry", price:299, credits:240},
+  {name:"Elite Max", price:399, credits:330},
+  {name:"Elite Infinity", price:499, credits:420},
+  {name:"VIP Tier 1", price:749, credits:650},
+  {name:"VIP Tier 2", price:999, credits:900},
+  {name:"GODMODE PACK", price:1499, credits:1500},
+];
+
+const grid = document.querySelector(".plan-grid");
+plans.forEach((p,i)=>{
+  grid.innerHTML += `
+    <div class="plan-card">
+      <div class="plan-title">${p.name}</div>
+      <div class="plan-price">$${p.price}</div>
+      <div class="plan-credit">${p.credits} Credits</div>
+      <button class="btn-buy" onclick="openPayment(${i})">Buy Now</button>
+    </div>
+  `;
+});
+
+/* ====================================================
+   PAYMENT SYSTEM
+==================================================== */
+let selectedPlan = null;
+
+const PAYMENT_ADDRESSES = {
+  "TRC20-USDT": "TQDwWFmC2fMCDzLmrndc2bsiB7vK78DE33",
+  "BEP20-USDT": "0xb5f5090D4f032059844c464C7A273D29063311c1",
+  "ERC20-USDT": "0xb5f5090D4f032059844c464C7A273D29063311c1",
+  "USDC-ERC20": "0xb5f5090D4f032059844c464C7A273D29063311c1",
+  "BTC": "bc1qwwqwkkw7aqvg5j58peskg0hw4xuyeeucahg7gl"
+};
+
+const PAYMENT_CURRENCY = {
+  "TRC20-USDT": "USDT",
+  "BEP20-USDT": "USDT",
+  "ERC20-USDT": "USDT",
+  "USDC-ERC20": "USDC",
+  "BTC": "BTC"
+};
+
+const PAYMENT_NETWORK = {
+  "TRC20-USDT": "TRC20 (TRON)",
+  "BEP20-USDT": "BEP20 (BSC)",
+  "ERC20-USDT": "ERC20 (Ethereum)",
+  "USDC-ERC20": "ERC20 / BEP20",
+  "BTC": "Bitcoin"
+};
+
+const OXAPAY_URL = "https://pay.oxapay.com/13369911";
+// Binance Pay ve Shopier için kendi linklerini daha sonra buraya koyarsın.
+
+function openPayment(id){
+  selectedPlan = plans[id];
+  document.getElementById("selectedPlanInfo").innerHTML =
+    `<b>${selectedPlan.name}</b> — $${selectedPlan.price} — ${selectedPlan.credits} credits`;
+  document.getElementById("paymentModal").style.display = "flex";
+}
+
+function closeModal(){
+  document.getElementById("paymentModal").style.display = "none";
+}
+
+async function startPayment(method) {
+  if (!selectedPlan) {
+    return alert("Please select a plan first.");
+  }
+
+  // Özel gateway davranışları - OxaPay için özel sayfaya yönlendir
+  if (method === "OXAPAY") {
+    localStorage.setItem("selectedPlanName", selectedPlan.name);
+    localStorage.setItem("selectedPlanPrice", selectedPlan.price);
+    localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
+    window.location.href = `payment-oxapay.html?plan=${encodeURIComponent(selectedPlan.name)}&price=${selectedPlan.price}&credits=${selectedPlan.credits}`;
+    return;
+  } else if (method === "BINANCE-PAY") {
+    alert("Binance Pay integration coming soon.");
+    return;
+  } else if (method === "SHOPIER") {
+    alert("Shopier integration coming soon.");
+    return;
+  }
+
+  const addr = PAYMENT_ADDRESSES[method];
+  if (!addr) {
+    alert("Payment method not configured.");
+    return;
+  }
+
+  const currency = PAYMENT_CURRENCY[method] || "USDT";
+  const network = PAYMENT_NETWORK[method] || method;
+
+  // Store plan info for payment page
+  localStorage.setItem("selectedPlanName", selectedPlan.name);
+  localStorage.setItem("selectedPlanPrice", selectedPlan.price);
+  localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
+  localStorage.setItem("selectedPaymentMethod", method);
+
+  // Redirect to payment page
+  // Store plan info
+  localStorage.setItem("selectedPlanName", selectedPlan.name);
+  localStorage.setItem("selectedPlanPrice", selectedPlan.price);
+  localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
+  window.location.href = `payment-oxapay.html?plan=${encodeURIComponent(selectedPlan.name)}&price=${selectedPlan.price}&credits=${selectedPlan.credits}&method=${method}`;
+}
+
+/* ====================================================
+   INIT
+==================================================== */
+async function initPremiumPage() {
+  await storeFingerprint();
+  await loadMe();
+}
+initPremiumPage();
+
+</script>
+
+</body>
+</html>

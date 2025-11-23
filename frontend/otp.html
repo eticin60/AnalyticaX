@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>AnalyticaX — OTP Verification</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+:root{
+  --neon:#00E5FF;
+  --magenta:#FF4DFF;
+  --accent-green:#14F195;
+  --bg:#020617;
+  --panel:#0b1020;
+  --panel-soft:#111827;
+  --text-soft:#A0AEC0;
+  --border-soft:rgba(148,163,184,.35);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:"Poppins",sans-serif;
+  background:radial-gradient(circle at top,#061525 0,var(--bg) 45%,#000 100%);
+  color:#fff;
+  overflow:hidden;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* BACKGROUND */
+canvas#bgParticles{
+  position:fixed;
+  inset:0;
+  z-index:-3;
+}
+.bg-grid{
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:50px 50px;
+  opacity:.22;
+  pointer-events:none;
+  z-index:-2;
+}
+.bg-glow{
+  position:fixed;
+  width:480px;
+  height:480px;
+  border-radius:50%;
+  filter:blur(120px);
+  opacity:.75;
+  mix-blend-mode:screen;
+  pointer-events:none;
+  z-index:-1;
+  animation:glowFloat 18s ease-in-out infinite alternate;
+}
+.bg-glow.cyan{
+  background:radial-gradient(circle,rgba(0,229,255,.9),transparent 60%);
+  top:-90px; left:-60px;
+}
+.bg-glow.magenta{
+  background:radial-gradient(circle,rgba(255,77,255,.9),transparent 60%);
+  bottom:-130px; right:-80px;
+  animation-delay:6s;
+}
+@keyframes glowFloat{
+  0%{transform:translate(0,0);}
+  100%{transform:translate(40px,-35px);}
+}
+
+/* OTP CARD */
+.otp-card{
+  width:350px;
+  padding:30px 26px;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at top left,rgba(0,229,255,.14),transparent 60%),
+    rgba(15,23,42,.96);
+  border:1px solid rgba(148,163,184,.5);
+  box-shadow:0 22px 50px rgba(15,23,42,.95);
+  text-align:center;
+}
+.otp-title{
+  font-size:22px;
+  font-weight:600;
+  margin-bottom:8px;
+}
+.otp-sub{
+  font-size:12px;
+  color:var(--text-soft);
+  margin-bottom:18px;
+}
+input{
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  border-radius:12px;
+  border:1px solid rgba(148,163,184,.4);
+  background:rgba(15,23,42,.82);
+  color:#fff;
+  font-size:18px;
+  text-align:center;
+  outline:none;
+  letter-spacing:4px;
+}
+button{
+  width:100%;
+  padding:12px;
+  margin-top:20px;
+  border-radius:999px;
+  border:none;
+  background:linear-gradient(90deg,var(--neon),var(--magenta));
+  color:#020617;
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+  box-shadow:0 0 25px rgba(0,229,255,.6);
+}
+
+.resend{
+  margin-top:12px;
+  font-size:11px;
+  color:var(--text-soft);
+  cursor:pointer;
+  text-decoration:underline;
+}
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUNDS -->
+<canvas id="bgParticles"></canvas>
+<div class="bg-grid"></div>
+<div class="bg-glow cyan"></div>
+<div class="bg-glow magenta"></div>
+
+<!-- OTP CARD -->
+<div class="otp-card">
+  <div class="otp-title">OTP Verification</div>
+  <div class="otp-sub">We sent a 6-digit security code. Enter below to continue.</div>
+
+  <input id="otp" maxlength="6" placeholder="••••••" />
+
+  <button onclick="verifyOtp()">Verify Code</button>
+  <div class="resend" onclick="alert('OTP zaten console.log ile backendde görünüyor');">
+    Didn't receive code?
+  </div>
+</div>
+
+<script>
+/* OTP VERIFY */
+async function verifyOtp() {
+    let otp = document.getElementById("otp").value;
+    let email = localStorage.getItem("pending_email");
+
+    let res = await fetch("http://localhost:5000/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp })
+    });
+
+    let data = await res.json();
+
+    if (!data.ok) {
+        alert(data.message);
+        return;
+    }
+
+    localStorage.setItem("ax_token", data.token);
+    window.location.href = "dashboard.html";
+}
+
+/* PARTICLE BACKGROUND (same as dashboard) */
+const canvas = document.getElementById("bgParticles");
+const ctx = canvas.getContext("2d");
+let particles = [];
+const COUNT = 80;
+function resize(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.onresize = resize;
+
+function initParticles(){
+  particles=[];
+  for(let i=0;i<COUNT;i++){
+    particles.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      r:Math.random()*2+0.5,
+      vx:(Math.random()-0.5)*0.2,
+      vy:(Math.random()-0.5)*0.2,
+      a:Math.random()*0.6+0.2
+    });
+  }
+}
+initParticles();
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(const p of particles){
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0)p.x=canvas.width;
+    if(p.x>canvas.width)p.x=0;
+    if(p.y<0)p.y=canvas.height;
+    if(p.y>canvas.height)p.y=0;
+
+    const g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*6);
+    g.addColorStop(0,`rgba(0,229,255,${p.a})`);
+    g.addColorStop(0.4,`rgba(255,77,255,${p.a*0.7})`);
+    g.addColorStop(1,"rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r*6,0,Math.PI*2);
+    ctx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+</body>
+</html>

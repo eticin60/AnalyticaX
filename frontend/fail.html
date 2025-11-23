@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Failed | AnalyticaX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --red:#FF4D6B;
+  --bg:#020617;
+  --text-soft:#98A0B3;
+}
+
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:Poppins, sans-serif;
+  background:radial-gradient(circle at top,#071526 0,var(--bg) 45%,#000 100%);
+  overflow:hidden;
+  color:#fff;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+/* BACKGROUND */
+canvas#p{
+  position:fixed;
+  inset:0;
+  z-index:-3;
+}
+.bg-grid{
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:50px 50px;
+  opacity:.22;
+  z-index:-2;
+}
+
+.bg-glow{
+  position:fixed;
+  width:520px;
+  height:520px;
+  border-radius:50%;
+  filter:blur(150px);
+  opacity:.7;
+  mix-blend-mode:screen;
+  z-index:-1;
+}
+.bg-glow.c1{background:rgba(255,77,107,.9);top:-140px;left:-120px;}
+.bg-glow.c2{background:rgba(255,77,255,.7);bottom:-140px;right:-120px;}
+
+/* MAIN */
+.box{z-index:5;max-width:650px;padding:20px;}
+.logo{width:110px;margin-bottom:12px;}
+
+.icon{
+  font-size:110px;
+  color:var(--red);
+  text-shadow:0 0 25px rgba(255,77,107,.7);
+  margin-bottom:10px;
+}
+
+.title{font-size:30px;font-weight:600;margin-bottom:8px;}
+.desc{font-size:14px;color:var(--text-soft);margin-bottom:26px;}
+
+.btn{
+  padding:12px 28px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#FF4D6B,#FF4DFF);
+  color:#020617;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+  transition:.25s;
+  box-shadow:0 0 20px rgba(255,77,107,.6);
+}
+.btn:hover{
+  transform:scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND -->
+<canvas id="p"></canvas>
+<div class="bg-grid"></div>
+<div class="bg-glow c1"></div>
+<div class="bg-glow c2"></div>
+
+<!-- CONTENT -->
+<div class="box">
+  <img src="assets/AnalyticaX.png" class="logo">
+  <div class="icon">✕</div>
+  <div class="title">Payment Failed</div>
+  <div class="desc">We could not verify your payment. Please try again.</div>
+
+  <button class="btn" onclick="window.location.href='premium.html'">Try Again</button>
+</div>
+
+<script>
+/* PARTICLES - RED */
+const c=document.getElementById("p");
+const x=c.getContext("2d");
+let parts=[];
+function resize(){
+  c.width=innerWidth;
+  c.height=innerHeight;
+}
+resize();
+onresize=resize;
+
+for(let i=0;i<70;i++){
+  parts.push({
+    x:Math.random()*innerWidth,
+    y:Math.random()*innerHeight,
+    r:Math.random()*2+1,
+    vx:(Math.random()-.5)*.4,
+    vy:(Math.random()-.5)*.4
+  });
+}
+
+function draw(){
+  x.clearRect(0,0,c.width,c.height);
+  parts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=c.width;
+    if(p.x>c.width)p.x=0;
+    if(p.y<0)p.y=c.height;
+    if(p.y>c.height)p.y=0;
+
+    x.fillStyle="rgba(255,77,107,0.45)";
+    x.beginPath();
+    x.arc(p.x,p.y,p.r,0,7);
+    x.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+</body>
+</html>

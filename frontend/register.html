@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AnalyticaX – Register</title>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        height: 100vh;
+        overflow: hidden;
+        background: radial-gradient(circle at top, #1b1f3a, #000014);
+        position: relative;
+        color: #fff;
+    }
+
+    .big-logo {
+        width: 320px;
+        position: absolute;
+        top: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 20;
+        animation: fadeLogo 1.3s ease;
+    }
+
+    #particles {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 0 !important;
+        pointer-events: none;
+    }
+
+    .login-card {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 380px;
+        padding: 35px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 40px rgba(0, 150, 255, 0.2);
+        z-index: 3;
+        animation: fadeIn 1.2s ease;
+    }
+
+    .login-card h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    .login-card input {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 10px;
+        outline: none;
+        border: none;
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+        font-size: 15px;
+    }
+
+    .login-card button {
+        width: 100%;
+        margin-top: 15px;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #4c00ff, #009dff);
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+        font-weight: 500;
+    }
+
+    .login-card button:hover {
+        box-shadow: 0 0 20px #009dff;
+        transform: scale(1.03);
+    }
+
+    .register-link {
+        margin-top: 15px;
+        text-align: center;
+        font-size: 14px;
+        opacity: 0.8;
+    }
+
+    .register-link a {
+        color: #00c3ff;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .neon-glow {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        pointer-events: none;
+        background: linear-gradient(45deg, transparent, rgba(0,140,255,0.4), transparent);
+        animation: neonMove 6s infinite linear;
+    }
+
+    @keyframes neonMove {
+        0% { transform: translateX(-100%); opacity: 0; }
+        50% { opacity: 1; }
+        100% { transform: translateX(100%); opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translate(-50%, -45%); }
+        to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+</style>
+</head>
+
+<body>
+
+<img src="assets/AnalyticaX.png" class="big-logo">
+
+<canvas id="particles"></canvas>
+
+<div class="neon-glow"></div>
+
+<div class="login-card">
+    <h2>Create Account</h2>
+
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+
+    <button onclick="registerUser()">Register</button>
+
+    <div class="register-link">
+        Already have an account? <a href="login.html">Login</a>
+    </div>
+</div>
+
+
+<script>
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+let particles = [];
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resize();
+window.onresize = resize;
+
+class Particle {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1;
+        this.speedY = Math.random() * 0.5 + 0.2;
+        this.alpha = Math.random() * 0.5 + 0.3;
+    }
+    update() {
+        this.y += this.speedY;
+        if (this.y > canvas.height) this.y = 0;
+    }
+    draw() {
+        ctx.fillStyle = `rgba(0,150,255,${this.alpha})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+for (let i = 0; i < 130; i++) particles.push(new Particle());
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+}
+animate();
+
+
+async function registerUser() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    try {
+        let res = await fetch("http://localhost:5000/api/auth/register", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ email, password })
+        });
+
+        let data = await res.json();
+        console.log("REGISTER RESPONSE:", data);
+
+        if (!res.ok || !data.ok) {
+            alert(data.message || "Registration failed.");
+            return;
+        }
+
+        localStorage.setItem("ax_token", data.token);
+
+        window.location.href = "dashboard.html";
+
+    } catch (err) {
+        alert("Connection error");
+    }
+}
+</script>
+</body>
+</html>

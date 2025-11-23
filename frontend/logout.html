@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Logging Out — AnalyticaX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --neon:#00E5FF;
+  --magenta:#FF4DFF;
+  --bg:#020617;
+  --text-soft:#9aa2b8;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:Poppins,sans-serif;
+  background:radial-gradient(circle at top,#081524 0,var(--bg) 45%,#000 100%);
+  color:#fff;height:100vh;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* BACKGROUND */
+canvas#fx{position:fixed;inset:0;z-index:-3;}
+.bg-glow{
+  position:fixed;width:480px;height:480px;border-radius:50%;
+  filter:blur(150px);opacity:.75;mix-blend-mode:screen;z-index:-1;
+  animation:float 18s ease-in-out infinite alternate;
+}
+.bg-glow.c1{background:rgba(0,229,255,.85);top:-140px;left:-140px;}
+.bg-glow.c2{background:rgba(255,77,255,.85);bottom:-140px;right:-140px;animation-delay:7s;}
+@keyframes float{0%{transform:translate(0,0);}100%{transform:translate(40px,-40px);}}
+
+/* CARD */
+.box{
+  text-align:center;max-width:440px;padding:40px 30px;
+  background:rgba(15,20,40,.8);
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(14px);
+  box-shadow:0 0 40px rgba(0,229,255,.25);
+  animation:fadeIn .6s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
+
+/* logo */
+.logo{
+  width:72px;height:72px;border-radius:18px;
+  margin-bottom:18px;background:#0003;padding:12px;
+  box-shadow:0 0 22px rgba(0,229,255,.6);
+}
+
+/* TEXT */
+.title{
+  font-size:26px;font-weight:600;margin-bottom:10px;
+  background:linear-gradient(90deg,var(--neon),var(--magenta));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.msg{font-size:14px;color:var(--text-soft);margin-bottom:20px;}
+
+.counter{
+  margin-top:12px;font-size:14px;color:#fff;
+  opacity:.8;
+}
+
+/* BUTTON (fallback if JS disabled) */
+.btn{
+  margin-top:20px;padding:12px 22px;border:none;
+  background:linear-gradient(90deg,var(--neon),var(--magenta));
+  border-radius:12px;font-weight:600;font-size:14px;
+  color:#020617;cursor:pointer;
+  box-shadow:0 0 20px rgba(0,229,255,.6);
+}
+.btn:hover{transform:scale(1.05);}
+</style>
+</head>
+
+<body>
+
+<!-- Background -->
+<canvas id="fx"></canvas>
+<div class="bg-glow c1"></div>
+<div class="bg-glow c2"></div>
+
+<div class="box">
+  <img src="assets/AnalyticaX.png" class="logo">
+
+  <div class="title">Logging Out</div>
+  <div class="msg">
+    You are being securely logged out from AnalyticaX.<br>
+    See you soon!
+  </div>
+
+  <div class="counter">Redirecting in <span id="sec">3</span> seconds...</div>
+
+  <button class="btn" onclick="goLogin()">Go to Login</button>
+</div>
+
+<script>
+// PARTICLES
+const c=document.getElementById("fx"),x=c.getContext("2d");
+let P=[];
+function rs(){c.width=innerWidth;c.height=innerHeight;} rs(); onresize=rs;
+for(let i=0;i<60;i++){P.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*2+1,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3});}
+function draw(){x.clearRect(0,0,c.width,c.height);
+  P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=c.width;if(p.x>c.width)p.x=0;if(p.y<0)p.y=c.height;if(p.y>c.height)p.y=0;
+    x.fillStyle="rgba(0,229,255,.45)";x.beginPath();x.arc(p.x,p.y,p.r,0,6.28);x.fill();});
+  requestAnimationFrame(draw);
+}
+draw();
+
+// CLEAR SESSION
+localStorage.removeItem("ax_token");
+
+// REDIRECT
+let s=3;
+let timer=setInterval(()=>{
+  s--;
+  document.getElementById("sec").textContent=s;
+  if(s<=0){
+    clearInterval(timer);
+    goLogin();
+  }
+},1000);
+
+function goLogin(){
+  window.location.href="login.html";
+}
+</script>
+
+</body>
+</html>

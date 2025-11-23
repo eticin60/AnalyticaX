@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AnalyticaX — History</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+/* =====================================
+   GLOBAL STYLE
+===================================== */
+:root{
+  --neon:#00E5FF;
+  --pink:#FF4DFF;
+  --bg:#020617;
+  --panel:#0f172a;
+  --panel-soft:#1e293b;
+  --text-soft:#94a3b8;
+  --border-soft:rgba(148,163,184,.3);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:"Poppins",sans-serif;
+  background:radial-gradient(circle at top, #031029 0, #020617 45%, #000 100%);
+  color:#fff;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+/* Background grid */
+.bg-grid{
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:50px 50px;
+  opacity:.2;
+  z-index:-2;
+}
+
+/* Glow Balls */
+.bg-glow{
+  position:fixed;
+  width:420px;height:420px;
+  border-radius:50%;
+  filter:blur(120px);
+  opacity:.55;
+  mix-blend-mode:screen;
+  z-index:-1;
+  animation:float 18s infinite alternate ease-in-out;
+}
+.bg-glow.cyan{ background:rgba(0,229,255,.9); top:-90px; left:-40px; }
+.bg-glow.pink{ background:rgba(255,77,255,.8); bottom:-120px; right:-60px; animation-delay:8s; }
+
+@keyframes float{0%{transform:translate(0,0);}100%{transform:translate(40px,-40px);}}
+
+/* Navbar */
+.navbar{
+  position:fixed; inset:0 auto auto 0;
+  width:100%;
+  padding:10px 6%;
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(3,7,18,.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border-soft);
+  z-index:50;
+}
+.nav-left{display:flex;align-items:center;gap:12px;}
+.logo{
+  width:46px;height:46px;border-radius:14px;
+  background:radial-gradient(circle,rgba(0,229,255,.2),transparent 60%);
+  padding:4px;object-fit:contain;box-shadow:0 0 20px rgba(0,229,255,.5);
+}
+.logo-main{font-size:18px;font-weight:600;letter-spacing:.07em;}
+.logo-main span{color:var(--neon);}
+.logo-sub{font-size:11px;color:var(--text-soft);}
+
+.nav-links a{
+  margin-left:22px;
+  font-size:13px;
+  color:var(--text-soft);
+  text-decoration:none;
+  position:relative; padding-bottom:3px;
+}
+.nav-links a.active{color:#fff;font-weight:500;}
+.nav-links a.active::after,
+.nav-links a:hover::after{
+  width:100%;
+}
+.nav-links a::after{
+  content:""; position:absolute; left:0; bottom:0;
+  width:0; height:2px;
+  background:linear-gradient(90deg,var(--neon),var(--pink));
+  transition:.25s;
+}
+
+.nav-actions{
+  display:flex;align-items:center;gap:14px;font-size:12px;
+}
+.credits-pill{
+  padding:5px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--border-soft);
+  color:var(--neon);
+}
+.user-box{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 10px;
+  background:rgba(255,255,255,.05);
+  border-radius:999px;
+  border:1px solid var(--border-soft);
+}
+.user-avatar{
+  width:24px;height:24px;
+  border-radius:50%;
+  background:radial-gradient(circle,#fff,#a2ecff 40%,#1f2937 65%);
+  color:#000;font-size:12px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;
+}
+
+.btn-logout{
+  padding:6px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--border-soft);
+  cursor:pointer;color:#fff;font-size:12px;
+}
+
+/* Page Container */
+main{
+  width:90%; max-width:1200px;
+  margin:auto;
+  padding-top:120px;
+  padding-bottom:40px;
+  min-height:calc(100vh - 80px);
+  position:relative;
+}
+
+/* Title */
+.page-title{
+  font-size:26px;
+  font-weight:600;
+  margin-bottom:6px;
+  background:linear-gradient(90deg,var(--neon),var(--pink));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.page-sub{color:var(--text-soft);font-size:13px;margin-bottom:25px;}
+
+/* CARD GRID */
+.history-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:22px;
+}
+
+/* History Card */
+.card{
+  background:rgba(15,23,42,.9);
+  border-radius:18px;
+  padding:16px;
+  border:1px solid var(--border-soft);
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  transition:.25s;
+}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.45);}
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background:
+    radial-gradient(circle at 0 0,rgba(0,229,255,.14),transparent 55%),
+    radial-gradient(circle at 100% 100%,rgba(255,77,255,.18),transparent 55%);
+  opacity:.5;
+  mix-blend-mode:soft-light;
+  pointer-events:none;
+}
+
+.axid{
+  font-size:11px;
+  background:rgba(255,255,255,.06);
+  padding:3px 8px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.2);
+  display:inline-block;
+  margin-bottom:8px;
+  letter-spacing:.05em;
+}
+
+.thumb{
+  width:100%; height:150px;
+  border-radius:14px;
+  object-fit:cover;
+  margin-bottom:14px;
+  background:#111;
+}
+
+.row{display:flex;justify-content:space-between;margin-bottom:6px;}
+.label{color:var(--text-soft);font-size:12px;}
+.val{font-size:13px;}
+
+.badge{
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:11px;
+  border:1px solid var(--border-soft);
+}
+.tf{color:#00e5ff;border-color:#00e5ff;}
+.risk-low{color:#19e28a;border-color:#19e28a;}
+.risk-high{color:#ff4d79;border-color:#ff4d79;}
+
+/* MODAL */
+.modal{
+  position:fixed; inset:0;
+  backdrop-filter:blur(12px);
+  background:rgba(0,0,0,.55);
+  display:none;
+  align-items:center; justify-content:center;
+  z-index:200;
+}
+.modal.active{display:flex;}
+.modal-content{
+  width:90%; max-width:720px;
+  background:#0f172a;
+  padding:24px;
+  border-radius:20px;
+  border:1px solid var(--border-soft);
+  box-shadow:0 0 40px rgba(0,0,0,.6);
+}
+.modal-close{ float:right; cursor:pointer; font-size:18px; }
+
+/* Footer */
+footer{
+  text-align:center;
+  padding:18px;
+  font-size:12px;
+  color:var(--text-soft);
+  margin-top:40px;
+}
+
+.card {
+  background: linear-gradient(145deg, rgba(15,23,42,0.95), rgba(10,15,28,0.85));
+  border: 1px solid rgba(148,163,184,0.15);
+  border-radius: 20px;
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: 0.35s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.55),
+              0 0 25px rgba(0,229,255,0.3);
+}
+
+.card::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  background: radial-gradient(circle at top right,
+      rgba(0,229,255,0.18), transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+.thumb-wrapper {
+  position: relative;
+}
+
+.thumb-coin {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow cyan"></div>
+<div class="bg-glow pink"></div>
+
+<header class="navbar">
+  <div class="nav-left">
+    <img src="assets/AnalyticaX.png" class="logo" />
+    <div>
+      <div class="logo-main">Analytica<span>X</span></div>
+      <div class="logo-sub">AI Powered Analysis</div>
+    </div>
+  </div>
+
+  <nav class="nav-links">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="history.html" class="active">History</a>
+    <a href="premium.html">Premium</a>
+    <a href="settings.html">Settings</a>
+  </nav>
+
+  <div class="nav-actions">
+    <div class="credits-pill" id="navCredits">Credits: --</div>
+    <div class="user-box">
+      <div class="user-avatar" id="userAvatar">U</div>
+      <div id="userEmail">User</div>
+    </div>
+    <button class="btn-logout" id="btnLogout">Logout</button>
+  </div>
+</header>
+
+<main>
+  <div class="page-title">Analysis History</div>
+  <div class="page-sub">Your previous AI chart analyses are listed below.</div>
+
+  <div id="historyGrid" class="history-grid">
+    <div style="color:#777">Loading...</div>
+  </div>
+</main>
+
+<footer>
+  © 2025 AnalyticaX — All rights reserved.
+</footer>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-close" onclick="closeModal()">✖</div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const token = localStorage.getItem("ax_token");
+if(!token) location.href="login.html";
+
+/* Load User Info */
+async function loadUser() {
+  const r = await fetch("http://localhost:5000/api/auth/me", {
+    headers:{Authorization:"Bearer "+token}
+  });
+  const d = await r.json();
+
+  document.getElementById("navCredits").textContent = "Credits: " + d.credits;
+  document.getElementById("userEmail").textContent = d.email;
+  document.getElementById("userAvatar").textContent = d.email[0].toUpperCase();
+}
+loadUser();
+
+document.getElementById("btnLogout").onclick = ()=>{
+  localStorage.removeItem("ax_token");
+  location.href="login.html";
+};
+
+/* Load History */
+async function loadHistory() {
+  try {
+    const res = await fetch("http://localhost:5000/api/analysis/history", {
+      headers:{
+        "Authorization":"Bearer "+token,
+        "x-device-id": localStorage.getItem("ax_device_id"),
+        "x-device-fingerprint": localStorage.getItem("ax_fingerprint")
+      }
+    });
+
+    if(!res.ok) {
+      document.getElementById("historyGrid").innerHTML = "<div style='color:#f97373'>Error loading history. Please try again.</div>";
+      return;
+    }
+
+    const list = await res.json();
+    const grid = document.getElementById("historyGrid");
+
+    grid.innerHTML = "";
+
+    if(!Array.isArray(list) || list.length===0){
+      grid.innerHTML = `
+        <div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-soft);">
+          <div style="font-size:48px; margin-bottom:16px;">📊</div>
+          <div style="font-size:16px; margin-bottom:8px;">No analysis history yet</div>
+          <div style="font-size:13px;">Start analyzing charts to see your history here</div>
+          <a href="analyze.html" style="display:inline-block; margin-top:20px; padding:10px 24px; background:linear-gradient(90deg,var(--neon),var(--pink)); border-radius:999px; text-decoration:none; color:#020617; font-weight:600;">Analyze Chart</a>
+        </div>
+      `;
+      return;
+    }
+
+    list.forEach(item => {
+        const img = item.imageBase64 || item.image || item.chartImage || "assets/no-preview.png";
+        const symbol = item.symbol || "N/A";
+        const timeframe = item.timeframe || "N/A";
+        const trend = item.trend || item.result?.trend || "N/A";
+        const risk = item.risk || item.result?.risk || "Medium";
+        const axId = item.axId || item.queryId || "NO-ID";
+        const createdAt = item.createdAt ? new Date(item.createdAt).toLocaleString() : "N/A";
+        const probUp = item.result?.probUp || item.probUp || 50;
+        const probDown = item.result?.probDown || item.probDown || 50;
+        const leverage = item.result?.leverage || item.leverage || "N/A";
+        const forecast = item.result?.forecast || item.forecast || "N/A";
+
+        grid.innerHTML += `
+          <div class="card" onclick='openModal(${JSON.stringify(item).replace(/'/g, "&#39;")})'>
+            <div class="axid">${axId}</div>
+
+            <div class="thumb-wrapper" style="position:relative;">
+                <img class="thumb" src="${img}" onerror="this.src='assets/no-preview.png'">
+                <div class="thumb-coin" style="
+                    position:absolute;
+                    bottom:8px; right:8px;
+                    padding:4px 10px;
+                    background:rgba(0,0,0,.6);
+                    border-radius:8px;
+                    font-size:11px;
+                    font-weight:600;
+                    backdrop-filter:blur(6px);
+                    border:1px solid rgba(255,255,255,.25);
+                ">
+                    ${symbol.replace("USDT","").replace("USD","")}
+                </div>
+            </div>
+
+            <div class="row"><div class="label">Symbol</div><div class="val" style="font-weight:600;">${symbol}</div></div>
+            <div class="row"><div class="label">Timeframe</div><div class="val"><span class="badge tf">${timeframe}</span></div></div>
+            <div class="row"><div class="label">Trend</div><div class="val" style="color:${trend.toLowerCase().includes('up')?'#14f195':trend.toLowerCase().includes('down')?'#ff4d79':'#94a3b8'}">${trend}</div></div>
+            <div class="row"><div class="label">Risk</div><div class="val">
+                <span class="badge ${risk==="High"||risk==="high"?"risk-high":"risk-low"}">${risk}</span>
+            </div></div>
+            <div class="row"><div class="label">Probability</div><div class="val" style="font-size:12px;">
+                <span style="color:#14f195">↑${probUp}%</span> / <span style="color:#ff4d79">↓${probDown}%</span>
+            </div></div>
+            <div class="row"><div class="label">Date</div><div class="val" style="font-size:11px;color:var(--text-soft);">${createdAt}</div></div>
+          </div>
+        `;
+    });
+  } catch(err) {
+    console.error("History load error:", err);
+    document.getElementById("historyGrid").innerHTML = "<div style='color:#f97373'>Error: " + err.message + "</div>";
+  }
+}
+loadHistory();
+
+/* MODAL */
+function openModal(item){
+  const modal = document.getElementById("modal");
+  const body = document.getElementById("modalBody");
+
+  const result = item.result || item;
+  const img = item.imageBase64 || item.image || item.chartImage || "assets/no-preview.png";
+  const symbol = item.symbol || "N/A";
+  const timeframe = item.timeframe || "N/A";
+  const trend = result.trend || item.trend || "N/A";
+  const risk = result.risk || item.risk || "Medium";
+  const axId = item.axId || item.queryId || "NO-ID";
+  const createdAt = item.createdAt ? new Date(item.createdAt).toLocaleString() : "N/A";
+  const probUp = result.probUp || item.probUp || 50;
+  const probDown = result.probDown || item.probDown || 50;
+  const leverage = result.leverage || item.leverage || "N/A";
+  const forecast = result.forecast || item.forecast || "N/A";
+  const pattern = result.pattern || item.pattern || "N/A";
+  const aiComment = result.aiComment || result.comment || item.aiComment || "N/A";
+  const support = result.support || item.support || "N/A";
+  const resistance = result.resistance || item.resistance || "N/A";
+  const ema20 = result.ema20 || item.ema20 || "N/A";
+  const ema50 = result.ema50 || item.ema50 || "N/A";
+  const atr = result.atr || item.atr || "N/A";
+  const tradeIdeas = result.tradeIdeas || item.tradeIdeas || [];
+
+  body.innerHTML = `
+    <div style="max-height:80vh; overflow-y:auto; padding-right:8px;">
+      <h3 style="margin-bottom:20px; background:linear-gradient(90deg,var(--neon),var(--pink)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Analysis Details</h3>
+      
+      <div style="margin-bottom:20px;">
+        <img src="${img}" style="width:100%; border-radius:12px; margin-bottom:16px;" onerror="this.src='assets/no-preview.png'">
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:20px;">
+        <div style="background:rgba(15,23,42,.7); padding:12px; border-radius:12px; border:1px solid var(--border-soft);">
+          <div style="font-size:11px; color:var(--text-soft); margin-bottom:4px;">AX-ID</div>
+          <div style="font-weight:600; font-size:13px;">${axId}</div>
+        </div>
+        <div style="background:rgba(15,23,42,.7); padding:12px; border-radius:12px; border:1px solid var(--border-soft);">
+          <div style="font-size:11px; color:var(--text-soft); margin-bottom:4px;">Symbol</div>
+          <div style="font-weight:600; font-size:13px;">${symbol}</div>
+        </div>
+        <div style="background:rgba(15,23,42,.7); padding:12px; border-radius:12px; border:1px solid var(--border-soft);">
+          <div style="font-size:11px; color:var(--text-soft); margin-bottom:4px;">Timeframe</div>
+          <div style="font-weight:600; font-size:13px;"><span class="badge tf">${timeframe}</span></div>
+        </div>
+        <div style="background:rgba(15,23,42,.7); padding:12px; border-radius:12px; border:1px solid var(--border-soft);">
+          <div style="font-size:11px; color:var(--text-soft); margin-bottom:4px;">Date</div>
+          <div style="font-weight:600; font-size:13px;">${createdAt}</div>
+        </div>
+      </div>
+
+      <div style="background:rgba(15,23,42,.7); padding:16px; border-radius:12px; border:1px solid var(--border-soft); margin-bottom:16px;">
+        <div style="font-size:13px; font-weight:600; margin-bottom:12px; color:var(--neon);">📊 Market Analysis</div>
+        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px; font-size:12px;">
+          <div><span style="color:var(--text-soft);">Trend:</span> <span style="color:${trend.toLowerCase().includes('up')?'#14f195':trend.toLowerCase().includes('down')?'#ff4d79':'#94a3b8'}">${trend}</span></div>
+          <div><span style="color:var(--text-soft);">Risk:</span> <span class="badge ${risk==="High"||risk==="high"?"risk-high":"risk-low"}">${risk}</span></div>
+          <div><span style="color:var(--text-soft);">Pattern:</span> ${pattern}</div>
+          <div><span style="color:var(--text-soft);">Leverage:</span> ${leverage}</div>
+        </div>
+      </div>
+
+      <div style="background:rgba(15,23,42,.7); padding:16px; border-radius:12px; border:1px solid var(--border-soft); margin-bottom:16px;">
+        <div style="font-size:13px; font-weight:600; margin-bottom:12px; color:var(--neon);">📈 Probabilities</div>
+        <div style="display:flex; gap:16px; font-size:12px;">
+          <div style="flex:1; text-align:center; padding:12px; background:rgba(20,241,149,.1); border-radius:8px; border:1px solid rgba(20,241,149,.3);">
+            <div style="color:var(--text-soft); margin-bottom:4px;">Bullish</div>
+            <div style="font-size:18px; font-weight:600; color:#14f195;">${probUp}%</div>
+          </div>
+          <div style="flex:1; text-align:center; padding:12px; background:rgba(255,77,121,.1); border-radius:8px; border:1px solid rgba(255,77,121,.3);">
+            <div style="color:var(--text-soft); margin-bottom:4px;">Bearish</div>
+            <div style="font-size:18px; font-weight:600; color:#ff4d79;">${probDown}%</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:rgba(15,23,42,.7); padding:16px; border-radius:12px; border:1px solid var(--border-soft); margin-bottom:16px;">
+        <div style="font-size:13px; font-weight:600; margin-bottom:12px; color:var(--neon);">📉 Technical Indicators</div>
+        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px; font-size:12px;">
+          <div><span style="color:var(--text-soft);">EMA20:</span> ${ema20}</div>
+          <div><span style="color:var(--text-soft);">EMA50:</span> ${ema50}</div>
+          <div><span style="color:var(--text-soft);">ATR:</span> ${atr}</div>
+          <div><span style="color:var(--text-soft);">Support:</span> ${Array.isArray(support)?support.join(", "):support}</div>
+          <div style="grid-column:1/-1;"><span style="color:var(--text-soft);">Resistance:</span> ${Array.isArray(resistance)?resistance.join(", "):resistance}</div>
+        </div>
+      </div>
+
+      ${forecast !== "N/A" ? `
+      <div style="background:rgba(15,23,42,.7); padding:16px; border-radius:12px; border:1px solid var(--border-soft); margin-bottom:16px;">
+        <div style="font-size:13px; font-weight:600; margin-bottom:8px; color:var(--neon);">🔮 AI Forecast</div>
+        <div style="font-size:12px; color:var(--text-soft); line-height:1.6;">${forecast}</div>
+      </div>
+      ` : ""}
+
+      ${aiComment !== "N/A" ? `
+      <div style="background:rgba(15,23,42,.7); padding:16px; border-radius:12px; border:1px solid var(--border-soft); margin-bottom:16px;">
+        <div style="font-size:13px; font-weight:600; margin-bottom:8px; color:var(--neon);">💡 AI Insights</div>
+        <div style="font-size:12px; color:var(--text-soft); line-height:1.6;">${aiComment}</div>
+      </div>
+      ` : ""}
+
+      ${Array.isArray(tradeIdeas) && tradeIdeas.length > 0 ? `
+      <div style="background:rgba(15,23,42,.7); padding:16px; border-radius:12px; border:1px solid var(--border-soft); margin-bottom:16px;">
+        <div style="font-size:13px; font-weight:600; margin-bottom:12px; color:var(--neon);">💼 Trade Ideas</div>
+        ${tradeIdeas.map((idea, idx) => `
+          <div style="padding:10px; background:rgba(0,0,0,.3); border-radius:8px; margin-bottom:8px; font-size:12px;">
+            <div style="font-weight:600; margin-bottom:4px;">${idea.type || "Trade"} ${idx+1}</div>
+            <div style="color:var(--text-soft);">${idea.description || idea || "N/A"}</div>
+          </div>
+        `).join("")}
+      </div>
+      ` : ""}
+
+      <details style="margin-top:16px;">
+        <summary style="cursor:pointer; color:var(--text-soft); font-size:12px; margin-bottom:8px;">📋 Full JSON Data</summary>
+        <pre style="background:#0b1220;padding:14px;border-radius:12px;overflow:auto; font-size:11px; max-height:300px;">
+${JSON.stringify(item,null,2)}
+        </pre>
+      </details>
+    </div>
+  `;
+
+  modal.classList.add("active");
+}
+function closeModal(){ 
+  document.getElementById("modal").classList.remove("active"); 
+}
+// Close modal on outside click
+document.getElementById("modal")?.addEventListener("click", (e) => {
+  if(e.target.id === "modal") closeModal();
+});
+
+</script>
+
+</body>
+</html>

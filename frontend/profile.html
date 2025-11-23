@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AnalyticaX — Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --neon:#00E5FF;
+      --magenta:#FF4DFF;
+      --accent-green:#14F195;
+      --accent-yellow:#FCE96A;
+      --bg:#020617;
+      --panel:#0b1020;
+      --text-soft:#A0AEC0;
+      --border-soft:rgba(148,163,184,.35);
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:"Poppins",sans-serif;
+      background:radial-gradient(circle at top,#061525 0,var(--bg) 45%,#000 100%);
+      color:#fff;
+      overflow-x:hidden;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* BACKGROUND */
+    canvas#particles{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+    }
+    .bg-grid{
+      position:fixed;
+      inset:0;
+      background-image:
+        linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),
+        linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+      background-size:50px 50px;
+      opacity:.22;
+      pointer-events:none;
+      z-index:-2;
+    }
+    .bg-glow{
+      position:fixed;
+      width:480px;height:480px;
+      border-radius:50%;
+      filter:blur(120px);
+      opacity:.75;
+      mix-blend-mode:screen;
+      pointer-events:none;
+      z-index:-1;
+      animation:float 16s ease-in-out infinite alternate;
+    }
+    .bg-glow.c1{background:radial-gradient(circle,rgba(0,229,255,.9),transparent 60%);top:-90px;left:-60px;}
+    .bg-glow.c2{background:radial-gradient(circle,rgba(255,77,255,.9),transparent 60%);bottom:-130px;right:-90px;animation-delay:6s;}
+    @keyframes float{0%{transform:translate(0,0);}100%{transform:translate(40px,-30px);} }
+
+    /* NAVBAR */
+    .navbar{
+      position:fixed;
+      top:0;left:0;width:100%;
+      padding:10px 6%;
+      display:flex;align-items:center;justify-content:space-between;
+      backdrop-filter:blur(12px);
+      background:linear-gradient(to bottom,rgba(3,7,18,.92),rgba(3,7,18,.35));
+      border-bottom:1px solid rgba(148,163,184,.3);
+      z-index:50;
+    }
+    .nav-links{display:flex;gap:18px;font-size:13px;}
+    .nav-links a{text-decoration:none;color:var(--text-soft);}
+    .nav-links a.active{color:#fff;font-weight:600;}
+
+    .nav-actions{display:flex;align-items:center;gap:10px;}
+    .nav-credits{
+      padding:5px 12px;
+      border-radius:999px;
+      background:rgba(15,23,42,.8);
+      border:1px solid rgba(148,163,184,.5);
+      color:var(--neon);
+    }
+    .user-pill{display:flex;align-items:center;gap:8px;padding:5px 9px;border-radius:999px;border:1px solid var(--border-soft);}
+    .user-avatar{
+      width:26px;height:26px;border-radius:50%;
+      background:radial-gradient(circle at 30% 0,#fff,#95eaff,#1e293b);
+      display:flex;align-items:center;justify-content:center;
+      color:#000;font-weight:700;font-size:12px;
+    }
+    .btn-outline{padding:6px 14px;border-radius:999px;border:1px solid var(--border-soft);background:rgba(15,23,42,.6);color:#fff;}
+
+    /* MAIN */
+    main{
+      padding-top:110px;
+      padding-bottom:40px;
+      width:92%;
+      max-width:1200px;
+      margin:auto;
+    }
+    .title{
+      font-size:28px;font-weight:600;
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:10px;
+    }
+    .sub{font-size:13px;color:var(--text-soft);margin-bottom:30px;}
+
+    /* CARD */
+    .card{
+      background:rgba(16, 24, 42, .96);
+      border:1px solid var(--border-soft);
+      border-radius:20px;
+      padding:20px;
+      margin-bottom:20px;
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";position:absolute;inset:-40%;
+      background:
+        radial-gradient(circle at 0 0,rgba(0,229,255,.18),transparent 60%),
+        radial-gradient(circle at 100% 100%,rgba(255,77,255,.18),transparent 60%);
+      opacity:.4;pointer-events:none;mix-blend-mode:soft-light;
+    }
+    .card-title{font-size:16px;font-weight:600;margin-bottom:6px;}
+    .card-sub{font-size:12px;color:var(--text-soft);margin-bottom:14px;}
+
+    /* PROFILE IMAGE */
+    .profile-photo{
+      width:110px;height:110px;border-radius:50%;
+      border:2px solid var(--neon);
+      object-fit:cover;
+      box-shadow:0 0 25px rgba(0,229,255,.45);
+      margin-bottom:10px;
+    }
+    .upload-btn{
+      margin-top:6px;
+      font-size:12px;
+      cursor:pointer;
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:10px;
+      background:rgba(0,229,255,.15);
+      border:1px solid var(--neon);
+      color:var(--neon);
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:14px;margin-top:12px;
+    }
+    .info-box{
+      background:rgba(255,255,255,.04);
+      padding:12px;border-radius:14px;
+      border:1px solid rgba(148,163,184,.2);
+    }
+    .info-label{
+      font-size:11px;color:var(--text-soft);text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+    .info-value{font-size:13px;margin-top:2px;}
+
+  </style>
+</head>
+
+<body>
+
+<!-- BACKGROUND -->
+<canvas id="particles"></canvas>
+<div class="bg-grid"></div>
+<div class="bg-glow c1"></div>
+<div class="bg-glow c2"></div>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div style="font-size:18px;font-weight:600;">Analytica<span style="color:var(--neon)">X</span></div>
+
+  <nav class="nav-links">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="history.html">History</a>
+    <a href="premium.html">Premium</a>
+    <a href="profile.html" class="active">Profile</a>
+    <a href="settings.html">Settings</a>
+  </nav>
+
+  <div class="nav-actions">
+    <div class="nav-credits" id="navCredits">Credits: --</div>
+    <div class="user-pill">
+      <div class="user-avatar" id="userAvatar">U</div>
+      <div id="userEmail">loading...</div>
+    </div>
+    <button class="btn-outline" id="btnLogout">Logout</button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <h1 class="title">Your Profile</h1>
+  <div class="sub">Manage your personal data and account details.</div>
+
+  <!-- PROFILE CARD -->
+  <div class="card">
+    <div class="card-title">Profile Overview</div>
+    <div class="card-sub">Your account identity and plan details.</div>
+
+    <center>
+      <img id="profileImage" src="assets/default-avatar.png" class="profile-photo" />
+      <br>
+      <label class="upload-btn">
+        Upload Photo
+        <input id="photoInput" type="file" accept="image/*" style="display:none;">
+      </label>
+    </center>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <div class="info-label">Email</div>
+        <div class="info-value" id="infoEmail"></div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">User ID</div>
+        <div class="info-value" id="infoId"></div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">Credits</div>
+        <div class="info-value" id="infoCredits"></div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">Total Analyses</div>
+        <div class="info-value" id="infoTotalAnalyses"></div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">Joined</div>
+        <div class="info-value" id="infoJoin"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECURITY -->
+  <div class="card">
+    <div class="card-title">Security & Device</div>
+    <div class="card-sub">Your secure device identifiers.</div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <div class="info-label">IP</div>
+        <div class="info-value" id="infoIp"></div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">Device ID</div>
+        <div class="info-value" id="infoDevice"></div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">Fingerprint</div>
+        <div class="info-value" id="infoFp"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+/* ================================
+   PARTICLE BACKGROUND
+================================ */
+const c = document.getElementById("particles");
+const ctx = c.getContext("2d");
+function resize(){c.width=innerWidth;c.height=innerHeight;} resize(); onresize=resize;
+
+let p=[];
+for(let i=0;i<70;i++){
+  p.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*2+1,
+    vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4});
+}
+function draw(){
+  ctx.clearRect(0,0,c.width,c.height);
+  p.forEach(a=>{
+    a.x+=a.vx; a.y+=a.vy;
+    if(a.x<0)a.x=c.width;if(a.x>c.width)a.x=0;
+    if(a.y<0)a.y=c.height;if(a.y>c.height)a.y=0;
+    ctx.fillStyle="rgba(0,229,255,.4)";
+    ctx.beginPath();ctx.arc(a.x,a.y,a.r,0,Math.PI*2);ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* ================================
+   AUTH + LOAD USER DATA
+================================ */
+const api = "http://localhost:5000";
+const token = localStorage.getItem("ax_token");
+if(!token) location.href="login.html";
+
+document.getElementById("btnLogout").onclick=()=>{
+  localStorage.removeItem("ax_token");
+  location.href="login.html";
+};
+
+async function loadProfile(){
+  const res = await fetch(api+"/api/auth/me",{headers:{Authorization:"Bearer "+token}});
+  const d = await res.json();
+  if(!d.ok){location.href="login.html";return;}
+
+  // NAV
+  document.getElementById("navCredits").textContent="Credits: "+d.credits;
+  document.getElementById("userEmail").textContent=d.email;
+  document.getElementById("userAvatar").textContent=d.email[0].toUpperCase();
+
+  // MAIN PROFILE
+  document.getElementById("infoEmail").textContent = d.email;
+  document.getElementById("infoId").textContent = d._id;
+  document.getElementById("infoCredits").textContent = d.credits;
+  document.getElementById("infoTotalAnalyses").textContent = d.totalAnalyses || 0;
+  document.getElementById("infoJoin").textContent = new Date(d.createdAt).toLocaleDateString();
+
+  // SECURITY
+  document.getElementById("infoIp").textContent = d.ipAddress || "N/A";
+  document.getElementById("infoDevice").textContent = d.deviceId || "N/A";
+  document.getElementById("infoFp").textContent = d.deviceFingerprint || "N/A";
+}
+loadProfile();
+
+/* ================================
+   PHOTO PREVIEW
+================================ */
+document.getElementById("photoInput").onchange=function(){
+  const file = this.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload=e=>{
+    document.getElementById("profileImage").src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+</script>
+
+</body>
+</html>

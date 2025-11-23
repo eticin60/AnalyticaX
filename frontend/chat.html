@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AnalyticaX — AI Chat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ROOT */
+:root{
+  --neon:#00E5FF;
+  --magenta:#FF4DFF;
+  --green:#14F195;
+  --bg:#020617;
+  --panel:#0b1020;
+  --panel-soft:#111827;
+  --soft:#9da5b8;
+  --border:rgba(148,163,184,.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:Poppins,sans-serif;
+  background:radial-gradient(circle at top,#071526 0,var(--bg) 50%,#000 100%);
+  color:#fff;overflow:hidden;height:100vh;
+}
+
+/* BACKGROUND FX */
+canvas#fx{position:fixed;inset:0;z-index:-3;}
+.bg-grid{
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:55px 55px;
+  opacity:.22;z-index:-2;
+}
+.bg-glow{
+  position:fixed;width:480px;height:480px;border-radius:50%;
+  filter:blur(140px);opacity:.7;mix-blend-mode:screen;z-index:-1;
+  animation:float 16s ease-in-out infinite alternate;
+}
+.bg-glow.c1{background:rgba(0,229,255,.9);top:-120px;left:-90px;}
+.bg-glow.c2{background:rgba(255,77,255,.9);bottom:-120px;right:-90px;animation-delay:8s;}
+@keyframes float{0%{transform:translate(0,0);}100%{transform:translate(35px,-30px);}}
+
+/* NAVBAR */
+.navbar{
+  position:fixed;top:0;left:0;width:100%;
+  background:rgba(10,15,35,.65);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+  padding:14px 6%;
+  z-index:50;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand img{width:42px;height:42px;border-radius:14px;background:#0003;padding:4px;box-shadow:0 0 12px rgba(0,229,255,.45);}
+.brand-name{font-size:18px;font-weight:600;} .brand-name span{color:var(--neon);}
+.nav-credits{
+  color:var(--neon);padding:6px 14px;border-radius:999px;
+  background:rgba(15,23,42,.7);border:1px solid var(--border);font-size:12px;
+}
+
+/* CHAT LAYOUT */
+.chat-wrapper{
+  position:absolute;top:95px;bottom:0;left:0;right:0;
+  display:flex;flex-direction:column;
+}
+.chat-window{
+  flex:1;padding:25px 6%;
+  overflow-y:auto;scroll-behavior:smooth;position:relative;
+}
+.chat-window::-webkit-scrollbar{width:6px;}
+.chat-window::-webkit-scrollbar-thumb{background:rgba(0,229,255,.35);border-radius:10px;}
+
+/* EMPTY STATE PANEL (full center) */
+.welcome-panel{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;width:100%;max-width:680px;
+  animation:fadeIn .6s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translate(-50%,-46%);}to{opacity:1;transform:translate(-50%,-50%);}}
+
+.welcome-logo{
+  width:80px;height:80px;border-radius:24px;
+  margin-bottom:16px;
+  background:#0003;
+  padding:12px;
+  box-shadow:0 0 26px rgba(0,229,255,.45);
+}
+.welcome-title{
+  font-size:32px;font-weight:600;
+  background:linear-gradient(90deg,var(--neon),var(--magenta));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:8px;
+}
+.welcome-desc{
+  font-size:15px;color:var(--soft);margin-bottom:26px;
+}
+
+/* QUICK PROMPTS */
+.quick-list{
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+}
+.quick-item{
+  padding:10px 16px;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;font-size:12px;
+  cursor:pointer;transition:.25s;
+}
+.quick-item:hover{
+  background:linear-gradient(90deg,var(--neon),var(--magenta));
+  color:#000;border:none;
+  transform:scale(1.05);
+}
+
+/* AI AVATAR SIDE PANEL */
+.ai-side{
+  position:absolute;top:30px;left:30px;
+  padding:16px 20px;border-radius:20px;
+  background:rgba(15,23,42,.82);
+  border:1px solid rgba(255,255,255,.08);
+  width:230px;
+  box-shadow:0 0 25px rgba(0,229,255,.15);
+  backdrop-filter:blur(10px);
+}
+.ai-side img{
+  width:60px;height:60px;border-radius:16px;
+  margin-bottom:10px;
+}
+.ai-side h3{margin:0;font-size:16px;font-weight:600;}
+.ai-side p{margin-top:4px;font-size:12px;color:var(--soft);}
+
+/* USER / AI BUBBLES */
+.msg{max-width:75%;padding:12px 16px;border-radius:18px;margin-bottom:14px;font-size:14px;line-height:1.45;animation:fadeMsg .25s ease;}
+@keyframes fadeMsg{0%{opacity:0;transform:translateY(6px);}100%{opacity:1;transform:translateY(0);}}
+
+.msg.user{
+  margin-left:auto;
+  background:rgba(0,229,255,.14);
+  border:1px solid rgba(0,229,255,.4);
+}
+.msg.ai{
+  background:rgba(12,18,35,.9);
+  border:1px solid rgba(255,255,255,.06);
+  position:relative;
+}
+.msg.ai::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at top left,rgba(0,229,255,.18),transparent 60%);
+  pointer-events:none;
+}
+
+/* INPUT BAR */
+.input-area{
+  padding:18px 6%;background:rgba(10,15,35,.75);
+  backdrop-filter:blur(16px);
+  display:flex;gap:14px;border-top:1px solid var(--border);
+}
+.input-area input{
+  flex:1;padding:12px 15px;border-radius:14px;
+  background:rgba(15,23,42,.8);
+  border:1px solid rgba(255,255,255,.15);
+  color:#fff;font-size:14px;
+}
+.send-btn{
+  padding:12px 22px;border-radius:14px;
+  background:linear-gradient(90deg,var(--neon),var(--magenta));
+  border:none;color:#000;font-weight:600;
+  cursor:pointer;box-shadow:0 0 20px rgba(0,229,255,.55);
+}
+.send-btn:hover{transform:scale(1.05);}
+</style>
+</head>
+
+
+
+<body>
+
+<!-- BACKGROUND -->
+<canvas id="fx"></canvas>
+<div class="bg-grid"></div>
+<div class="bg-glow c1"></div>
+<div class="bg-glow c2"></div>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="brand">
+    <img src="assets/AnalyticaX.png">
+    <div class="brand-name">Analytica<span>X</span> Chat</div>
+  </div>
+  <div class="nav-credits" id="navCredits">Credits: --</div>
+</header>
+
+<!-- CHAT -->
+<div class="chat-wrapper">
+  <div class="chat-window" id="chat">
+
+    <!-- SIDE AI PROFILE -->
+    <div class="ai-side" id="aiPanel">
+      <img src="assets/AnalyticaX.png">
+      <h3>AnalyticaX AI</h3>
+      <p>Crypto market insights, chart patterns, trend forecasts and more.</p>
+    </div>
+
+    <!-- CENTER WELCOME PANEL -->
+    <div class="welcome-panel" id="welcome">
+      <img src="assets/AnalyticaX.png" class="welcome-logo">
+      <div class="welcome-title">Welcome to AnalyticaX Chat</div>
+      <div class="welcome-desc">
+        Ask anything about indicators, trends, support/resistance, forecast or crypto analysis.
+      </div>
+
+      <div class="quick-list">
+        <div class="quick-item" onclick="quick('Analyze BTC 1H trend')">BTC 1H Trend</div>
+        <div class="quick-item" onclick="quick('Find pattern in ETH chart')">ETH Pattern</div>
+        <div class="quick-item" onclick="quick('Predict next movement of BTC')">BTC Forecast</div>
+        <div class="quick-item" onclick="quick('Show support & resistance levels')">S/R Levels</div>
+        <div class="quick-item" onclick="quick('Is it good time to long?')">Long Idea</div>
+        <div class="quick-item" onclick="quick('Is short position safer now?')">Short Idea</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- INPUT BAR -->
+  <div class="input-area">
+    <input id="msgInput" placeholder="Ask anything about crypto charts, indicators, trends..." />
+    <button class="send-btn" onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+
+<script>
+/* PARTICLES */
+const c=document.getElementById("fx"),x=c.getContext("2d");
+let P=[];
+function rs(){c.width=innerWidth;c.height=innerHeight;}
+rs();onresize=rs;
+for(let i=0;i<70;i++){P.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*2+1,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3});}
+function draw(){x.clearRect(0,0,c.width,c.height);
+  P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=c.width;if(p.x>c.width)p.x=0;if(p.y<0)p.y=c.height;if(p.y>c.height)p.y=0;
+  x.fillStyle="rgba(0,229,255,.45)";x.beginPath();x.arc(p.x,p.y,p.r,0,7);x.fill();});
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* CHAT FUNCTIONS */
+function addMsg(text,from="ai"){
+  document.getElementById("welcome").style.display="none";
+  document.getElementById("aiPanel").style.display="none";
+
+  const wrap=document.getElementById("chat");
+  const m=document.createElement("div");
+  m.className="msg "+from;
+  m.innerHTML=text;
+  wrap.appendChild(m);
+  wrap.scrollTop=wrap.scrollHeight;
+}
+
+function sendMessage(){
+  const t=document.getElementById("msgInput").value.trim();
+  if(!t) return;
+  addMsg(t,"user");
+  document.getElementById("msgInput").value="";
+
+  setTimeout(()=>{addMsg("Analyzing your request...", "ai");},600);
+}
+
+function quick(text){
+  document.getElementById("msgInput").value=text;
+  sendMessage();
+}
+</script>
+
+</body>
+</html>

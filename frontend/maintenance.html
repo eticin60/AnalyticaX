@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Maintenance — AnalyticaX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ========== ROOT ========== */
+:root{
+  --neon:#00E5FF;
+  --magenta:#FF4DFF;
+  --yellow:#FFDD55;
+  --bg:#020617;
+  --text-soft:#98A0B3;
+}
+/* ========== RESET ========== */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:Poppins, sans-serif;
+  background:radial-gradient(circle at top,#071526 0,var(--bg) 45%,#000 100%);
+  overflow:hidden;color:#fff;height:100vh;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+}
+/* ========== BACKGROUND ========== */
+canvas#p{position:fixed;inset:0;z-index:-3;}
+.bg-grid{
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:50px 50px;opacity:.23;z-index:-2;
+}
+.bg-glow{
+  position:fixed;width:540px;height:540px;border-radius:50%;
+  filter:blur(150px);opacity:.7;mix-blend-mode:screen;z-index:-1;
+  animation:f 16s ease-in-out infinite alternate;
+}
+.bg-glow.c1{background:rgba(255,221,85,.8);top:-120px;left:-100px;}
+.bg-glow.c2{background:rgba(255,77,255,.75);bottom:-110px;right:-90px;animation-delay:7s;}
+@keyframes f{0%{transform:translate(0,0);}100%{transform:translate(40px,-30px);}}
+
+/* ========== CONTENT ========== */
+.box{z-index:10;max-width:650px;padding:20px;}
+.logo{width:110px;margin-bottom:12px;filter:drop-shadow(0 0 22px rgba(255,221,85,.6));}
+
+.icon{
+  font-size:95px;
+  color:var(--yellow);
+  text-shadow:0 0 22px rgba(255,221,85,.7);
+  margin-bottom:6px;
+}
+
+.title{font-size:32px;font-weight:600;margin-bottom:10px;}
+.desc{color:var(--text-soft);font-size:14px;margin-bottom:24px;}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="p"></canvas>
+<div class="bg-grid"></div>
+<div class="bg-glow c1"></div>
+<div class="bg-glow c2"></div>
+
+<div class="box">
+  <img src="assets/AnalyticaX.png" class="logo">
+
+  <div class="icon">⛏</div>
+  <div class="title">Scheduled Maintenance</div>
+
+  <div class="desc">
+    AnalyticaX systems are temporarily offline for improvements.<br>
+    Please check back in a few minutes.
+  </div>
+</div>
+
+
+<script>
+/* particles */
+const c=document.getElementById("p"),x=c.getContext("2d");
+let P=[];function r(){c.width=innerWidth;c.height=innerHeight;}r();onresize=r;
+for(let i=0;i<60;i++){P.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2+1,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4});}
+(function a(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;
+if(p.x<0)p.x=c.width;if(p.x>c.width)p.x=0;if(p.y<0)p.y=c.height;if(p.y>c.height)p.y=0;
+x.fillStyle="rgba(255,221,85,0.45)";x.beginPath();x.arc(p.x,p.y,p.r,0,7);x.fill();});
+requestAnimationFrame(a);})();
+</script>
+
+</body>
+</html>

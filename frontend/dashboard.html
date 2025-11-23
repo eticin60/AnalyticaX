@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AnalyticaX — Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --neon:#00E5FF;
+      --magenta:#FF4DFF;
+      --accent-green:#14F195;
+      --bg:#020617;
+      --panel:#0b1020;
+      --panel-soft:#111827;
+      --text-soft:#A0AEC0;
+      --border-soft:rgba(148,163,184,.35);
+      --danger:#fb7185;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      padding-top: 5%;
+      font-family:"Poppins",sans-serif;
+      background:radial-gradient(circle at top,#061525 0,var(--bg) 45%,#000 100%);
+      color:#fff;
+      overflow-x:hidden;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+    a{color:inherit;text-decoration:none;}
+
+    .container{
+      width:88%;
+      max-width:1240px;
+      margin:0 auto;
+    }
+    main{
+      padding-top:96px;
+      padding-bottom:40px;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+
+    /* BACKGROUND LAYERS */
+    canvas#bgParticles{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+    }
+    .bg-grid{
+      position:fixed;
+      inset:0;
+      background-image:
+        linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),
+        linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+      background-size:50px 50px;
+      opacity:.22;
+      pointer-events:none;
+      z-index:-2;
+    }
+    .bg-glow{
+      position:fixed;
+      width:480px;
+      height:480px;
+      border-radius:50%;
+      filter:blur(120px);
+      opacity:.75;
+      mix-blend-mode:screen;
+      pointer-events:none;
+      z-index:-1;
+      animation:glowFloat 18s ease-in-out infinite alternate;
+    }
+    .bg-glow.cyan{
+      background:radial-gradient(circle,rgba(0,229,255,.9),transparent 60%);
+      top:-90px;
+      left:-60px;
+    }
+    .bg-glow.magenta{
+      background:radial-gradient(circle,rgba(255,77,255,.9),transparent 60%);
+      bottom:-130px;
+      right:-80px;
+      animation-delay:6s;
+    }
+    @keyframes glowFloat{
+      0%{transform:translate(0,0);}
+      100%{transform:translate(40px,-35px);}
+    }
+
+    /* NAVBAR */
+    .navbar{
+      position:fixed;
+      top:0;left:0;
+      width:100%;
+      padding:10px 6%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      backdrop-filter:blur(14px);
+      background:linear-gradient(to bottom,rgba(3,7,18,.92),rgba(3,7,18,.35));
+      border-bottom:1px solid rgba(148,163,184,.3);
+      z-index:50;
+    }
+    .nav-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .logo-img{
+      width:46px;
+      height:46px;
+      border-radius:16px;
+      object-fit:contain;
+      padding:4px;
+      background:radial-gradient(circle,rgba(0,229,255,.18),transparent 70%);
+      box-shadow:0 0 20px rgba(0,229,255,.6);
+    }
+    .logo-main{
+      font-size:18px;
+      font-weight:600;
+      letter-spacing:.08em;
+    }
+    .logo-main span{color:var(--neon);}
+    .logo-sub{
+      font-size:11px;
+      color:var(--text-soft);
+    }
+    .nav-links{
+      display:flex;
+      gap:18px;
+      font-size:13px;
+      color:var(--text-soft);
+    }
+    .nav-links a{
+      position:relative;
+      padding-bottom:3px;
+    }
+    .nav-links a::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:0;
+      width:0;
+      height:2px;
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      transition:width .25s ease;
+    }
+    .nav-links a:hover::after{width:100%;}
+    .nav-links a.active{
+      color:#e5e7eb;
+      font-weight:500;
+    }
+    .nav-links a.active::after{width:100%;}
+
+    .nav-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      font-size:12px;
+    }
+    .nav-credits{
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.8);
+      color:var(--neon);
+      font-size:11px;
+    }
+    .user-pill{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:4px 9px 4px 5px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.9);
+      font-size:11px;
+    }
+    .user-avatar{
+      width:22px;
+      height:22px;
+      border-radius:999px;
+      background:radial-gradient(circle at 30% 0%,#fff,#95f0ff 40%,#1f2937 65%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#020617;
+      font-size:11px;
+      font-weight:600;
+    }
+    .btn-outline{
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      padding:6px 14px;
+      background:rgba(15,23,42,.7);
+      color:#e5e7eb;
+      cursor:pointer;
+      font-size:11px;
+    }
+
+    @media(max-width:960px){
+      .navbar{padding-inline:4%;}
+      .nav-links{display:none;}
+    }
+
+    /* DASHBOARD HEADER */
+    .dash-wrapper{
+      width:100%;
+      max-width:1240px;
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+      margin-top:12px;
+    }
+
+    .dash-header{
+      margin-top:8px;
+      padding:18px 20px 18px;
+      border-radius:22px;
+      background:
+        radial-gradient(circle at top left,rgba(0,229,255,.16),transparent 60%),
+        rgba(15,23,42,.96);
+      border:1px solid rgba(148,163,184,.65);
+      box-shadow:0 22px 50px rgba(15,23,42,.95);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+    .dash-title-main{
+      font-size:20px;
+      font-weight:600;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .dash-title-main span.name{
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+    .dash-sub{
+      font-size:12px;
+      color:var(--text-soft);
+      margin-top:4px;
+      max-width:520px;
+    }
+    .pill-plan{
+      font-size:10px;
+      padding:3px 9px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.9);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      background:rgba(15,23,42,.9);
+      color:var(--text-soft);
+    }
+    .pill-plan.premium{
+      border-color:var(--neon);
+      color:#020617;
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      box-shadow:0 0 16px rgba(0,229,255,.7);
+    }
+    .dash-actions{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      align-items:flex-end;
+      min-width:210px;
+    }
+    .btn-primary{
+      border-radius:999px;
+      border:none;
+      padding:8px 16px;
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      color:#020617;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow:0 0 20px rgba(0,229,255,.6);
+      font-size:12px;
+    }
+    .btn-ghost{
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      padding:7px 14px;
+      background:rgba(15,23,42,.8);
+      color:var(--text-soft);
+      cursor:pointer;
+      font-size:11px;
+    }
+    .dash-badges{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:6px;
+      font-size:11px;
+    }
+    .badge-soft{
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.5);
+      padding:3px 9px;
+      color:var(--text-soft);
+      background:rgba(15,23,42,.8);
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .badge-dot{
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      background:var(--accent-green);
+      box-shadow:0 0 10px rgba(20,241,149,.9);
+    }
+    .mini-text{
+      font-size:10px;
+      color:var(--text-soft);
+      margin-top:4px;
+      text-align:right;
+    }
+
+    /* GRID LAYOUT */
+    .dash-grid{
+      display:grid;
+      grid-template-columns: minmax(0,1.7fr) minmax(0,1.1fr);
+      gap:18px;
+      align-items:flex-start;
+    }
+    @media(max-width:960px){
+      .dash-grid{grid-template-columns:1fr;}
+    }
+
+    .card{
+      position:relative;
+      border-radius:20px;
+      background:rgba(15,23,42,.96);
+      border:1px solid var(--border-soft);
+      padding:14px 16px 15px;
+      overflow:hidden;
+      box-shadow:0 18px 40px rgba(15,23,42,.9);
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:
+        radial-gradient(circle at 0 0,rgba(0,229,255,.18),transparent 55%),
+        radial-gradient(circle at 100% 100%,rgba(255,77,255,.20),transparent 55%);
+      opacity:.45;
+      mix-blend-mode:soft-light;
+      pointer-events:none;
+    }
+    .card-inner{position:relative;z-index:1;}
+
+    .card-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .card-title{
+      font-size:13px;
+      font-weight:500;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .card-tag{
+      font-size:9px;
+      padding:2px 7px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.75);
+      text-transform:uppercase;
+      letter-spacing:.13em;
+      color:var(--text-soft);
+      background:rgba(15,23,42,.9);
+    }
+    .card-sub{
+      font-size:11px;
+      color:var(--text-soft);
+    }
+
+    /* METRICS */
+    .stat-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+      gap:10px;
+      margin-top:6px;
+    }
+    .stat-card{
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,.55);
+      background:rgba(15,23,42,.95);
+      padding:9px 10px;
+      font-size:11px;
+    }
+    .stat-label{
+      text-transform:uppercase;
+      letter-spacing:.13em;
+      font-size:9px;
+      color:var(--text-soft);
+      margin-bottom:4px;
+    }
+    .stat-value{
+      font-size:17px;
+      font-weight:600;
+    }
+    .stat-help{
+      font-size:10px;
+      color:var(--text-soft);
+      margin-top:2px;
+    }
+    .stat-value.green{color:#4ade80;}
+    .stat-value.yellow{color:#facc15;}
+
+    .chip-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-top:10px;
+      font-size:10px;
+    }
+    .chip{
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      padding:3px 8px;
+      background:rgba(15,23,42,.9);
+      color:var(--text-soft);
+    }
+    .chip.green{
+      border-color:rgba(34,197,94,.9);
+      color:#bbf7d0;
+      background:rgba(22,163,74,.25);
+    }
+    .chip.red{
+      border-color:rgba(248,113,113,.9);
+      color:#fecaca;
+      background:rgba(127,29,29,.35);
+    }
+
+    /* PROFILE / SETTINGS */
+    .profile-list{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      font-size:11px;
+      margin-top:8px;
+    }
+    .profile-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-radius:12px;
+      border:1px solid rgba(148,163,184,.5);
+      background:rgba(15,23,42,.96);
+      padding:6px 8px;
+      gap:8px;
+    }
+    .profile-key{
+      color:var(--text-soft);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+    }
+    .profile-val{
+      font-size:11px;
+      word-break:break-all;
+      text-align:right;
+    }
+    .badge-on{
+      border-radius:999px;
+      border:1px solid rgba(34,197,94,.8);
+      padding:2px 8px;
+      font-size:10px;
+      color:#bbf7d0;
+      background:rgba(22,163,74,.25);
+    }
+    .badge-off{
+      border-radius:999px;
+      border:1px solid rgba(248,113,113,.8);
+      padding:2px 8px;
+      font-size:10px;
+      color:#fecaca;
+      background:rgba(127,29,29,.35);
+    }
+
+    /* HISTORY CARD */
+    .history-card{
+      margin-top:10px;
+    }
+    .history-table-wrap{
+      margin-top:8px;
+      border-radius:16px;
+      border:1px solid rgba(30,64,175,.7);
+      background:rgba(15,23,42,.96);
+      overflow:hidden;
+    }
+    table.history-table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:11px;
+    }
+    .history-table thead{
+      background:rgba(15,23,42,.98);
+    }
+    .history-table th,
+    .history-table td{
+      padding:7px 8px;
+      border-bottom:1px solid rgba(30,64,175,.55);
+      text-align:left;
+      white-space:nowrap;
+    }
+    .history-table th{
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.11em;
+      color:var(--text-soft);
+    }
+    .history-table td:nth-child(1){max-width:120px;overflow:hidden;text-overflow:ellipsis;}
+    .history-table td:nth-child(2){max-width:80px;}
+    .history-table td:nth-child(6){text-align:right;}
+    .pill-status{
+      font-size:10px;
+      padding:2px 7px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+    }
+    .pill-status.ok{
+      border-color:rgba(34,197,94,.9);
+      background:rgba(22,163,74,.25);
+      color:#bbf7d0;
+    }
+    .pill-status.err{
+      border-color:rgba(248,113,113,.9);
+      background:rgba(127,29,29,.35);
+      color:#fecaca;
+    }
+    .btn-link{
+      border:none;
+      background:none;
+      font-size:10px;
+      color:var(--neon);
+      cursor:pointer;
+      text-decoration:underline;
+    }
+    .history-empty{
+      font-size:11px;
+      color:var(--text-soft);
+      padding:9px 10px 10px;
+    }
+
+    /* FOOTER */
+    footer{
+      padding:18px 6% 22px;
+      font-size:11px;
+      color:var(--text-soft);
+      border-top:1px solid rgba(148,163,184,.35);
+      margin-top:10px;
+    }
+    footer .right{float:right;}
+    @media(max-width:640px){
+      footer .right{float:none;display:block;margin-top:6px;}
+    }
+
+    /* REVEAL */
+    .reveal{
+      opacity:0;
+      transform:translateY(24px);
+      transition:opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- BACKGROUND -->
+  <canvas id="bgParticles"></canvas>
+  <div class="bg-grid"></div>
+  <div class="bg-glow cyan"></div>
+  <div class="bg-glow magenta"></div>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-left">
+      <img src="assets/AnalyticaX.png" alt="AnalyticaX Logo" class="logo-img">
+      <div>
+        <div class="logo-main">Analytica<span>X</span></div>
+        <div class="logo-sub">AI Powered Crypto Chart Analysis</div>
+      </div>
+    </div>
+
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="analyze.html">Analyze</a>
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="premium.html">Premium</a>
+      <a href="verify-payment-real.html">Verify payment</a>
+    </nav>
+
+    <div class="nav-actions">
+      <div class="nav-credits" id="navCredits">Credits: --</div>
+      <div class="user-pill">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div>
+          <div id="userEmail">user@demo.com</div>
+          <div id="userPlan" style="font-size:10px;color:var(--text-soft);">Plan: Free</div>
+        </div>
+        <button class="btn-ghost" onclick="window.location.href='settings.html'">
+  Settings
+</button>
+      </div>
+      <button class="btn-outline" id="btnLogout">Logout</button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="dash-wrapper">
+      <!-- HEADER -->
+      <section class="dash-header reveal">
+        <div>
+          <div class="dash-title-main">
+            Welcome back, <span class="name" id="pageUserName">Trader</span> 🚀
+            <span class="pill-plan" id="badgePlan">FREE MODE</span>
+          </div>
+          <p class="dash-sub">
+            Your personal trading intelligence cockpit — live credits, daily limits and AI analysis history, all in one neon control panel.
+          </p>
+          <div class="dash-badges">
+            <div class="badge-soft">
+              <span class="badge-dot"></span>
+              <span id="badgeLiveText">Account connected • API online</span>
+            </div>
+            <div class="badge-soft">
+              EMA/ATR AI engine <span style="color:var(--neon);font-weight:500;">enabled</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-actions">
+          <button class="btn-primary" onclick="window.location.href='analyze.html'">
+            Go to AI Analyze
+          </button>
+          <button class="btn-ghost" onclick="window.location.href='premium.html'">
+            Upgrade / Buy credits
+          </button>
+          <div class="mini-text" id="miniPlanHint">
+            Free plan: 1 analysis / day • total limit set by backend
+          </div>
+        </div>
+      </section>
+
+      <!-- GRID: LEFT = metrics & history, RIGHT = profile/settings -->
+      <section class="dash-grid">
+        <!-- LEFT SIDE -->
+        <div class="reveal">
+          <!-- METRICS -->
+          <div class="card" style="margin-bottom:18px;">
+            <div class="card-inner">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">
+                    Account overview
+                    <span class="card-tag">Usage</span>
+                  </div>
+                  <div class="card-sub">
+                    Credits, daily free quota and total AI analysis calls from your account.
+                  </div>
+                </div>
+              </div>
+
+              <div class="stat-grid">
+                <div class="stat-card">
+                  <div class="stat-label">Available credits</div>
+                  <div class="stat-value green" id="metricCredits">--</div>
+                  <div class="stat-help" id="metricDailyInfo">Daily free: --</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-label">Total analyses</div>
+                  <div class="stat-value" id="metricTotalAnalyses">--</div>
+                  <div class="stat-help" id="metricTodayAnalyses">Today: --</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-label">Current plan</div>
+                  <div class="stat-value" id="metricPlan">Free</div>
+                  <div class="stat-help" id="metricPlanLabel">Upgrade for full pro power</div>
+                </div>
+              </div>
+
+              <div class="chip-row">
+                <span class="chip green">✔ Token-based access system</span>
+                <span class="chip">Backend-validated daily free quota</span>
+                <span class="chip red">0 credits → analysis locked</span>
+                <span class="chip">AI EMA / ATR engine connected to AnalyticaX API</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- HISTORY -->
+          <section class="history-card card">
+            <div class="card-inner">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">
+                    Recent AI analyses
+                    <span class="card-tag">History</span>
+                  </div>
+                  <div class="card-sub">
+                    Last analysis requests linked to this account, loaded directly from the backend.
+                  </div>
+                </div>
+                <button class="btn-ghost" style="font-size:11px;" onclick="window.location.href='history.html'">
+                  View full history
+                </button>
+              </div>
+
+              <div class="history-table-wrap">
+                <table class="history-table" id="historyTable">
+                  <thead>
+                    <tr>
+                      <th>Symbol</th>
+                      <th>Timeframe</th>
+                      <th>Trend</th>
+                      <th>Risk</th>
+                      <th>Status</th>
+                      <th>When</th>
+                      <th>Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- JS fills -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="history-empty" id="historyHint">
+                Loading history from <strong>/api/analysis/history</strong>...
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- RIGHT SIDE: PROFILE / SETTINGS / PREMIUM STATE -->
+        <aside class="reveal">
+          <div class="card" style="margin-bottom:18px;">
+            <div class="card-inner">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">
+                    Profile & security
+                    <span class="card-tag">Account</span>
+                  </div>
+                  <div class="card-sub">
+                    Device, IP and plan information linked to this trading cockpit.
+                  </div>
+                </div>
+              </div>
+
+              <div class="profile-list">
+                <div class="profile-row">
+                  <div class="profile-key">Email</div>
+                  <div class="profile-val" id="profileEmail">--</div>
+                </div>
+                <div class="profile-row">
+                  <div class="profile-key">IP address</div>
+                  <div class="profile-val" id="profileIp">--</div>
+                </div>
+                <div class="profile-row">
+                  <div class="profile-key">Device ID</div>
+                  <div class="profile-val" id="profileDevice">Not set</div>
+                </div>
+                <div class="profile-row">
+                  <div class="profile-key">Browser fingerprint</div>
+                  <div class="profile-val" id="profileFingerprint">Not set</div>
+                </div>
+                <div class="profile-row">
+                  <div class="profile-key">OTP on IP change</div>
+                  <div class="profile-val"><span class="badge-on">ENABLED</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-inner">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">
+                    Plan & credits
+                    <span class="card-tag" id="sidePlanTag">Free</span>
+                  </div>
+                  <div class="card-sub">
+                    See your current tier and remaining power for the AI engine.
+                  </div>
+                </div>
+              </div>
+
+              <div class="stat-grid">
+                <div class="stat-card">
+                  <div class="stat-label">Plan</div>
+                  <div class="stat-value" id="sidePlan">Free</div>
+                  <div class="stat-help" id="sidePlanDesc">Upgrade to unlock higher limits.</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-label">Daily free remaining</div>
+                  <div class="stat-value yellow" id="sideDailyFree">--</div>
+                  <div class="stat-help">Resets every 24h (backend validated).</div>
+                </div>
+              </div>
+
+              <div class="chip-row">
+                <span id="premiumBadgeChip" class="chip red">Premium engine locked</span>
+                <span class="chip">Payments verified via verify-payment.html</span>
+              </div>
+
+              <div class="mini-text" style="margin-top:8px;">
+                Purchased credits are stored on-chain in your account and validated on every analysis call.
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© <span id="footerYear"></span> AnalyticaX • All rights reserved.</span>
+    <span class="right">Analysis only • No investment advice • Crypto payments via Binance</span>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    const API_BASE = "http://localhost:5000";
+
+    // ==== FOOTER YEAR ====
+    document.getElementById("footerYear").textContent = new Date().getFullYear();
+
+    // ==== PARTICLE BACKGROUND ====
+    const canvas = document.getElementById("bgParticles");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+    const PARTICLE_COUNT = 80;
+
+    function resizeCanvas(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function createParticles(){
+      particles = [];
+      for(let i=0;i<PARTICLE_COUNT;i++){
+        particles.push({
+          x: Math.random()*canvas.width,
+          y: Math.random()*canvas.height,
+          r: Math.random()*2+0.5,
+          vx:(Math.random()-0.5)*0.2,
+          vy:(Math.random()-0.5)*0.2,
+          alpha: Math.random()*0.6+0.2
+        });
+      }
+    }
+    createParticles();
+
+    function drawParticles(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      for(const p of particles){
+        p.x+=p.vx;
+        p.y+=p.vy;
+        if(p.x<0)p.x=canvas.width;
+        if(p.x>canvas.width)p.x=0;
+        if(p.y<0)p.y=canvas.height;
+        if(p.y>canvas.height)p.y=0;
+
+        const gradient = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*6);
+        gradient.addColorStop(0,`rgba(0,229,255,${p.alpha})`);
+        gradient.addColorStop(0.4,`rgba(255,77,255,${p.alpha*0.7})`);
+        gradient.addColorStop(1,"rgba(0,0,0,0)");
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r*6,0,Math.PI*2);
+        ctx.fill();
+      }
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    // ==== REVEAL ON SCROLL ====
+    const observer = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0.15});
+    document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+
+    // ==== AUTH / ME / DASHBOARD LOAD ====
+    const token = localStorage.getItem("ax_token");
+    if (!token) {
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("btnLogout").addEventListener("click", ()=>{
+      localStorage.removeItem("ax_token");
+      window.location.href = "login.html";
+    });
+
+    function formatDate(dateStr){
+      if(!dateStr) return "--";
+      const d = new Date(dateStr);
+      if(isNaN(d.getTime())) return "--";
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      const hh = String(d.getHours()).padStart(2,"0");
+      const mi = String(d.getMinutes()).padStart(2,"0");
+      return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
+    }
+
+async function loadDashboard() {
+    try {
+
+        const deviceId = localStorage.getItem("ax_device_id");
+        const fingerprint = localStorage.getItem("ax_fingerprint");
+
+        const res = await fetch(`${API_BASE}/api/auth/me`, {
+            headers:{
+                "Authorization": "Bearer " + token,
+                "x-device-id": deviceId,
+                "x-device-fingerprint": fingerprint
+            }
+        });
+
+        const data = await res.json();
+console.log("ME RESPONSE:", data); // 🔥 BURADA
+
+        if (data.otpRequired) {
+            window.location.href = "otp.html?email=" + encodeURIComponent(data.email);
+            return;
+        }
+        if (data.error === "Invalid token") {
+            localStorage.removeItem("ax_token");
+            window.location.href = "login.html";
+            return;
+        }
+
+        if(!data.ok){
+            alert("Session expired. Login again.");
+            localStorage.removeItem("ax_token");
+            window.location.href = "login.html";
+            return;
+        }
+
+        // === FILL DASHBOARD ===
+        document.getElementById("navCredits").textContent = "Credits: " + (data.credits ?? 0);
+        document.getElementById("userEmail").textContent = data.email;
+        document.getElementById("userPlan").textContent = "Plan: " + (data.plan || "Free");
+        document.getElementById("userAvatar").textContent = data.email[0].toUpperCase();
+
+        document.getElementById("pageUserName").textContent = data.email.split("@")[0];
+
+        const badgePlan = document.getElementById("badgePlan");
+        if(data.premium){
+            badgePlan.textContent = "PREMIUM";
+            badgePlan.classList.add("premium");
+        } else {
+            badgePlan.textContent = "FREE MODE";
+            badgePlan.classList.remove("premium");
+        }
+
+        document.getElementById("metricCredits").textContent = data.credits ?? 0;
+        document.getElementById("metricDailyInfo").textContent = "Daily free: " + (data.dailyFree ?? 0);
+        document.getElementById("metricTotalAnalyses").textContent = data.totalAnalyses ?? 0;
+        document.getElementById("metricTodayAnalyses").textContent = "Today: " + (data.todayAnalyses ?? 0);
+        document.getElementById("metricPlan").textContent = data.plan;
+        document.getElementById("metricPlanLabel").textContent =
+        data.premium ? "Premium features active" : "Upgrade for full pro power";
+
+        document.getElementById("profileEmail").textContent = data.email;
+        document.getElementById("profileIp").textContent = data.ipAddress;
+        document.getElementById("profileDevice").textContent = data.deviceId;
+        document.getElementById("profileFingerprint").textContent = data.deviceFingerprint;
+
+const sidePlanTag = document.getElementById("sidePlanTag");
+if (data.premium) {
+    sidePlanTag.textContent = "Premium";
+    sidePlanTag.style.borderColor = "#00E5FF";
+    sidePlanTag.style.color = "#00E5FF";
+} else {
+    sidePlanTag.textContent = "Free";
+    sidePlanTag.style.borderColor = "rgba(148,163,184,.75)";
+    sidePlanTag.style.color = "var(--text-soft)";
+}
+document.getElementById("sidePlan").textContent = data.plan;
+
+        document.getElementById("sidePlanDesc").textContent =
+        data.premium ? "Premium features active" : "Upgrade to unlock higher limits.";
+
+        document.getElementById("sideDailyFree").textContent = data.dailyFree;
+
+const chip = document.getElementById("premiumBadgeChip");
+if (data.premium) {
+    chip.classList.remove("red");
+    chip.classList.add("green");
+    chip.textContent = "Premium active";
+} else {
+    chip.classList.remove("green");
+    chip.classList.add("red");
+    chip.textContent = "Premium engine locked";
+}
+
+
+    } catch(err) {
+        console.error("ME ERROR:", err);
+        window.location.href = "login.html";
+    }
+
+    await loadHistory();
+}
+
+    async function loadHistory(){
+      const tbody = document.querySelector("#historyTable tbody");
+      const hint = document.getElementById("historyHint");
+
+      try{
+    const res = await fetch(`${API_BASE}/api/analysis/history`, {
+    headers:{
+      "Authorization":"Bearer " + token,
+      "x-device-fingerprint": localStorage.getItem("ax_fingerprint")
+    }
+    });
+
+
+        if(!res.ok){
+          hint.textContent = "Could not load history from backend.";
+          return;
+        }
+
+        const list = await res.json();
+        tbody.innerHTML = "";
+
+        if(!Array.isArray(list) || list.length === 0){
+          hint.innerHTML = "No analyses yet. Start with a new chart on <strong>Analyze</strong> page.";
+          return;
+        }
+        hint.textContent = "";
+
+        // son 5 kaydı göster
+        const recent = list.slice(0,5);
+
+        recent.forEach(item=>{
+          const tr = document.createElement("tr");
+          const trend = item.trend || "--";
+          const risk = item.risk || "--";
+          const status = (item.status || "ok").toLowerCase();
+          const isOk = status === "ok" || status === "success";
+          const id = item._id || item.id || "";
+          const when = formatDate(item.createdAt || item.date || item.created_at);
+
+          tr.innerHTML = `
+            <td>${item.symbol || item.pair || "--"}</td>
+            <td>${item.timeframe || item.tf || "--"}</td>
+            <td>${trend}</td>
+            <td>${risk}</td>
+            <td>
+              <span class="pill-status ${isOk ? "ok" : "err"}">
+                ${isOk ? "OK" : "ERROR"}
+              </span>
+            </td>
+            <td>${when}</td>
+            <td>
+              ${
+                id
+                  ? `<button class="btn-link" onclick="openHistoryDetail('${id}')">Open</button>`
+                  : `<span style="font-size:10px;color:var(--text-soft);">—</span>`
+              }
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+      }catch(err){
+        console.error("HISTORY ERROR:", err);
+        hint.textContent = "History load error. Check backend or network.";
+      }
+    }
+
+    async function getDeviceFingerprint(){
+    const data = [
+      navigator.userAgent,
+      navigator.language,
+      screen.width + "x" + screen.height,
+      screen.colorDepth,
+      Intl.DateTimeFormat().resolvedOptions().timeZone
+    ].join(" | ");
+
+    return btoa(data).substring(0,32);
+}
+
+async function storeFingerprint(){
+
+    let deviceId = localStorage.getItem("ax_device_id");
+    let fingerprint = localStorage.getItem("ax_fingerprint");
+
+    if (deviceId && fingerprint) return;
+
+    deviceId = crypto.randomUUID();
+    fingerprint = await getDeviceFingerprint();
+
+    localStorage.setItem("ax_device_id", deviceId);
+    localStorage.setItem("ax_fingerprint", fingerprint);
+}
+
+function openHistoryDetail(id){
+  window.location.href = "history.html?id=" + encodeURIComponent(id);
+}
+
+async function startDashboard() {
+    await storeFingerprint();
+    await loadDashboard();
+}
+startDashboard();
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AnalyticaX — Complete Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --neon:#00E5FF;
+      --magenta:#FF4DFF;
+      --accent-green:#14F195;
+      --bg:#020617;
+      --panel:#0b1020;
+      --text-soft:#A0AEC0;
+      --border-soft:rgba(148,163,184,.35);
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:"Poppins",sans-serif;
+      background:radial-gradient(circle at top,#061525 0,var(--bg) 45%,#000 100%);
+      color:#fff;
+      min-height:100vh;
+      overflow-x:hidden;
+      padding:20px;
+    }
+
+    canvas#bgParticles{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+    }
+    .bg-grid{
+      position:fixed;
+      inset:0;
+      background-image:
+        linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),
+        linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+      background-size:50px 50px;
+      opacity:.22;
+      pointer-events:none;
+      z-index:-2;
+    }
+    .bg-glow{
+      position:fixed;
+      width:480px;
+      height:480px;
+      border-radius:50%;
+      filter:blur(120px);
+      opacity:.75;
+      mix-blend-mode:screen;
+      pointer-events:none;
+      z-index:-1;
+      animation:glowFloat 18s ease-in-out infinite alternate;
+    }
+    .bg-glow.cyan{
+      background:radial-gradient(circle,rgba(0,229,255,.9),transparent 60%);
+      top:-90px;
+      left:-60px;
+    }
+    .bg-glow.magenta{
+      background:radial-gradient(circle,rgba(255,77,255,.9),transparent 60%);
+      bottom:-130px;
+      right:-80px;
+      animation-delay:6s;
+    }
+    @keyframes glowFloat{
+      0%{transform:translate(0,0);}
+      100%{transform:translate(40px,-35px);}
+    }
+
+    .container{
+      max-width:900px;
+      margin:40px auto;
+    }
+
+    .payment-card{
+      background:rgba(15,23,42,.96);
+      border-radius:24px;
+      border:1px solid rgba(148,163,184,.35);
+      padding:32px;
+      box-shadow:0 26px 60px rgba(15,23,42,.95);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .payment-card::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:
+        radial-gradient(circle at 0 0,rgba(0,229,255,.22),transparent 55%),
+        radial-gradient(circle at 100% 100%,rgba(255,77,255,.22),transparent 55%);
+      opacity:.35;
+      pointer-events:none;
+      mix-blend-mode:soft-light;
+    }
+
+    .payment-header{
+      position:relative;
+      z-index:2;
+      margin-bottom:24px;
+    }
+
+    .payment-title{
+      font-size:24px;
+      font-weight:600;
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:8px;
+    }
+
+    .payment-subtitle{
+      font-size:13px;
+      color:var(--text-soft);
+    }
+
+    .step-indicator{
+      display:flex;
+      gap:12px;
+      margin-bottom:28px;
+      position:relative;
+      z-index:2;
+    }
+
+    .step{
+      flex:1;
+      text-align:center;
+      position:relative;
+    }
+
+    .step-number{
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      background:rgba(15,23,42,.9);
+      border:2px solid rgba(148,163,184,.5);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 auto 8px;
+      font-weight:600;
+      transition:all 0.3s ease;
+    }
+
+    .step.active .step-number{
+      border-color:var(--neon);
+      background:rgba(0,229,255,.15);
+      box-shadow:0 0 20px rgba(0,229,255,.5);
+    }
+
+    .step.completed .step-number{
+      border-color:var(--accent-green);
+      background:rgba(20,241,149,.15);
+    }
+
+    .step-label{
+      font-size:11px;
+      color:var(--text-soft);
+    }
+
+    .step.active .step-label{
+      color:#fff;
+    }
+
+    .step-content{
+      position:relative;
+      z-index:2;
+      min-height:400px;
+    }
+
+    .step-panel{
+      display:none;
+    }
+
+    .step-panel.active{
+      display:block;
+      animation:fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(10px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+
+    .method-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:12px;
+      margin-bottom:20px;
+    }
+
+    .method-card{
+      padding:16px;
+      border-radius:16px;
+      border:2px solid rgba(148,163,184,.35);
+      background:rgba(15,23,42,.7);
+      cursor:pointer;
+      transition:all 0.3s ease;
+      text-align:center;
+    }
+
+    .method-card:hover{
+      border-color:var(--neon);
+      background:rgba(0,229,255,.1);
+      transform:translateY(-2px);
+    }
+
+    .method-card.selected{
+      border-color:var(--neon);
+      background:rgba(0,229,255,.2);
+      box-shadow:0 0 25px rgba(0,229,255,.4);
+    }
+
+    .method-icon{
+      font-size:32px;
+      margin-bottom:8px;
+    }
+
+    .method-name{
+      font-size:14px;
+      font-weight:600;
+      margin-bottom:4px;
+    }
+
+    .method-desc{
+      font-size:11px;
+      color:var(--text-soft);
+    }
+
+    .status-badge{
+      display:inline-block;
+      padding:3px 8px;
+      border-radius:999px;
+      font-size:9px;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      margin-top:6px;
+    }
+
+    .status-live{
+      background:rgba(20,241,149,.2);
+      border:1px solid var(--accent-green);
+      color:var(--accent-green);
+    }
+
+    .status-new{
+      background:rgba(0,229,255,.2);
+      border:1px solid var(--neon);
+      color:var(--neon);
+    }
+
+    .status-closed{
+      background:rgba(249,115,115,.2);
+      border:1px solid #f97373;
+      color:#f97373;
+    }
+
+    .wallet-section{
+      background:rgba(15,23,42,.7);
+      border-radius:16px;
+      padding:20px;
+      margin-bottom:20px;
+      border:1px solid rgba(148,163,184,.3);
+    }
+
+    .wallet-label{
+      font-size:12px;
+      color:var(--text-soft);
+      margin-bottom:8px;
+    }
+
+    .wallet-input{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid rgba(148,163,184,.5);
+      background:rgba(0,0,0,.4);
+      color:#fff;
+      font-size:13px;
+      font-family:monospace;
+    }
+
+    .wallet-input:focus{
+      outline:none;
+      border-color:var(--neon);
+      box-shadow:0 0 15px rgba(0,229,255,.3);
+    }
+
+    .copy-btn{
+      margin-top:8px;
+      padding:8px 16px;
+      border-radius:999px;
+      border:1px solid var(--neon);
+      background:rgba(0,229,255,.1);
+      color:var(--neon);
+      cursor:pointer;
+      font-size:12px;
+      transition:all 0.3s ease;
+    }
+
+    .copy-btn:hover{
+      background:rgba(0,229,255,.2);
+      box-shadow:0 0 15px rgba(0,229,255,.4);
+    }
+
+    .payment-info{
+      background:rgba(15,23,42,.7);
+      border-radius:16px;
+      padding:20px;
+      margin-bottom:20px;
+      border:1px solid rgba(148,163,184,.3);
+    }
+
+    .info-row{
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:12px;
+      font-size:13px;
+    }
+
+    .info-label{
+      color:var(--text-soft);
+    }
+
+    .info-value{
+      font-weight:600;
+    }
+
+    .warning-box{
+      background:rgba(249,115,115,.15);
+      border-left:4px solid #f97373;
+      border-radius:12px;
+      padding:14px;
+      margin-bottom:20px;
+      font-size:12px;
+      color:#fecaca;
+    }
+
+    .success-box{
+      background:rgba(20,241,149,.15);
+      border-left:4px solid var(--accent-green);
+      border-radius:12px;
+      padding:14px;
+      margin-bottom:20px;
+      font-size:12px;
+      color:#bbf7d0;
+    }
+
+    .btn-primary{
+      width:100%;
+      padding:14px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      color:#020617;
+      font-weight:600;
+      font-size:15px;
+      cursor:pointer;
+      box-shadow:0 0 25px rgba(0,229,255,.6);
+      transition:all 0.3s ease;
+      margin-top:12px;
+    }
+
+    .btn-primary:hover{
+      box-shadow:0 0 35px rgba(0,229,255,.9), 0 0 50px rgba(255,77,255,.5);
+      transform:translateY(-2px) scale(1.02);
+    }
+
+    .btn-secondary{
+      width:100%;
+      padding:12px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.8);
+      color:#e5e7eb;
+      font-size:13px;
+      cursor:pointer;
+      transition:all 0.3s ease;
+      margin-top:8px;
+    }
+
+    .btn-secondary:hover{
+      border-color:var(--neon);
+      background:rgba(0,229,255,.1);
+    }
+
+    .verify-section{
+      text-align:center;
+    }
+
+    .txid-input{
+      width:100%;
+      padding:14px;
+      border-radius:12px;
+      border:1px solid rgba(148,163,184,.5);
+      background:rgba(0,0,0,.4);
+      color:#fff;
+      font-size:13px;
+      font-family:monospace;
+      margin-bottom:16px;
+    }
+
+    .txid-input:focus{
+      outline:none;
+      border-color:var(--neon);
+      box-shadow:0 0 15px rgba(0,229,255,.3);
+    }
+
+    .loading-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.85);
+      backdrop-filter:blur(8px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      flex-direction:column;
+    }
+
+    .loading-overlay.active{
+      display:flex;
+    }
+
+    .loader{
+      width:64px;
+      height:64px;
+      border:5px solid rgba(255,255,255,.15);
+      border-top:5px solid var(--neon);
+      border-right:5px solid var(--magenta);
+      border-radius:50%;
+      animation:spin 1s linear infinite;
+      margin-bottom:20px;
+    }
+
+    @keyframes spin{
+      to{transform:rotate(360deg);}
+    }
+
+    .loading-text{
+      font-size:16px;
+      color:#fff;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bgParticles"></canvas>
+  <div class="bg-grid"></div>
+  <div class="bg-glow cyan"></div>
+  <div class="bg-glow magenta"></div>
+
+  <div class="container">
+    <div class="payment-card">
+      <div class="payment-header">
+        <h1 class="payment-title">Complete Payment</h1>
+        <p class="payment-subtitle">Follow the steps to complete your payment securely</p>
+      </div>
+
+      <div class="step-indicator">
+        <div class="step active" id="step1">
+          <div class="step-number">1</div>
+          <div class="step-label">Select Method</div>
+        </div>
+        <div class="step" id="step2">
+          <div class="step-number">2</div>
+          <div class="step-label">Enter Wallet</div>
+        </div>
+        <div class="step" id="step3">
+          <div class="step-number">3</div>
+          <div class="step-label">Payment</div>
+        </div>
+        <div class="step" id="step4">
+          <div class="step-number">4</div>
+          <div class="step-label">Verify</div>
+        </div>
+      </div>
+
+      <div class="step-content">
+        <!-- STEP 1: SELECT PAYMENT METHOD -->
+        <div class="step-panel active" id="panel1">
+          <h3 style="margin-bottom:16px;font-size:18px;">Choose a network or provider</h3>
+          <div class="method-grid" id="methodGrid">
+            <!-- Methods will be injected by JS -->
+          </div>
+          <button class="btn-primary" id="btnContinue1">Continue →</button>
+        </div>
+
+        <!-- STEP 2: ENTER WALLET ADDRESS -->
+        <div class="step-panel" id="panel2">
+          <div class="payment-info">
+            <div class="info-row">
+              <span class="info-label">Package:</span>
+              <span class="info-value" id="infoPackage">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Amount:</span>
+              <span class="info-value" id="infoAmount">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Network:</span>
+              <span class="info-value" id="infoNetwork">—</span>
+            </div>
+          </div>
+
+          <div class="wallet-section">
+            <label class="wallet-label">Enter your wallet address</label>
+            <input type="text" class="wallet-input" id="walletAddress" placeholder="Enter your TRC20/ERC20/BEP20 wallet address">
+            <button class="copy-btn" onclick="copyToClipboard('walletAddress')">Copy</button>
+          </div>
+
+          <div class="warning-box">
+            ⚠️ Double-check your address. Transactions sent to incorrect addresses cannot be recovered.
+          </div>
+
+          <button class="btn-primary" id="btnContinue2">Continue to Payment →</button>
+          <button class="btn-secondary" onclick="goToStep(1)">Back</button>
+        </div>
+
+        <!-- STEP 3: PAYMENT INSTRUCTIONS -->
+        <div class="step-panel" id="panel3">
+          <div class="payment-info">
+            <div class="info-row">
+              <span class="info-label">Pay Address:</span>
+              <span class="info-value" id="payAddress" style="font-family:monospace;font-size:11px;">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Amount:</span>
+              <span class="info-value" id="payAmount">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Network:</span>
+              <span class="info-value" id="payNetwork">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Est. Fee:</span>
+              <span class="info-value">~0.5-1.0 USDT</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">ETA:</span>
+              <span class="info-value">~30-120s confirmation</span>
+            </div>
+          </div>
+
+          <div class="success-box">
+            ✅ Your transaction is secured with advanced encryption.
+          </div>
+
+          <div class="warning-box">
+            ⚠️ Only send <span id="currencyType">USDT</span> to this address. Sending any other cryptocurrency may result in permanent loss of funds.
+          </div>
+
+          <button class="btn-primary" id="btnMadePayment">I've Made the Payment</button>
+          <button class="btn-secondary" onclick="goToStep(2)">Back</button>
+        </div>
+
+        <!-- STEP 4: VERIFY TRANSACTION -->
+        <div class="step-panel" id="panel4">
+          <div class="verify-section">
+            <h3 style="margin-bottom:16px;font-size:18px;">Verify Your Transaction</h3>
+            <p style="color:var(--text-soft);margin-bottom:24px;font-size:13px;">
+              Please enter your transaction ID (TXID) to verify your payment.
+            </p>
+
+            <input type="text" class="txid-input" id="txidInput" placeholder="Enter your transaction ID (TXID)">
+
+            <button class="btn-primary" id="btnVerify">Verify Transaction</button>
+            <button class="btn-secondary" onclick="goToStep(3)">Back</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loader"></div>
+    <div class="loading-text" id="loadingText">Verifying Transaction...</div>
+  </div>
+
+  <script>
+    // Payment methods configuration
+    const PAYMENT_METHODS = [
+      {id:"TRC20-USDT", name:"TRC20 (TRON)", desc:"USDT • Fast & low fee", icon:"🟢", status:"live"},
+      {id:"ERC20-USDT", name:"ERC20 (Ethereum)", desc:"USDT • High security", icon:"🔷", status:"live"},
+      {id:"BEP20-USDT", name:"BEP20 (BSC)", desc:"USDT • Low gas on BSC", icon:"🟡", status:"live"},
+      {id:"USDC-ERC20", name:"USDC (BEP20-ERC20)", desc:"Same address for both", icon:"💵", status:"new"},
+      {id:"BTC", name:"BTC (Bitcoin)", desc:"Native Bitcoin network", icon:"₿", status:"new"},
+      {id:"OXAPAY", name:"Oxapay Gateway", desc:"Multi-coin crypto gateway", icon:"🔵", status:"live"},
+      {id:"SHOPIER", name:"Shopier (Secure Payment)", desc:"Credit / debit card", icon:"💳", status:"new"},
+      {id:"BINANCE-PAY", name:"Binance Pay", desc:"Pay directly from Binance", icon:"🔶", status:"closed"},
+      {id:"OKX-PAY", name:"OKX Pay", desc:"OKX payment gateway", icon:"⚫", status:"closed"}
+    ];
+
+    const PAYMENT_ADDRESSES = {
+      "TRC20-USDT": "TQDwWFmC2fMCDzLmrndc2bsiB7vK78DE33",
+      "ERC20-USDT": "0xb5f5090D4f032059844c464C7A273D29063311c1",
+      "BEP20-USDT": "0xb5f5090D4f032059844c464C7A273D29063311c1",
+      "USDC-ERC20": "0xb5f5090D4f032059844c464C7A273D29063311c1",
+      "BTC": "bc1qwwqwkkw7aqvg5j58peskg0hw4xuyeeucahg7gl"
+    };
+
+    const PAYMENT_CURRENCY = {
+      "TRC20-USDT": "USDT",
+      "ERC20-USDT": "USDT",
+      "BEP20-USDT": "USDT",
+      "USDC-ERC20": "USDC",
+      "BTC": "BTC"
+    };
+
+    let currentStep = 1;
+    let selectedMethod = null;
+    let selectedPlan = null;
+
+    // Get plan from URL or localStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    const planName = urlParams.get("plan") || localStorage.getItem("selectedPlanName") || "Pro pack";
+    const planPrice = parseFloat(urlParams.get("price") || localStorage.getItem("selectedPlanPrice") || "50");
+    const planCredits = parseInt(urlParams.get("credits") || localStorage.getItem("selectedPlanCredits") || "10");
+
+    selectedPlan = {name:planName, price:planPrice, credits:planCredits};
+
+    // Initialize
+    function init(){
+      renderMethods();
+      updatePlanInfo();
+      initParticles();
+    }
+
+    function renderMethods(){
+      const grid = document.getElementById("methodGrid");
+      grid.innerHTML = "";
+      
+      PAYMENT_METHODS.forEach(method => {
+        const card = document.createElement("div");
+        card.className = "method-card";
+        card.dataset.method = method.id;
+        
+        const statusClass = `status-${method.status}`;
+        const statusText = method.status === "live" ? "LIVE" : method.status === "new" ? "NEW" : "CLOSED";
+        
+        card.innerHTML = `
+          <div class="method-icon">${method.icon}</div>
+          <div class="method-name">${method.name}</div>
+          <div class="method-desc">${method.desc}</div>
+          <span class="status-badge ${statusClass}">${statusText}</span>
+        `;
+        
+        card.addEventListener("click", () => {
+          if(method.status === "closed") return;
+          document.querySelectorAll(".method-card").forEach(c => c.classList.remove("selected"));
+          card.classList.add("selected");
+          selectedMethod = method.id;
+        });
+        
+        grid.appendChild(card);
+      });
+    }
+
+    function updatePlanInfo(){
+      document.getElementById("infoPackage").textContent = selectedPlan.name;
+      document.getElementById("infoAmount").textContent = `$${selectedPlan.price}`;
+    }
+
+    function goToStep(step){
+      currentStep = step;
+      updateSteps();
+    }
+
+    function nextStep(){
+      if(currentStep < 4) currentStep++;
+      updateSteps();
+    }
+
+    function updateSteps(){
+      // Update step indicators
+      for(let i=1; i<=4; i++){
+        const stepEl = document.getElementById(`step${i}`);
+        const panelEl = document.getElementById(`panel${i}`);
+        
+        stepEl.classList.remove("active", "completed");
+        panelEl.classList.remove("active");
+        
+        if(i < currentStep){
+          stepEl.classList.add("completed");
+        } else if(i === currentStep){
+          stepEl.classList.add("active");
+          panelEl.classList.add("active");
+        }
+      }
+
+      // Update content based on step
+      if(currentStep === 2){
+        if(selectedMethod){
+          const network = PAYMENT_METHODS.find(m => m.id === selectedMethod)?.name || selectedMethod;
+          document.getElementById("infoNetwork").textContent = network;
+        }
+      } else if(currentStep === 3){
+        if(selectedMethod && PAYMENT_ADDRESSES[selectedMethod]){
+          document.getElementById("payAddress").textContent = PAYMENT_ADDRESSES[selectedMethod];
+          document.getElementById("payAmount").textContent = `$${selectedPlan.price} ${PAYMENT_CURRENCY[selectedMethod] || "USDT"}`;
+          document.getElementById("payNetwork").textContent = PAYMENT_METHODS.find(m => m.id === selectedMethod)?.name || selectedMethod;
+          document.getElementById("currencyType").textContent = PAYMENT_CURRENCY[selectedMethod] || "USDT";
+        } else if(selectedMethod === "OXAPAY"){
+          // Redirect to OxaPay
+          window.open("https://pay.oxapay.com/13369911", "_blank");
+        }
+      }
+    }
+
+    document.getElementById("btnContinue1").addEventListener("click", () => {
+      if(!selectedMethod){
+        alert("Please select a payment method");
+        return;
+      }
+      if(selectedMethod === "OXAPAY"){
+        // Store plan info
+        localStorage.setItem("selectedPlanName", selectedPlan.name);
+        localStorage.setItem("selectedPlanPrice", selectedPlan.price);
+        localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
+        // Open OxaPay in new tab
+        window.open("https://pay.oxapay.com/13369911", "_blank");
+        // Continue to next step for verification
+        nextStep();
+        return;
+      }
+      nextStep();
+    });
+
+    document.getElementById("btnContinue2").addEventListener("click", () => {
+      const wallet = document.getElementById("walletAddress").value.trim();
+      if(!wallet){
+        alert("Please enter your wallet address");
+        return;
+      }
+      nextStep();
+    });
+
+    document.getElementById("btnMadePayment").addEventListener("click", () => {
+      nextStep();
+    });
+
+    document.getElementById("btnVerify").addEventListener("click", async () => {
+      const txid = document.getElementById("txidInput").value.trim();
+      if(!txid){
+        alert("Please enter transaction ID");
+        return;
+      }
+
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.add("active");
+      document.getElementById("loadingText").textContent = "Verifying Transaction...";
+
+      const token = localStorage.getItem("ax_token");
+      if(!token){
+        overlay.classList.remove("active");
+        alert("Please login first");
+        window.location.href = "login.html";
+        return;
+      }
+
+      try{
+        const res = await fetch("http://localhost:5000/api/payments/verify", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token,
+            "x-device-id": localStorage.getItem("ax_device_id"),
+            "x-device-fingerprint": localStorage.getItem("ax_fingerprint")
+          },
+          body: JSON.stringify({
+            txid,
+            planName: selectedPlan.name,
+            amount: selectedPlan.price,
+            credits: selectedPlan.credits,
+            method: selectedMethod || "OXAPAY"
+          })
+        });
+
+        const data = await res.json();
+        overlay.classList.remove("active");
+        
+        if(data.ok){
+          alert("✅ Payment verified successfully! " + data.credits + " credits added to your account.");
+          // Update localStorage credits
+          if(data.credits) {
+            // Reload user data
+            const meRes = await fetch("http://localhost:5000/api/auth/me", {
+              headers: {
+                "Authorization": "Bearer " + token,
+                "x-device-id": localStorage.getItem("ax_device_id"),
+                "x-device-fingerprint": localStorage.getItem("ax_fingerprint")
+              }
+            });
+            const meData = await meRes.json();
+            if(meData.ok) {
+              localStorage.setItem("ax_user_credits", meData.credits || 0);
+            }
+          }
+          window.location.href = "verify-payment-real.html?plan=" + encodeURIComponent(selectedPlan.name) + "&price=" + selectedPlan.price + "&credits=" + selectedPlan.credits + "&method=" + (selectedMethod || "OXAPAY");
+        } else {
+          alert("❌ Verification failed: " + (data.error || data.message || "Please check your TXID"));
+        }
+      } catch(err){
+        overlay.classList.remove("active");
+        console.error("Verify error:", err);
+        alert("Error: " + err.message);
+      }
+    });
+
+    function copyToClipboard(inputId){
+      const input = document.getElementById(inputId);
+      input.select();
+      document.execCommand("copy");
+      alert("Copied to clipboard!");
+    }
+
+    function initParticles(){
+      const canvas = document.getElementById("bgParticles");
+      const ctx = canvas.getContext("2d");
+      
+      function resize(){
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener("resize", resize);
+
+      let particles = [];
+      for(let i=0; i<80; i++){
+        particles.push({
+          x: Math.random()*canvas.width,
+          y: Math.random()*canvas.height,
+          r: Math.random()*2+0.5,
+          vx: (Math.random()-0.5)*0.2,
+          vy: (Math.random()-0.5)*0.2,
+          alpha: Math.random()*0.6+0.2
+        });
+      }
+
+      function draw(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if(p.x<0) p.x=canvas.width;
+          if(p.x>canvas.width) p.x=0;
+          if(p.y<0) p.y=canvas.height;
+          if(p.y>canvas.height) p.y=0;
+
+          const grad = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*6);
+          grad.addColorStop(0, `rgba(0,229,255,${p.alpha})`);
+          grad.addColorStop(1, "transparent");
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,p.r*6,0,Math.PI*2);
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    init();
+  </script>
+</body>
+</html>
+

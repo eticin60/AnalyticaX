@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>404 — Page Not Found | AnalyticaX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --neon:#00E5FF;
+  --magenta:#FF4DFF;
+  --green:#14F195;
+  --bg:#020617;
+  --panel:#0b1020;
+  --text-soft:#98A0B3;
+  --border:rgba(148,163,184,.35);
+}
+
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:Poppins, sans-serif;
+  background:radial-gradient(circle at top,#071526 0,var(--bg) 45%,#000 100%);
+  overflow:hidden;
+  color:#fff;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+/* BACKGROUND */
+canvas#particles{position:fixed;inset:0;z-index:-3;}
+.bg-grid{
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:50px 50px;
+  opacity:.22;pointer-events:none;z-index:-2;
+}
+.bg-glow{
+  position:fixed;width:520px;height:520px;border-radius:50%;
+  filter:blur(150px);
+  opacity:.7;mix-blend-mode:screen;z-index:-1;
+  animation:float 16s ease-in-out infinite alternate;
+}
+.bg-glow.c1{background:radial-gradient(circle,rgba(0,229,255,.9),transparent 60%);top:-140px;left:-120px;}
+.bg-glow.c2{background:radial-gradient(circle,rgba(255,77,255,.85),transparent 60%);bottom:-140px;right:-120px;animation-delay:8s;}
+
+@keyframes float{
+  0%{transform:translate(0,0);}
+  100%{transform:translate(50px,-35px);}
+}
+
+/* MAIN CONTENT */
+.box{
+  position:relative;z-index:5;
+  width:90%;max-width:650px;
+  padding:30px;
+}
+
+/* LOGO */
+.logo{
+  width:110px;                    /* Büyük Logo */
+  margin-bottom:14px;
+  filter:drop-shadow(0 0 20px rgba(0,229,255,.75));
+  animation:logoFloat 5s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+  0% { transform:translateY(0); }
+  100% { transform:translateY(-10px); }
+}
+
+.title-404{
+  font-size:130px;
+  font-weight:700;
+  letter-spacing:-2px;
+  background:linear-gradient(90deg,var(--neon),var(--magenta));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 0 35px rgba(0,229,255,.6);
+  margin-bottom:10px;
+}
+
+.subtitle{
+  font-size:22px;
+  font-weight:500;
+  margin-bottom:12px;
+}
+
+.desc{
+  font-size:14px;
+  color:var(--text-soft);
+  margin-bottom:28px;
+}
+
+.btn-home{
+  padding:12px 26px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:600;
+  color:#020617;
+  background:linear-gradient(90deg,var(--neon),var(--magenta));
+  border:none;
+  cursor:pointer;
+  box-shadow:0 0 22px rgba(0,229,255,.6);
+  transition:.25s ease;
+}
+.btn-home:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 28px rgba(0,229,255,.9);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND -->
+<canvas id="particles"></canvas>
+<div class="bg-grid"></div>
+<div class="bg-glow c1"></div>
+<div class="bg-glow c2"></div>
+
+<!-- CONTENT -->
+<div class="box">
+
+  <!-- ✓ LOGO EKLENDİ -->
+  <img src="assets/AnalyticaX.png" class="logo">
+
+  <div class="title-404">404</div>
+  <div class="subtitle">Page Not Found</div>
+  <div class="desc">
+    The page you're looking for doesn’t exist or was moved.<br>
+    Return to safety and continue your trading journey.
+  </div>
+
+  <button class="btn-home" onclick="window.location.href='index.html'">
+    Go Back Home
+  </button>
+
+</div>
+
+<!-- PARTICLES JS -->
+<script>
+const c=document.getElementById("particles");
+const ctx=c.getContext("2d");
+let parts=[];
+function resize(){c.width=innerWidth;c.height=innerHeight;}
+resize();onresize=resize;
+
+for(let i=0;i<70;i++){
+  parts.push({
+    x:Math.random()*innerWidth,
+    y:Math.random()*innerHeight,
+    r:Math.random()*2+1,
+    vx:(Math.random()-0.5)*0.3,
+    vy:(Math.random()-0.5)*0.3
+  });
+}
+
+function draw(){
+  ctx.clearRect(0,0,c.width,c.height);
+  parts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=c.width;
+    if(p.x>c.width)p.x=0;
+    if(p.y<0)p.y=c.height;
+    if(p.y>c.height)p.y=0;
+
+    ctx.fillStyle="rgba(0,229,255,0.45)";
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,7);
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+</body>
+</html>
