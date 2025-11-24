@@ -75,11 +75,11 @@
       justify-content:space-between;
       gap:20px;
       backdrop-filter:blur(20px) saturate(180%);
-      background:rgba(20,15,35,0.3);
+      background:rgba(20,15,35,0.5);
       border:none;
       box-shadow:none;
       z-index:50;
-      border-radius:0;
+      border-radius:12px;
       margin:0;
     }
     .navbar .nav-links:first-of-type{
@@ -91,6 +91,7 @@
       left:50%;
       transform:translateX(-50%);
       margin:0;
+      z-index:10;
     }
     .navbar .nav-actions:last-of-type{
       position:static;
@@ -138,7 +139,7 @@
       filter:drop-shadow(0 0 40px rgba(0,229,255,1)) drop-shadow(0 0 80px rgba(255,77,255,.8));
     }
     .logo-main{
-      font-size:32px;
+      font-size:28px;
       font-weight:600;
       letter-spacing:0.02em;
       line-height:1.2;
@@ -147,6 +148,29 @@
       gap:2px;
       color:#fff;
       text-align:center;
+      position:relative;
+    }
+    .logo-main::before{
+      content:'';
+      position:absolute;
+      top:50%;
+      left:-20px;
+      transform:translateY(-50%);
+      width:2px;
+      height:24px;
+      background:linear-gradient(180deg, transparent, rgba(255,255,255,0.3), transparent);
+      border-radius:1px;
+    }
+    .logo-main::after{
+      content:'';
+      position:absolute;
+      top:50%;
+      right:-20px;
+      transform:translateY(-50%);
+      width:2px;
+      height:24px;
+      background:linear-gradient(180deg, transparent, rgba(255,255,255,0.3), transparent);
+      border-radius:1px;
     }
     .logo-main .logo-analytica{
       background:linear-gradient(90deg, var(--neon), #7C3AED);
@@ -163,7 +187,7 @@
     }
     .nav-links{
       display:flex;
-      gap:24px;
+      gap:32px;
       font-size:14px;
       color:rgba(255,255,255,0.95);
       align-items:center;
@@ -171,6 +195,7 @@
       padding:0;
       background:transparent;
       border:none;
+      flex:1;
     }
     .nav-links a{
       position:relative;
@@ -216,6 +241,8 @@
       padding:0;
       background:transparent;
       border:none;
+      flex:1;
+      justify-content:flex-end;
     }
     @media(max-width:1200px){
       .nav-actions{
