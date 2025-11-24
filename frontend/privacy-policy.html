@@ -40,6 +40,12 @@
       border:1px solid rgba(255,255,255,0.15);border-top:none;
       box-shadow:0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
       z-index:50;min-height:64px;border-radius:0 0 16px 16px;
+      transition:transform 0.3s ease, opacity 0.3s ease;
+    }
+    .navbar.scrolled{
+      transform:translateX(-50%) translateY(-100%);
+      opacity:0;
+      pointer-events:none;
     }
     .nav-brand{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;flex-shrink:0;cursor:pointer;transition:opacity 0.3s ease;}
     .nav-brand:hover{opacity:0.9;}
@@ -149,7 +155,20 @@
       requestAnimationFrame(animate);
     }
     animate();
+// ==== SCROLL HIDE NAVBAR ====
+window.addEventListener('scroll', () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const navbar = document.querySelector('.navbar');
+  
+  if (scrollTop > 100) {
+    if (navbar) navbar.classList.add('scrolled');
+  } else {
+    if (navbar) navbar.classList.remove('scrolled');
+  }
+}, { passive: true });
+
   </script>
 </body>
 </html>
+
 

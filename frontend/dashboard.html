@@ -104,6 +104,12 @@
       background:linear-gradient(to bottom,rgba(3,7,18,.92),rgba(3,7,18,.35));
       border-bottom:1px solid rgba(148,163,184,.3);
       z-index:50;
+      transition:transform 0.3s ease, opacity 0.3s ease;
+    }
+    .navbar.scrolled{
+      transform:translateY(-100%);
+      opacity:0;
+      pointer-events:none;
     }
     .nav-left{
       display:flex;
@@ -1135,6 +1141,18 @@ async function startDashboard() {
     await loadDashboard();
 }
 startDashboard();
+
+// ==== SCROLL HIDE NAVBAR ====
+window.addEventListener('scroll', () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const navbar = document.querySelector('.navbar');
+  
+  if (scrollTop > 100) {
+    if (navbar) navbar.classList.add('scrolled');
+  } else {
+    if (navbar) navbar.classList.remove('scrolled');
+  }
+}, { passive: true });
 
   </script>
 </body>

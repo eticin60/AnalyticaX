@@ -57,6 +57,12 @@ body {
   z-index:50;
   min-height:64px;
   border-radius:0 0 16px 16px;
+  transition:transform 0.3s ease, opacity 0.3s ease;
+}
+.navbar.scrolled{
+  transform:translateX(-50%) translateY(-100%);
+  opacity:0;
+  pointer-events:none;
 }
 .nav-brand{
   display:flex;
@@ -2176,6 +2182,18 @@ async function initAnalyzePage(){
 }
 
 initAnalyzePage();
+
+// ==== SCROLL HIDE NAVBAR ====
+window.addEventListener('scroll', () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const navbar = document.querySelector('.navbar');
+  
+  if (scrollTop > 100) {
+    if (navbar) navbar.classList.add('scrolled');
+  } else {
+    if (navbar) navbar.classList.remove('scrolled');
+  }
+}, { passive: true });
 
 </script>
 
