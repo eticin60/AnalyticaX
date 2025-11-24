@@ -40,7 +40,7 @@
       max-width:1240px;
       margin:0 auto;
     }
-    main{padding-top:110px;padding-bottom:80px;}
+    main{padding-top:100px;padding-bottom:80px;}
     section{margin-top:70px;}
 
     /* BACKGROUND LAYERS */
@@ -60,158 +60,217 @@
       pointer-events:none;
       z-index:-2;
     }
-    .bg-glow{
-      position:fixed;
-      width:480px;
-      height:480px;
-      border-radius:50%;
-      filter:blur(120px);
-      opacity:.75;
-      mix-blend-mode:screen;
-      pointer-events:none;
-      z-index:-1;
-      animation:glowFloat 18s ease-in-out infinite alternate;
-    }
-    .bg-glow.cyan{
-      background:radial-gradient(circle,rgba(0,229,255,.9),transparent 60%);
-      top:-90px;
-      left:-60px;
-    }
-    .bg-glow.magenta{
-      background:radial-gradient(circle,rgba(255,77,255,.9),transparent 60%);
-      bottom:-130px;
-      right:-80px;
-      animation-delay:6s;
-    }
-    @keyframes glowFloat{
-      0%{transform:translate(0,0);}
-      100%{transform:translate(40px,-35px);}
-    }
 
     /* NAVBAR */
     .navbar{
       position:fixed;
-      top:0;left:0;
-      width:100%;
-      padding:10px 6%;
+      top:0;
+      left:50%;
+      transform:translateX(-50%);
+      width:calc(100% - 80px);
+      max-width:1400px;
+      padding:12px 24px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      backdrop-filter:blur(14px);
-      background:linear-gradient(to bottom,rgba(3,7,18,.92),rgba(3,7,18,.35));
-      border-bottom:1px solid rgba(148,163,184,.3);
+      gap:12px;
+      backdrop-filter:blur(30px) saturate(200%);
+      background:rgba(15,23,42,0.75);
+      border:1px solid rgba(255,255,255,0.15);
+      border-top:none;
+      box-shadow:0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
       z-index:50;
+      min-height:64px;
+      border-radius:0 0 16px 16px;
+    }
+    .nav-brand{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      justify-content:center;
+      flex-shrink:0;
+      cursor:pointer;
+      transition:opacity 0.3s ease;
+    }
+    .nav-brand:hover{
+      opacity:0.9;
     }
     .nav-left{
       display:flex;
-      align-items:center;
-      gap:10px;
+      flex-direction:column;
+      align-items:flex-start;
+      justify-content:center;
+      flex-shrink:0;
+      cursor:pointer;
       transition:opacity 0.3s ease;
     }
     .nav-left:hover{
       opacity:0.9;
     }
     .logo-img{
-      width:64px;
-      height:64px;
-      border-radius:18px;
+      width:240px;
+      height:auto;
+      max-height:100px;
       object-fit:contain;
-      padding:6px;
-      background:radial-gradient(circle,rgba(0,229,255,.18),transparent 70%);
-      box-shadow:0 0 26px rgba(0,229,255,.65);
+      transition:transform 0.3s ease, filter 0.3s ease;
+      filter:drop-shadow(0 0 30px rgba(0,229,255,.9)) drop-shadow(0 0 60px rgba(255,77,255,.6));
+    }
+    .logo-img:hover{
+      transform:scale(1.08);
+      filter:drop-shadow(0 0 40px rgba(0,229,255,1)) drop-shadow(0 0 80px rgba(255,77,255,.8));
     }
     .logo-main{
-      font-size:19px;
-      font-weight:600;
-      letter-spacing:.08em;
+      font-size:22px;
+      font-weight:700;
+      letter-spacing:0.05em;
+      background:linear-gradient(90deg, var(--neon), #7C3AED, var(--magenta));
+      background-clip:text;
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      color:transparent;
+      line-height:1.2;
     }
-    .logo-main span{color:var(--neon);}
     .logo-sub{
       font-size:11px;
-      color:var(--text-soft);
+      color:rgba(148,163,184,0.8);
+      margin-top:2px;
+      font-weight:400;
     }
     .nav-links{
       display:flex;
-      gap:22px;
+      gap:8px;
       font-size:13px;
-      color:var(--text-soft);
+      color:rgba(255,255,255,0.9);
+      align-items:center;
+      justify-content:center;
+      padding:6px;
+      background:rgba(15,23,42,0.5);
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.1);
     }
     .nav-links a{
       position:relative;
-      padding-bottom:3px;
-      transition:color 0.3s ease;
+      padding:8px 16px;
+      border-radius:8px;
+      transition:all 0.3s ease;
+      font-weight:400;
+      background:transparent;
+      text-decoration:none;
+    }
+    .nav-links a::after{
+      content:'';
+      position:absolute;
+      bottom:0;
+      left:50%;
+      transform:translateX(-50%) scaleX(0);
+      width:80%;
+      height:2px;
+      background:linear-gradient(90deg, var(--neon), var(--magenta));
+      border-radius:2px;
+      transition:transform 0.3s ease, width 0.3s ease;
+      box-shadow:0 0 10px rgba(0,229,255,0.5);
     }
     .nav-links a:hover{
       color:#fff;
+      background:rgba(255,255,255,0.05);
     }
-    .nav-links a::after{
-      content:"";
-      position:absolute;
-      left:0;
-      bottom:0;
-      width:0;
-      height:2px;
-      background:linear-gradient(90deg,var(--neon),var(--magenta));
-      transition:width .25s ease;
+    .nav-links a:hover::after{
+      transform:translateX(-50%) scaleX(1);
+      width:90%;
     }
-    .nav-links a:hover::after{width:100%;}
+    .nav-links a.active::after{
+      transform:translateX(-50%) scaleX(1);
+      width:90%;
+    }
 
     .nav-actions{
       display:flex;
       gap:8px;
       align-items:center;
-      font-size:12px;
+      font-size:13px;
+      flex-wrap:nowrap;
+      padding:6px;
+      background:rgba(15,23,42,0.5);
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.1);
+    }
+    @media(max-width:1200px){
+      .nav-actions{
+        gap:6px;
+      }
+      .nav-actions button span:not(:first-child){
+        display:none;
+      }
+      .nav-actions #userProfileBox > div:last-child{
+        display:none;
+      }
+      .nav-actions #userProfileBox{
+        padding:6px 8px;
+      }
     }
     .btn-outline{
-      border-radius:999px;
-      border:1px solid rgba(148,163,184,.6);
-      padding:7px 16px;
-      background:rgba(15,23,42,.7);
-      color:#e5e7eb;
+      border-radius:8px;
+      border:1px solid rgba(148,163,184,0.4);
+      padding:8px 16px;
+      background:rgba(15,23,42,0.7);
+      color:rgba(255,255,255,0.9);
       cursor:pointer;
       transition:all 0.3s ease;
+      font-weight:400;
+      font-size:13px;
     }
     .btn-outline:hover{
-      border-color:var(--neon);
-      background:rgba(0,229,255,.1);
-      box-shadow:0 0 15px rgba(0,229,255,.4);
-      transform:translateY(-1px);
+      border-color:rgba(148,163,184,0.6);
+      background:rgba(15,23,42,0.9);
+      color:#fff;
     }
     .btn-primary{
-      border-radius:999px;
+      border-radius:8px;
       border:none;
       padding:8px 18px;
-      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      background:linear-gradient(135deg,var(--neon),var(--magenta));
       color:#020617;
       font-weight:600;
       cursor:pointer;
-      box-shadow:0 0 20px rgba(0,229,255,.6);
       transition:all 0.3s ease;
+      font-size:13px;
     }
     .btn-primary:hover{
-      box-shadow:0 0 30px rgba(0,229,255,.9), 0 0 50px rgba(255,77,255,.5);
-      transform:translateY(-2px) scale(1.02);
+      box-shadow:0 0 20px rgba(0,229,255,0.5);
+      transform:translateY(-1px);
     }
 
     .lang-switch{
       display:flex;
-      gap:4px;
-      margin-left:10px;
+      gap:0;
+      margin-right:12px;
+      border-radius:8px;
+      border:1px solid rgba(148,163,184,0.4);
+      background:rgba(15,23,42,0.7);
+      overflow:hidden;
     }
     .lang-btn{
-      border-radius:999px;
-      border:1px solid rgba(148,163,184,.6);
-      background:rgba(15,23,42,.8);
-      color:var(--text-soft);
-      padding:4px 9px;
-      font-size:11px;
+      border:none;
+      background:transparent;
+      color:rgba(255,255,255,0.7);
+      padding:8px 12px;
+      font-size:12px;
       cursor:pointer;
+      transition:all 0.3s ease;
+      font-weight:400;
+      border-right:1px solid rgba(148,163,184,0.2);
+    }
+    .lang-btn:last-child{
+      border-right:none;
+    }
+    .lang-btn:hover{
+      background:rgba(255,255,255,0.05);
+      color:#fff;
     }
     .lang-btn.active{
-      background:linear-gradient(90deg,var(--neon),var(--magenta));
-      color:#020617;
-      border-color:transparent;
-      font-weight:600;
+      background:rgba(255,255,255,0.1);
+      color:#fff;
+      font-weight:500;
     }
 
     /* HERO */
@@ -228,8 +287,10 @@
     }
     .hero-title span.gradient{
       background:linear-gradient(90deg,var(--neon),var(--magenta));
+      background-clip:text;
       -webkit-background-clip:text;
       -webkit-text-fill-color:transparent;
+      color:transparent;
     }
     .hero-desc{
       margin-top:14px;
@@ -405,23 +466,6 @@
       perspective:1100px;
       position:relative;
     }
-    .features-logo{
-      position:absolute;
-      top:-16px;
-      right:0;
-      width:90px;
-      height:90px;
-      border-radius:26px;
-      padding:8px;
-      background:radial-gradient(circle,rgba(0,229,255,.22),transparent 70%);
-      box-shadow:0 0 32px rgba(0,229,255,.7);
-      opacity:.95;
-    }
-    .features-logo img{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-    }
 
     .carousel{
       position:relative;
@@ -465,16 +509,6 @@
     .carousel-card:nth-child(1){transform:rotateY(0deg) translateZ(360px);}
     .carousel-card:nth-child(2){transform:rotateY(120deg) translateZ(360px);}
     .carousel-card:nth-child(3){transform:rotateY(240deg) translateZ(360px);}
-    .carousel-card::after{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      border-radius:inherit;
-      background:linear-gradient(120deg,rgba(0,229,255,.3),rgba(255,77,255,.1),rgba(0,229,255,.3));
-      mix-blend-mode:screen;
-      opacity:.18;
-      pointer-events:none;
-    }
 
     /* HOW IT WORKS */
     .steps-grid{
@@ -693,31 +727,36 @@
     }
     .dot{width:6px;height:6px;border-radius:999px;background:var(--neon);margin-top:5px;flex-shrink:0;}
     .price-btn{
-      margin-top:16px;
+      margin-top:14px;
       width:100%;
-      border-radius:999px;
+      border-radius:10px;
       border:none;
-      padding:9px 14px;
-      font-size:13px;
+      padding:8px 12px;
+      font-size:12px;
       font-weight:600;
       cursor:pointer;
-      background:rgba(248,250,252,.07);
-      color:#e5e7eb;
+      background:linear-gradient(135deg, var(--neon), var(--magenta));
+      color:#020617;
+      border:1px solid transparent;
       transition:all 0.3s ease;
+      box-shadow:0 2px 10px rgba(0,229,255,0.3);
     }
     .price-btn:hover{
-      background:rgba(248,250,252,.15);
+      background:linear-gradient(135deg, var(--neon), var(--magenta));
       transform:translateY(-2px);
-      box-shadow:0 5px 15px rgba(0,0,0,.3);
+      box-shadow:0 4px 20px rgba(0,229,255,0.5), 0 0 30px rgba(255,77,255,0.3);
     }
+    .price-btn-highlight,
     .price-card.highlight .price-btn{
-      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      background:linear-gradient(135deg, var(--neon), var(--magenta));
       color:#020617;
-      box-shadow:0 0 20px rgba(0,229,255,.65);
+      border:1px solid transparent;
+      box-shadow:0 0 20px rgba(0,229,255,0.6), 0 0 40px rgba(255,77,255,0.4);
     }
+    .price-btn-highlight:hover,
     .price-card.highlight .price-btn:hover{
-      box-shadow:0 0 35px rgba(0,229,255,.9), 0 0 60px rgba(255,77,255,.6);
-      transform:translateY(-3px) scale(1.03);
+      box-shadow:0 0 35px rgba(0,229,255,0.9), 0 0 60px rgba(255,77,255,0.6);
+      transform:translateY(-2px);
     }
 
     /* CREDITS BANNER */
@@ -805,25 +844,335 @@
       .market-header-row{flex-direction:column;align-items:flex-start;}
       .market-search{width:100%;max-width:none;}
     }
+
+    /* AI ROBOT ASSISTANT */
+    .ai-robot-container{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      z-index:1000;
+      width:80px;
+      height:80px;
+      cursor:pointer;
+    }
+    .ai-robot{
+      width:100%;
+      height:100%;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(0,229,255,0.3), rgba(255,77,255,0.2));
+      border:2px solid var(--neon);
+      box-shadow:0 0 30px rgba(0,229,255,0.6), 0 0 60px rgba(255,77,255,0.4), inset 0 0 20px rgba(0,229,255,0.2);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:40px;
+      position:relative;
+      animation:robotFloat 3s ease-in-out infinite, robotGlow 2s ease-in-out infinite alternate;
+      transition:transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .ai-robot:hover{
+      transform:scale(1.1);
+      box-shadow:0 0 40px rgba(0,229,255,0.9), 0 0 80px rgba(255,77,255,0.6), inset 0 0 30px rgba(0,229,255,0.3);
+    }
+    .ai-robot::before{
+      content:"";
+      position:absolute;
+      inset:-4px;
+      border-radius:50%;
+      background:linear-gradient(45deg, var(--neon), var(--magenta), var(--neon));
+      opacity:0.3;
+      z-index:-1;
+      animation:robotRotate 4s linear infinite;
+    }
+    @keyframes robotFloat{
+      0%, 100%{transform:translateY(0px);}
+      50%{transform:translateY(-10px);}
+    }
+    @keyframes robotGlow{
+      0%{box-shadow:0 0 30px rgba(0,229,255,0.6), 0 0 60px rgba(255,77,255,0.4);}
+      100%{box-shadow:0 0 50px rgba(0,229,255,0.9), 0 0 100px rgba(255,77,255,0.6);}
+    }
+    @keyframes robotRotate{
+      0%{transform:rotate(0deg);}
+      100%{transform:rotate(360deg);}
+    }
+    .ai-robot-message{
+      position:absolute;
+      bottom:100%;
+      right:0;
+      margin-bottom:15px;
+      min-width:280px;
+      max-width:320px;
+      background:linear-gradient(135deg, rgba(15,23,42,0.98), rgba(11,16,32,0.98));
+      border:1px solid rgba(0,229,255,0.4);
+      border-radius:16px;
+      padding:14px 16px;
+      box-shadow:0 8px 32px rgba(0,0,0,0.6), 0 0 20px rgba(0,229,255,0.3);
+      font-size:13px;
+      line-height:1.5;
+      opacity:0;
+      transform:translateY(10px) scale(0.9);
+      pointer-events:none;
+      transition:all 0.3s ease;
+      backdrop-filter:blur(10px);
+    }
+    .ai-robot-message.show{
+      opacity:1;
+      transform:translateY(0) scale(1);
+      pointer-events:auto;
+    }
+    .ai-robot-message::after{
+      content:"";
+      position:absolute;
+      bottom:-8px;
+      right:20px;
+      width:0;
+      height:0;
+      border-left:8px solid transparent;
+      border-right:8px solid transparent;
+      border-top:8px solid rgba(0,229,255,0.4);
+    }
+    .ai-robot-message-header{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:8px;
+      font-weight:600;
+      color:var(--neon);
+      font-size:12px;
+    }
+    .ai-robot-message-content{
+      color:#fff;
+    }
+    .ai-robot-message-time{
+      font-size:10px;
+      color:var(--text-soft);
+      margin-top:6px;
+      text-align:right;
+    }
+    .ai-robot-notification{
+      position:absolute;
+      top:-8px;
+      right:-8px;
+      width:24px;
+      height:24px;
+      background:linear-gradient(135deg, var(--neon), var(--magenta));
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:12px;
+      font-weight:600;
+      color:#020617;
+      box-shadow:0 0 15px rgba(0,229,255,0.8);
+      animation:notificationPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes notificationPulse{
+      0%, 100%{transform:scale(1);}
+      50%{transform:scale(1.2);}
+    }
+    .ai-robot-moving{
+      animation:robotMove 20s ease-in-out infinite;
+    }
+    @keyframes robotMove{
+      0%{bottom:20px;right:20px;}
+      25%{bottom:20px;right:calc(50% - 40px);}
+      50%{bottom:calc(50% - 40px);right:calc(50% - 40px);}
+      75%{bottom:calc(50% - 40px);right:20px;}
+      100%{bottom:20px;right:20px;}
+    }
+    /* AI CHAT WIDGET */
+    .ai-chat-widget{
+      position:fixed;
+      bottom:110px;
+      right:20px;
+      width:380px;
+      max-height:600px;
+      background:linear-gradient(135deg, rgba(15,23,42,0.98), rgba(11,16,32,0.98));
+      border:1px solid rgba(0,229,255,0.4);
+      border-radius:20px;
+      box-shadow:0 8px 32px rgba(0,0,0,0.6), 0 0 30px rgba(0,229,255,0.3);
+      backdrop-filter:blur(20px);
+      display:none;
+      flex-direction:column;
+      z-index:1001;
+      overflow:hidden;
+    }
+    .ai-chat-widget.open{
+      display:flex;
+      animation:chatSlideIn 0.3s ease;
+    }
+    @keyframes chatSlideIn{
+      from{
+        opacity:0;
+        transform:translateY(20px) scale(0.95);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+      }
+    }
+    .ai-chat-header{
+      padding:16px 18px;
+      border-bottom:1px solid rgba(148,163,184,0.2);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      background:rgba(0,229,255,0.1);
+    }
+    .ai-chat-close{
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      border:none;
+      background:rgba(255,255,255,0.1);
+      color:#fff;
+      font-size:20px;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:all 0.3s ease;
+    }
+    .ai-chat-close:hover{
+      background:rgba(255,77,255,0.3);
+      transform:rotate(90deg);
+    }
+    .ai-chat-messages{
+      flex:1;
+      overflow-y:auto;
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      max-height:450px;
+    }
+    .ai-chat-message{
+      display:flex;
+      gap:10px;
+      animation:messageSlideIn 0.3s ease;
+    }
+    @keyframes messageSlideIn{
+      from{
+        opacity:0;
+        transform:translateX(-10px);
+      }
+      to{
+        opacity:1;
+        transform:translateX(0);
+      }
+    }
+    .ai-chat-bot{
+      align-self:flex-start;
+    }
+    .ai-chat-user{
+      align-self:flex-end;
+      flex-direction:row-reverse;
+    }
+    .ai-chat-avatar{
+      width:32px;
+      height:32px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--neon),var(--magenta));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      flex-shrink:0;
+    }
+    .ai-chat-text{
+      max-width:75%;
+      padding:10px 14px;
+      border-radius:12px;
+      font-size:13px;
+      line-height:1.5;
+    }
+    .ai-chat-bot .ai-chat-text{
+      background:rgba(15,23,42,0.8);
+      border:1px solid rgba(148,163,184,0.2);
+      color:#fff;
+    }
+    .ai-chat-user .ai-chat-text{
+      background:linear-gradient(135deg, rgba(0,229,255,0.3), rgba(255,77,255,0.2));
+      border:1px solid rgba(0,229,255,0.4);
+      color:#fff;
+    }
+    .ai-chat-input-area{
+      padding:12px 16px;
+      border-top:1px solid rgba(148,163,184,0.2);
+      display:flex;
+      gap:8px;
+      background:rgba(15,23,42,0.5);
+    }
+    .ai-chat-input{
+      flex:1;
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid rgba(148,163,184,0.3);
+      background:rgba(15,23,42,0.8);
+      color:#fff;
+      font-size:13px;
+      outline:none;
+      transition:all 0.3s ease;
+    }
+    .ai-chat-input:focus{
+      border-color:rgba(0,229,255,0.5);
+      box-shadow:0 0 10px rgba(0,229,255,0.3);
+    }
+    .ai-chat-send{
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      border:none;
+      background:linear-gradient(135deg,var(--neon),var(--magenta));
+      color:#020617;
+      font-size:18px;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:all 0.3s ease;
+    }
+    .ai-chat-send:hover{
+      transform:scale(1.1);
+      box-shadow:0 0 20px rgba(0,229,255,0.6);
+    }
+    @media(max-width:768px){
+      .ai-robot-container{
+        width:60px;
+        height:60px;
+        bottom:15px;
+        right:15px;
+      }
+      .ai-robot{
+        font-size:30px;
+      }
+      .ai-robot-message{
+        min-width:240px;
+        max-width:280px;
+        font-size:12px;
+      }
+      .ai-chat-widget{
+        width:calc(100vw - 40px);
+        max-width:380px;
+        bottom:90px;
+        right:20px;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- BACKGROUND -->
   <canvas id="bgParticles"></canvas>
   <div class="bg-grid"></div>
-  <div class="bg-glow cyan"></div>
-  <div class="bg-glow magenta"></div>
 
   <!-- NAVBAR -->
   <header class="navbar">
-    <div class="nav-left" onclick="window.location.href='index.html'" style="cursor:pointer;">
-      <img src="assets/AnalyticaX.png" alt="AnalyticaX Logo" class="logo-img">
-      <div>
-        <div class="logo-main">Analytica<span>X</span></div>
-        <div class="logo-sub" data-i18n="nav.tagline">AI Powered Crypto Chart Analysis</div>
-      </div>
+    <div class="nav-brand" onclick="window.location.href='index.html'">
+      <div class="logo-main">AnalyticaX</div>
+      <div class="logo-sub" data-i18n="nav.tagline">AI Powered Crypto Chart Analysis</div>
     </div>
-
+    
     <nav class="nav-links">
       <a href="index.html#how" data-i18n="nav.how">How it works</a>
       <a href="index.html#features" data-i18n="nav.features">What it analyzes</a>
@@ -833,12 +1182,42 @@
     </nav>
 
     <div class="nav-actions">
-      <button class="btn-outline" id="btnLogin" data-i18n="nav.login">Log in</button>
-      <button class="btn-primary" id="ctaStartFree" data-i18n="nav.startFree">Start free</button>
-      <div class="lang-switch">
-        <button class="lang-btn active" data-lang-btn="en">EN</button>
-        <button class="lang-btn" data-lang-btn="tr">TR</button>
+      <div id="navLoggedOut" style="display:flex;gap:10px;align-items:center;">
+        <button class="btn-outline" id="btnLogin" data-i18n="nav.login">Log in</button>
+        <button class="btn-primary" id="ctaStartFree" data-i18n="nav.startFree">Start free</button>
       </div>
+      <div id="navLoggedIn" style="display:none;gap:8px;align-items:center;flex-direction:row;flex-wrap:nowrap;">
+        <!-- Action Buttons -->
+        <button class="btn-outline" onclick="window.location.href='dashboard.html'" style="padding:8px 16px;font-size:13px;white-space:nowrap;background:rgba(15,23,42,0.8);border-color:rgba(148,163,184,0.3);">
+          <span data-i18n="nav.dashboard">Dashboard</span>
+        </button>
+        <button class="btn-primary" onclick="window.location.href='analyze.html'" style="padding:8px 18px;font-size:13px;white-space:nowrap;background:linear-gradient(135deg,var(--neon),var(--magenta));box-shadow:0 0 20px rgba(0,229,255,0.4);">
+          <span data-i18n="nav.analyze">Analyze</span>
+        </button>
+        <!-- User Profile with Credits and Logout -->
+        <div id="userProfileBox" style="position:relative;display:flex;align-items:center;gap:12px;padding:8px 16px;background:rgba(15,23,42,0.8);border-radius:10px;border:1px solid rgba(148,163,184,0.25);cursor:pointer;transition:all 0.3s ease;backdrop-filter:blur(10px);" onmouseover="this.style.borderColor='rgba(148,163,184,0.4)';this.style.background='rgba(15,23,42,0.95)'" onmouseout="this.style.borderColor='rgba(148,163,184,0.25)';this.style.background='rgba(15,23,42,0.8)'">
+          <div id="userProfileAvatar" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--neon),var(--magenta));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#020617;flex-shrink:0;box-shadow:0 0 15px rgba(0,229,255,0.3);cursor:pointer;" onclick="window.location.href='settings.html'">U</div>
+          <div style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1;cursor:pointer;" onclick="window.location.href='settings.html'">
+            <div id="userProfileEmail" style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;color:#fff;">user@email.com</div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <div id="userProfilePlan" style="font-size:10px;color:rgba(148,163,184,0.9);">Free</div>
+              <div style="width:1px;height:10px;background:rgba(148,163,184,0.3);"></div>
+              <div id="userCreditsBadge" style="font-size:10px;color:var(--neon);font-weight:600;">
+                <span id="userCreditsCount">0</span> Credits
+              </div>
+              <div style="width:1px;height:10px;background:rgba(148,163,184,0.2);"></div>
+              <button id="btnLogoutNav" onclick="event.stopPropagation();logoutUser();" style="padding:4px 8px;font-size:10px;color:rgba(249,115,115,1);border:1px solid rgba(249,115,115,0.5);border-radius:6px;white-space:nowrap;background:rgba(15,23,42,0.6);cursor:pointer;transition:all 0.3s ease;font-weight:500;line-height:1;" onmouseover="this.style.background='rgba(249,115,115,0.15)';this.style.borderColor='rgba(249,115,115,0.7)'" onmouseout="this.style.background='rgba(15,23,42,0.6)';this.style.borderColor='rgba(249,115,115,0.5)'">
+                <span data-i18n="nav.logout">Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang-btn="en">EN</button>
+      <button class="lang-btn" data-lang-btn="tr">TR</button>
     </div>
   </header>
 
@@ -947,61 +1326,61 @@
           </div>
         </div>
 
-        <!-- RIGHT SIDE: UPLOAD + FEATURES CAROUSEL -->
+        <!-- RIGHT SIDE: ANALYSIS REDIRECT CARD -->
         <div id="uploadArea">
-          <div class="upload-card">
-            <h3 data-i18n="upload.title">AI chart analysis</h3>
-            <p style="color:var(--text-soft);font-size:11px;" data-i18n="upload.desc">
-              Upload a screenshot from TradingView, Binance, Bybit or any platform. Select timeframe and pair, AnalyticaX will generate a detailed report.
-            </p>
+          <div class="upload-card" style="background:linear-gradient(135deg, rgba(0,229,255,0.15), rgba(255,77,255,0.15)); border:2px solid rgba(0,229,255,0.4); position:relative; overflow:hidden;">
+            <div style="position:absolute; top:-50%; right:-50%; width:200%; height:200%; background:radial-gradient(circle, rgba(0,229,255,0.1), transparent 70%); animation:rotate 20s linear infinite; pointer-events:none;"></div>
+            <div style="position:relative; z-index:2;">
+              <div style="font-size:48px; margin-bottom:16px; text-align:center;">📊</div>
+              <h3 style="text-align:center; margin-bottom:12px; background:linear-gradient(90deg, var(--neon), var(--magenta)); background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent; color:transparent; font-size:22px;" data-i18n="upload.title">AI Chart Analysis</h3>
+              <p style="color:var(--text-soft);font-size:13px; text-align:center; margin-bottom:24px; line-height:1.6;" data-i18n="upload.desc">
+                Upload any crypto chart screenshot and get instant AI-powered analysis with detailed insights, trend predictions, and trading recommendations.
+              </p>
 
-            <div class="field">
-              <label for="chartFile" data-i18n="upload.chartLabel">Chart screenshot (PNG/JPEG)</label>
-              <input type="file" id="chartFile" accept="image/*">
-            </div>
+              <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:20px;">
+                <div style="text-align:center; padding:12px; background:rgba(15,23,42,0.6); border-radius:12px; border:1px solid rgba(148,163,184,0.3);">
+                  <div style="font-size:20px; margin-bottom:4px;">🎯</div>
+                  <div style="font-size:11px; color:var(--text-soft);">Pattern Detection</div>
+                </div>
+                <div style="text-align:center; padding:12px; background:rgba(15,23,42,0.6); border-radius:12px; border:1px solid rgba(148,163,184,0.3);">
+                  <div style="font-size:20px; margin-bottom:4px;">📈</div>
+                  <div style="font-size:11px; color:var(--text-soft);">Trend Analysis</div>
+                </div>
+                <div style="text-align:center; padding:12px; background:rgba(15,23,42,0.6); border-radius:12px; border:1px solid rgba(148,163,184,0.3);">
+                  <div style="font-size:20px; margin-bottom:4px;">💡</div>
+                  <div style="font-size:11px; color:var(--text-soft);">AI Insights</div>
+                </div>
+              </div>
 
-            <div class="field">
-              <label for="timeframe" data-i18n="upload.tfLabel">Timeframe</label>
-              <select id="timeframe">
-                <option value="1m">1m</option>
-                <option value="5m">5m</option>
-                <option value="15m">15m</option>
-                <option value="1h" selected>1h</option>
-                <option value="4h">4h</option>
-                <option value="1d">1D</option>
-                <option value="1w">1W</option>
-              </select>
-            </div>
+              <button class="btn-primary" style="margin-top:10px;width:100%; padding:16px; font-size:15px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 0 30px rgba(0,229,255,0.5);" onclick="window.location.href='analyze.html'">
+                <span>🚀</span>
+                <span data-i18n="upload.btnAnalyze">Start AI Analysis →</span>
+              </button>
 
-            <div class="field">
-              <label for="pair" data-i18n="upload.pairLabel">Symbol / pair</label>
-              <select id="pair">
-                <option value="BTCUSDT">BTCUSDT</option>
-                <option value="ETHUSDT">ETHUSDT</option>
-                <option value="SOLUSDT">SOLUSDT</option>
-                <option value="BNBUSDT">BNBUSDT</option>
-                <option value="XRPUSDT">XRPUSDT</option>
-                <option value="DOGEUSDT">DOGEUSDT</option>
-                <option value="OTHER" data-i18n="upload.other">Other / altcoin</option>
-              </select>
-            </div>
+              <div style="margin-top:16px; padding:12px; background:rgba(15,23,42,0.5); border-radius:12px; border:1px solid rgba(148,163,184,0.2);">
+                <div style="font-size:11px; color:var(--text-soft); text-align:center; line-height:1.6;">
+                  <span style="color:var(--accent-green); font-weight:600;">✓</span> Free plan: 1 analysis/day, 3 total<br>
+                  <span style="color:var(--accent-green); font-weight:600;">✓</span> Premium credits available<br>
+                  <span style="color:var(--accent-green); font-weight:600;">✓</span> Instant results
+                </div>
+              </div>
 
-            <button class="btn-primary" style="margin-top:10px;width:100%;" id="btnAnalyze" onclick="window.location.href='analyze.html'" data-i18n="upload.btnAnalyze">
-              Use 1 credit & analyze →
-            </button>
-
-            <div class="analysis-status" id="analysisStatus" data-i18n="upload.statusIdle">
-              Upload a chart and use 1 credit to get a full AI breakdown.
-            </div>
-
-            <div class="small-pill">
-              <span>⚠</span>
-              <span data-i18n="upload.disclaimer">
-                This is not financial advice. AI output is for educational and informational purposes only.
-              </span>
+              <div class="small-pill" style="margin-top:16px;">
+                <span>⚠</span>
+                <span data-i18n="upload.disclaimer" style="font-size:10px;">
+                  This is not financial advice. AI output is for educational and informational purposes only.
+                </span>
+              </div>
             </div>
           </div>
         </div>
+        
+        <style>
+          @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+        </style>
       </section>
 
       <!-- WHAT IT ANALYZES -->
@@ -1012,8 +1391,6 @@
         </p>
 
         <div class="carousel-wrap">
-          <div class="features-logo" id="lottie-features" style="width:90px;height:90px;"></div>
-
           <div class="carousel">
             <article class="carousel-card">
               <h3 data-i18n="features.card1.title">Structure & trend</h3>
@@ -1157,75 +1534,8 @@
           Every registered user can activate a free plan with 1 AI analysis per day, up to 3 total. When you need more, you can top-up with crypto.
         </p>
 
-        <div class="pricing-grid">
-          <div class="price-card">
-            <div class="price-name" data-i18n="pricing.free.name">Free plan</div>
-            <div class="price-desc" data-i18n="pricing.free.desc">
-              Perfect for testing the AI and understanding how the system thinks.
-            </div>
-            <div>
-              <span class="price-value">0$</span>
-              <span class="price-unit" data-i18n="pricing.free.unit"> / up to 3 analyses</span>
-            </div>
-            <ul class="price-features">
-              <li><span class="dot"></span><span data-i18n="pricing.free.f1">1 AI analysis per day</span></li>
-              <li><span class="dot"></span><span data-i18n="pricing.free.f2">Up to 3 free analyses per account</span></li>
-              <li><span class="dot"></span><span data-i18n="pricing.free.f3">BTC, ETH and major pairs</span></li>
-            </ul>
-            <button class="price-btn" id="btnActivateFree2" data-i18n="pricing.free.btn">Activate free plan</button>
-          </div>
-
-          <div class="price-card highlight">
-            <div class="price-badge" data-i18n="pricing.popular">Most popular</div>
-            <div class="price-name" data-i18n="pricing.pro.name">Pro pack</div>
-            <div class="price-desc" data-i18n="pricing.pro.desc">
-              For active traders who need regular, detailed analysis.
-            </div>
-            <div>
-              <span class="price-value">50$</span>
-              <span class="price-unit" data-i18n="pricing.pro.unit"> / 10 analyses</span>
-            </div>
-            <ul class="price-features">
-              <li><span class="dot"></span><span data-i18n="pricing.pro.f1">10 AI chart analyses</span></li>
-              <li><span class="dot"></span><span data-i18n="pricing.pro.f2">Priority queue & faster response</span></li>
-              <li><span class="dot"></span><span data-i18n="pricing.pro.f3">Extra scenario and risk breakdown</span></li>
-            </ul>
-            <button class="price-btn" data-plan="PRO10" onclick="window.location.href='premium.html'" data-i18n="pricing.pro.btn">Upgrade with crypto</button>
-          </div>
-
-          <div class="price-card">
-            <div class="price-name" data-i18n="pricing.elite.name">Elite pack</div>
-            <div class="price-desc" data-i18n="pricing.elite.desc">
-              For professional traders and small teams.
-            </div>
-            <div>
-              <span class="price-value">100$</span>
-              <span class="price-unit" data-i18n="pricing.elite.unit"> / 25 analyses</span>
-            </div>
-            <ul class="price-features">
-              <li><span class="dot"></span><span data-i18n="pricing.elite.f1">25 advanced AI analyses</span></li>
-              <li><span class="dot"></span><span data-i18n="pricing.elite.f2">Team workflow friendly</span></li>
-              <li><span class="dot"></span><span data-i18n="pricing.elite.f3">Priority email support</span></li>
-            </ul>
-            <button class="price-btn" data-plan="ELITE25" onclick="window.location.href='premium.html'" data-i18n="pricing.elite.btn">Upgrade with crypto</button>
-          </div>
-
-          <div class="price-card">
-            <div class="price-name" data-i18n="pricing.ultra.name">Ultra / fund pack</div>
-            <div class="price-desc" data-i18n="pricing.ultra.desc">
-              For desks, funds and high-frequency analysis needs.
-            </div>
-            <div>
-              <span class="price-value">350$</span>
-              <span class="price-unit" data-i18n="pricing.ultra.unit"> / 100 analyses</span>
-            </div>
-            <ul class="price-features">
-              <li><span class="dot"></span><span data-i18n="pricing.ultra.f1">100 AI analyses per month</span></li>
-              <li><span class="dot"></span><span data-i18n="pricing.ultra.f2">Custom integration options</span></li>
-              <li><span class="dot"></span><span data-i18n="pricing.ultra.f3">Best for quant / prop desks</span></li>
-            </ul>
-            <button class="price-btn" data-plan="ULTRA100" onclick="window.location.href='premium.html'" data-i18n="pricing.ultra.btn">Contact for crypto payment</button>
-          </div>
+        <div class="pricing-grid" id="pricingGrid">
+          <!-- Packages will be dynamically loaded -->
         </div>
 
         <div class="legal-box" id="legal">
@@ -1236,13 +1546,142 @@
           </span>
         </div>
       </section>
+
+      <!-- ABOUT US -->
+      <section id="about" class="reveal" style="padding:80px 0;margin-top:60px;">
+        <h2 class="section-title" style="text-align:center;margin-bottom:16px;">About AnalyticaX</h2>
+        <p class="section-subtitle" style="text-align:center;max-width:800px;margin:0 auto 50px;">
+          Powered by advanced AI technology, AnalyticaX revolutionizes cryptocurrency chart analysis with precision and intelligence.
+        </p>
+        
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;max-width:1200px;margin:0 auto;">
+          <div class="carousel-card" style="padding:32px;">
+            <h3 style="font-size:20px;margin-bottom:12px;background:linear-gradient(90deg,var(--neon),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">AI-Powered Analysis</h3>
+            <p style="color:var(--text-soft);line-height:1.7;">
+              Our cutting-edge AI engine uses Google Gemini 2.0 Flash to analyze chart patterns, identify trends, and provide actionable insights for traders.
+            </p>
+          </div>
+          <div class="carousel-card" style="padding:32px;">
+            <h3 style="font-size:20px;margin-bottom:12px;background:linear-gradient(90deg,var(--neon),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Integrated with CyberEx</h3>
+            <p style="color:var(--text-soft);line-height:1.7;">
+              AnalyticaX is part of the CyberEx ecosystem, seamlessly integrated with <a href="https://cyberex.com" target="_blank" style="color:var(--neon);text-decoration:none;">CyberEx Kripto Para Platformu</a> and <a href="https://cyberex.com/wallet" target="_blank" style="color:var(--neon);text-decoration:none;">CyberEx Wallet</a> for a complete crypto trading experience.
+            </p>
+          </div>
+          <div class="carousel-card" style="padding:32px;">
+            <h3 style="font-size:20px;margin-bottom:12px;background:linear-gradient(90deg,var(--neon),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Professional Tools</h3>
+            <p style="color:var(--text-soft);line-height:1.7;">
+              From beginners to professional traders, AnalyticaX provides the tools you need to make informed decisions in the volatile crypto market.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   </main>
 
+  <!-- AI ROBOT ASSISTANT -->
+  <div class="ai-robot-container" id="aiRobotContainer">
+    <div class="ai-robot" id="aiRobot">
+      🤖
+      <div class="ai-robot-notification" id="aiRobotNotification" style="display:none;">!</div>
+    </div>
+    <div class="ai-robot-message" id="aiRobotMessage">
+      <div class="ai-robot-message-header">
+        <span>🤖</span>
+        <span>AnalyticaX AI</span>
+      </div>
+      <div class="ai-robot-message-content" id="aiRobotMessageContent">
+        Merhaba! Ben AnalyticaX AI asistanınız. Size yardımcı olmak için buradayım! 🚀
+      </div>
+      <div class="ai-robot-message-time" id="aiRobotMessageTime"></div>
+    </div>
+    
+    <!-- Chat Widget -->
+    <div class="ai-chat-widget" id="aiChatWidget">
+      <div class="ai-chat-header">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:20px;">🤖</span>
+          <span style="font-weight:600;">AnalyticaX AI Chat</span>
+        </div>
+        <button class="ai-chat-close" id="aiChatClose" onclick="closeAIChat()">×</button>
+      </div>
+      <div class="ai-chat-messages" id="aiChatMessages">
+        <div class="ai-chat-message ai-chat-bot">
+          <div class="ai-chat-avatar">🤖</div>
+          <div class="ai-chat-text">Merhaba! Ben AnalyticaX AI asistanınız. Size nasıl yardımcı olabilirim? 😊</div>
+        </div>
+      </div>
+      <div class="ai-chat-input-area">
+        <input type="text" id="aiChatInput" class="ai-chat-input" placeholder="Mesajınızı yazın..." onkeypress="if(event.key==='Enter') sendAIChatMessage()">
+        <button class="ai-chat-send" onclick="sendAIChatMessage()">📤</button>
+      </div>
+    </div>
+    
+    <!-- Chat Widget -->
+    <div class="ai-chat-widget" id="aiChatWidget">
+      <div class="ai-chat-header">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:20px;">🤖</span>
+          <span style="font-weight:600;">AnalyticaX AI Chat</span>
+        </div>
+        <button class="ai-chat-close" id="aiChatClose" onclick="closeAIChat()">×</button>
+      </div>
+      <div class="ai-chat-messages" id="aiChatMessages">
+        <div class="ai-chat-message ai-chat-bot">
+          <div class="ai-chat-avatar">🤖</div>
+          <div class="ai-chat-text">Merhaba! Ben AnalyticaX AI asistanınız. Size nasıl yardımcı olabilirim? 😊</div>
+        </div>
+      </div>
+      <div class="ai-chat-input-area">
+        <input type="text" id="aiChatInput" class="ai-chat-input" placeholder="Mesajınızı yazın..." onkeypress="if(event.key==='Enter') sendAIChatMessage()">
+        <button class="ai-chat-send" onclick="sendAIChatMessage()">📤</button>
+      </div>
+    </div>
+  </div>
+
   <!-- FOOTER -->
-  <footer>
-    <span data-i18n="footer.left">© 2025 AnalyticaX • All rights reserved.</span>
-    <span class="right" data-i18n="footer.right">Analysis only • No investment advice • Crypto payments via Binance</span>
+  <footer style="padding:40px 0;margin-top:80px;border-top:1px solid rgba(255,255,255,0.1);background:rgba(15,23,42,0.3);backdrop-filter:blur(10px);">
+    <div class="container" style="max-width:1400px;margin:0 auto;padding:0 40px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:40px;margin-bottom:30px;">
+        <div>
+          <div class="logo-main" style="margin-bottom:12px;">AnalyticaX</div>
+          <p style="color:var(--text-soft);font-size:13px;line-height:1.6;margin-bottom:16px;">
+            AI-powered cryptocurrency chart analysis platform. Part of the CyberEx ecosystem.
+          </p>
+          <div style="display:flex;gap:12px;">
+            <a href="https://cyberex.com" target="_blank" style="color:var(--neon);text-decoration:none;font-size:12px;padding:6px 12px;border:1px solid rgba(0,229,255,0.3);border-radius:6px;transition:all 0.3s;">CyberEx Platform</a>
+            <a href="https://cyberex.com/wallet" target="_blank" style="color:var(--magenta);text-decoration:none;font-size:12px;padding:6px 12px;border:1px solid rgba(255,77,255,0.3);border-radius:6px;transition:all 0.3s;">CyberEx Wallet</a>
+          </div>
+        </div>
+        <div>
+          <h4 style="font-size:14px;margin-bottom:16px;color:#fff;">Quick Links</h4>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="index.html#how" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">How it works</a>
+            <a href="index.html#features" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Features</a>
+            <a href="index.html#pricing" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Pricing</a>
+            <a href="dashboard.html" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Dashboard</a>
+            <a href="analyze.html" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Analyze</a>
+          </div>
+        </div>
+        <div>
+          <h4 style="font-size:14px;margin-bottom:16px;color:#fff;">Legal</h4>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="index.html#legal" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Terms of Service</a>
+            <a href="index.html#legal" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Privacy Policy</a>
+            <a href="index.html#legal" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Disclaimer</a>
+          </div>
+        </div>
+        <div>
+          <h4 style="font-size:14px;margin-bottom:16px;color:#fff;">Connect</h4>
+          <p style="color:var(--text-soft);font-size:12px;line-height:1.6;margin-bottom:12px;">
+            Payments powered by CyberEx Platform and CyberEx Wallet. Secure, fast, and reliable crypto transactions.
+          </p>
+        </div>
+      </div>
+      <div style="padding-top:24px;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+        <span style="color:var(--text-soft);font-size:12px;">© <span id="footerYear">2025</span> AnalyticaX • All rights reserved.</span>
+        <span style="color:var(--text-soft);font-size:12px;">Analysis only • No investment advice • Powered by <a href="https://cyberex.com" target="_blank" style="color:var(--neon);text-decoration:none;">CyberEx</a></span>
+      </div>
+    </div>
   </footer>
 
   <!-- JS -->
@@ -1299,6 +1738,94 @@
     }
     drawParticles();
 
+    // ==== CHECK LOGIN STATUS FOR NAVBAR ====
+    async function checkLoginStatus() {
+      const token = localStorage.getItem("ax_token");
+      
+      if (token) {
+        // Verify token is valid
+        try {
+          const res = await fetch("http://localhost:5000/api/auth/me", {
+            headers: {
+              "Authorization": "Bearer " + token,
+              "x-device-id": localStorage.getItem("ax_device_id"),
+              "x-device-fingerprint": localStorage.getItem("ax_fingerprint")
+            }
+          });
+          
+          const data = await res.json();
+          
+          if (data.ok) {
+            // User is logged in - show dashboard button, hide login buttons
+            const navOut = document.getElementById("navLoggedOut");
+            const navIn = document.getElementById("navLoggedIn");
+            if (navOut) navOut.style.display = "none";
+            if (navIn) navIn.style.display = "flex";
+            
+            // Update user profile info
+            const avatar = document.getElementById("userProfileAvatar");
+            const email = document.getElementById("userProfileEmail");
+            const plan = document.getElementById("userProfilePlan");
+            const credits = document.getElementById("userCreditsCount");
+            
+            if (avatar && data.email) {
+              avatar.textContent = data.email[0].toUpperCase();
+            }
+            if (email) {
+              email.textContent = data.email || "user@email.com";
+            }
+            if (plan) {
+              const planText = data.premium ? "Premium" : (data.plan || "Free Plan");
+              plan.textContent = planText;
+              if (data.premium) {
+                plan.style.color = "var(--accent-green)";
+                plan.style.fontWeight = "600";
+              }
+            }
+            if (credits) {
+              credits.textContent = data.credits || 0;
+            }
+            
+            return true;
+          } else {
+            // Token invalid - clear it
+            localStorage.removeItem("ax_token");
+            const navOut = document.getElementById("navLoggedOut");
+            const navIn = document.getElementById("navLoggedIn");
+            if (navOut) navOut.style.display = "flex";
+            if (navIn) navIn.style.display = "none";
+            return false;
+          }
+        } catch (err) {
+          console.error("Auth check error:", err);
+          // On error, assume not logged in (don't redirect if backend is down)
+          const navOut = document.getElementById("navLoggedOut");
+          const navIn = document.getElementById("navLoggedIn");
+          if (navOut) navOut.style.display = "flex";
+          if (navIn) navIn.style.display = "none";
+          return false;
+        }
+      } else {
+        // No token - show login buttons
+        const navOut = document.getElementById("navLoggedOut");
+        const navIn = document.getElementById("navLoggedIn");
+        if (navOut) navOut.style.display = "flex";
+        if (navIn) navIn.style.display = "none";
+        return false;
+      }
+    }
+
+    // ==== LOGOUT FUNCTION ====
+    function logoutUser() {
+      if (confirm("Are you sure you want to logout?")) {
+        localStorage.removeItem("ax_token");
+        window.location.href = "index.html";
+      }
+    }
+
+    // Just update navbar on page load - NO AUTO REDIRECT
+    checkLoginStatus();
+
     // ==== REVEAL ON SCROLL ====
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry=>{
@@ -1338,6 +1865,9 @@
         "nav.legal":"Legal",
         "nav.login":"Log in",
         "nav.startFree":"Start free",
+        "nav.logout":"Logout",
+        "nav.dashboard":"Dashboard",
+        "nav.analyze":"Analyze",
 
         "hero.titleLine2":"Upload any crypto chart, let AI break it down.",
         "hero.desc":"AnalyticaX reads your charts like a professional trader — structure, liquidity, trends, and patterns — and returns clear, probability-based scenarios. Each account gets <strong>1 free analysis per day, up to 3 total</strong>.",
@@ -1365,7 +1895,7 @@
         "upload.tfLabel":"Timeframe",
         "upload.pairLabel":"Symbol / pair",
         "upload.other":"Other / altcoin",
-        "upload.btnAnalyze":"Use 1 credit & analyze →",
+        "upload.btnAnalyze":"Start AI Analysis →",
         "upload.statusIdle":"Upload a chart and use 1 credit to get a full AI breakdown.",
         "upload.disclaimer":"This is not financial advice. AI output is for educational and informational purposes only.",
 
@@ -1450,7 +1980,7 @@
         "legal.body":"All analyses generated by AnalyticaX are for education and general information only. This platform does not provide investment advice, portfolio management or any licensed financial service. Crypto assets and leveraged products carry a high level of risk, and you can lose all of your capital. The final decision and responsibility always belongs to the user.",
 
         "footer.left":"© 2025 AnalyticaX • All rights reserved.",
-        "footer.right":"Analysis only • No investment advice • Crypto payments via TRC20"
+        "footer.right":"Analysis only • No investment advice • Crypto payments via CyberEx"
       },
       tr:{
         "nav.tagline":"Yapay Zekâ Destekli Kripto Grafik Analizi",
@@ -1461,6 +1991,9 @@
         "nav.legal":"Yasal",
         "nav.login":"Giriş yap",
         "nav.startFree":"Ücretsiz başla",
+        "nav.logout":"Çıkış yap",
+        "nav.dashboard":"Kontrol Paneli",
+        "nav.analyze":"Analiz Et",
 
         "hero.titleLine2":"Grafiğini yükle, yapay zekâ senin yerine analiz etsin.",
         "hero.desc":"AnalyticaX grafikleri profesyonel bir trader gibi okur — yapı, likidite, trend ve formasyonları analiz eder, olasılık temelli senaryolar üretir. Her hesap için <strong>günlük 1 ücretsiz analiz, toplamda 3 adet</strong> hak verilir.",
@@ -1482,13 +2015,13 @@
         "credits.premiumStatus":"Premium kredi: 0",
         "credits.activateFree":"Ücretsiz paketi aktifleştir",
 
-        "upload.title":"AI grafik analizi",
-        "upload.desc":"TradingView, Binance, Bybit veya herhangi bir platformdan ekran görüntüsü yükleyin. Zaman dilimini ve pariteyi seçin, AnalyticaX detaylı rapor üretsin.",
+        "upload.title":"AI Grafik Analizi",
+        "upload.desc":"Herhangi bir kripto grafik ekran görüntüsü yükleyin ve detaylı içgörüler, trend tahminleri ve işlem önerileriyle anında AI destekli analiz alın.",
         "upload.chartLabel":"Grafik ekran görüntüsü (PNG/JPEG)",
         "upload.tfLabel":"Zaman dilimi",
         "upload.pairLabel":"Sembol / parite",
         "upload.other":"Diğer / altcoin",
-        "upload.btnAnalyze":"1 kredi kullan ve analiz et →",
+        "upload.btnAnalyze":"AI Analizine Başla →",
         "upload.statusIdle":"Grafik yükleyip 1 kredi kullanarak tam AI analizi alabilirsiniz.",
         "upload.disclaimer":"Bu bir yatırım tavsiyesi değildir. Üretilen analizler eğitim ve bilgilendirme amaçlıdır.",
 
@@ -1688,26 +2221,29 @@
         : "Free plan activated. You can use 1 free analysis per day, up to 3 in total.");
     }
 
-    document.getElementById("btnActivateFree").addEventListener("click", activateFreePlan);
-    document.getElementById("btnActivateFree2").addEventListener("click", function(){
-      const token = localStorage.getItem("ax_token");
-      if(token){
-        activateFreePlan();
-      } else {
-        window.location.href = "register.html";
-      }
-    });
-    document.getElementById("ctaStartFree").addEventListener("click", function(){
-      const token = localStorage.getItem("ax_token");
-      if(token){
-        window.location.href = "dashboard.html";
-      } else {
-        window.location.href = "register.html";
-      }
-    });
-    document.getElementById("btnLogin").addEventListener("click", function(){
-      window.location.href = "login.html";
-    });
+    const btnActivateFree = document.getElementById("btnActivateFree");
+    if (btnActivateFree) {
+      btnActivateFree.addEventListener("click", activateFreePlan);
+    }
+    
+    // btnActivateFree2 will be attached in loadPremiumPackages after it's created
+    const ctaStartFree = document.getElementById("ctaStartFree");
+    if (ctaStartFree) {
+      ctaStartFree.addEventListener("click", function(){
+        const token = localStorage.getItem("ax_token");
+        if(token){
+          window.location.href = "dashboard.html";
+        } else {
+          window.location.href = "register.html";
+        }
+      });
+    }
+    const btnLogin = document.getElementById("btnLogin");
+    if (btnLogin) {
+      btnLogin.addEventListener("click", function(){
+        window.location.href = "login.html";
+      });
+    }
     updateCreditsUI();
 
     function consumeCredit(kind){
@@ -1757,63 +2293,34 @@
       return false;
     }
 
-    // ==== UPLOAD ANALYSIS DEMO ====
-    const analysisStatus = document.getElementById("analysisStatus");
-    document.getElementById("btnAnalyze").addEventListener("click", ()=>{
-      const file = document.getElementById("chartFile").files[0];
-      const tf = document.getElementById("timeframe").value;
-      const pair = document.getElementById("pair").value;
-      const lang = document.documentElement.getAttribute("data-lang") || "en";
-
-      if(!file){
-        alert(lang==="tr" ? "Lütfen bir grafik ekran görüntüsü seçin." : "Please select a chart screenshot first.");
-        return;
-      }
-
-      // Free credit first
-      if(!consumeCredit("free")) return;
-
-      analysisStatus.textContent = (lang==="tr")
-        ? "Grafik analiz ediliyor, lütfen bekleyin..."
-        : "Analyzing chart, please wait...";
-
-      // DEMO: fake AI text. Backend eklendiğinde buraya gerçek API çağrısı gelecek.
-      setTimeout(()=>{
-        const scenariosEn = [
-          `Primary bullish scenario: continuation towards local liquidity above recent highs. Invalidation on a close below last higher low on ${tf}.`,
-          `Neutral range scenario: price oscillates between mid-range and previous high, with liquidity building. Watch for sweep + reversal setups.`,
-          `Bearish breakdown scenario: acceptance below key support and expansion into untested demand zones. Tight risk management required.`
-        ];
-        const scenariosTr = [
-          `Birincil yukarı senaryo: son zirvelerin üzerindeki likidite bölgelerine doğru devam hareketi. Geçersizlik, ${tf} grafikte son higher low altı kapanış ile.`,
-          `Nötr yatay senaryo: fiyat orta bant ile önceki tepe arasında gidip gelerek likidite biriktiriyor. Sweep + dönüş formasyonlarına dikkat.`,
-          `Aşağı yönlü kırılım senaryosu: kritik desteğin altında kabul ve test edilmemiş talep bölgelerine doğru genişleme. Sıkı risk yönetimi gerektirir.`
-        ];
-
-        const text = (lang==="tr")
-          ? `Parite: ${pair}\nZaman dilimi: ${tf}\n\n- ${scenariosTr[0]}\n- ${scenariosTr[1]}\n- ${scenariosTr[2]}`
-          : `Pair: ${pair}\nTimeframe: ${tf}\n\n- ${scenariosEn[0]}\n- ${scenariosEn[1]}\n- ${scenariosEn[2]}`;
-
-        analysisStatus.textContent = text;
-      }, 1500);
-    });
-
-    // btnGoUpload artık inline onclick ile yönetiliyor
+    // ==== UPLOAD ANALYSIS - REMOVED (now redirects to analyze.html) ====
+    // Analysis functionality moved to analyze.html page
+    // The upload area now shows a redirect card that links to analyze.html
 
     // ==== MARKET DATA (COINGECKO) ====
     async function loadMarket(){
+      console.log("loadMarket called");
+      const body = document.getElementById("marketBody");
+      if (!body) {
+        console.error("marketBody not found");
+        return;
+      }
+      
       try{
+        console.log("Fetching market data from CoinGecko...");
         const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=40&page=1&sparkline=false");
         if(!res.ok) throw new Error("http");
         const data = await res.json();
+        console.log("Market data received:", data.length, "coins");
         renderMarketTable(data);
         renderHeatmap(data.slice(0,20));
-        // Auto-refresh every 30 seconds
-        setTimeout(loadMarket, 30000);
+        // Auto-refresh every 3 seconds for live updates
+        setTimeout(loadMarket, 3000);
       }catch(e){
         console.warn("Market load failed", e);
-        const body = document.getElementById("marketBody");
-        body.innerHTML = `<tr><td colspan="5" style="font-size:11px;color:var(--text-soft);padding:8px;">Market data temporarily unavailable.</td></tr>`;
+        if (body) {
+          body.innerHTML = `<tr><td colspan="5" style="font-size:11px;color:var(--text-soft);padding:8px;">Market data temporarily unavailable. Retrying...</td></tr>`;
+        }
         // Retry after 10 seconds
         setTimeout(loadMarket, 10000);
       }
@@ -1852,14 +2359,21 @@
         body.appendChild(tr);
       });
 
-      document.getElementById("marketSearch").addEventListener("input", e=>{
-        const q = e.target.value.toLowerCase();
-        body.querySelectorAll("tr").forEach(tr=>{
-          const name = tr.dataset.name || "";
-          const sym = tr.dataset.sym || "";
-          tr.style.display = (name.includes(q) || sym.includes(q)) ? "" : "none";
+      const marketSearch = document.getElementById("marketSearch");
+      if (marketSearch) {
+        // Remove existing listeners by cloning
+        const newSearch = marketSearch.cloneNode(true);
+        marketSearch.parentNode.replaceChild(newSearch, marketSearch);
+        
+        newSearch.addEventListener("input", e=>{
+          const q = e.target.value.toLowerCase();
+          body.querySelectorAll("tr").forEach(tr=>{
+            const name = tr.dataset.name || "";
+            const sym = tr.dataset.sym || "";
+            tr.style.display = (name.includes(q) || sym.includes(q)) ? "" : "none";
+          });
         });
-      });
+      }
     }
 
     function renderHeatmap(list){
@@ -1894,7 +2408,425 @@
       });
     }
 
-    loadMarket();
+    // ==== AI ROBOT ASSISTANT ====
+    let currentMarketData = [];
+    let aiRobotMoving = false;
+
+    const aiMessages = {
+      greetings: [
+        "Merhaba! Ben AnalyticaX AI asistanınız! 🤖",
+        "Selam! Kripto dünyasına hoş geldiniz! 🚀",
+        "Hey! Ben buradayım, size yardımcı olmak için! 💫"
+      ],
+      cryptoJokes: [
+        "Bitcoin neden hiç yorulmaz? Çünkü blockchain'de çalışıyor! 😄",
+        "Ethereum'a ne demişler? 'Smart contract' yapıyorsun ama akıllı mısın? 😂",
+        "Kripto trader'lar neden hep gece çalışır? Çünkü market 7/24 açık! 🌙",
+        "HODL ne demek? Hold On for Dear Life! Ama benim için: 'Hey, Optimize Data Learning!' 🤓"
+      ],
+      cryptoNews: [
+        "BTC fiyatı yükseliyor! Bull market mi geliyor? 📈",
+        "ETH 2.0 güncellemeleri devam ediyor! ⚡",
+        "DeFi sektörü büyümeye devam ediyor! 💎",
+        "NFT'ler hala popüler! Sanat ve teknoloji birleşiyor! 🎨"
+      ],
+      priceAlerts: [
+        "BTC şu anda güçlü bir trend içinde! 📊",
+        "ETH'de volatilite artıyor, dikkatli olun! ⚠️",
+        "Altcoin sezonu başladı mı? 🤔",
+        "Market cap genel olarak yükselişte! 📈"
+      ],
+      tips: [
+        "Unutmayın: Bu finansal tavsiye değil! Her zaman kendi araştırmanızı yapın! 🔍",
+        "Risk yönetimi çok önemli! Asla kaybetmeyi göze alamayacağınız parayla trade yapmayın! ⚠️",
+        "Chart analizi yaparken birden fazla timeframe'e bakmayı unutmayın! 📊",
+        "HODL stratejisi uzun vadede işe yarayabilir, ama her zaman DYOR! 💪"
+      ],
+      motivational: [
+        "Harika bir analiz yapmak için doğru chart'ı seçmek önemli! 🎯",
+        "Sabırlı olun, piyasa her zaman size fırsat sunar! ⏰",
+        "Her trade bir öğrenme fırsatıdır! 📚",
+        "Başarılı trader'lar sabırlı ve disiplinlidir! 🏆"
+      ]
+    };
+
+    function getRandomMessage() {
+      const categories = Object.keys(aiMessages);
+      const category = categories[Math.floor(Math.random() * categories.length)];
+      const messages = aiMessages[category];
+      return messages[Math.floor(Math.random() * messages.length)];
+    }
+
+    function getPriceMessage() {
+      if (currentMarketData.length === 0) return null;
+      const coin = currentMarketData[Math.floor(Math.random() * Math.min(5, currentMarketData.length))];
+      if (!coin) return null;
+      const change = coin.price_change_percentage_24h || 0;
+      const emoji = change >= 0 ? "📈" : "📉";
+      const trend = change >= 0 ? "yükselişte" : "düşüşte";
+      return `${emoji} ${coin.name} (${coin.symbol.toUpperCase()}) $${coin.current_price.toFixed(2)} - 24s'de %${change.toFixed(2)} ${trend}!`;
+    }
+
+    function showAIMessage(message, showNotification = true) {
+      const messageEl = document.getElementById("aiRobotMessage");
+      const contentEl = document.getElementById("aiRobotMessageContent");
+      const timeEl = document.getElementById("aiRobotMessageTime");
+      const notificationEl = document.getElementById("aiRobotNotification");
+
+      if (!messageEl || !contentEl) return;
+
+      contentEl.textContent = message;
+      const now = new Date();
+      timeEl.textContent = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+      messageEl.classList.add("show");
+
+      if (showNotification) {
+        notificationEl.style.display = "flex";
+        setTimeout(() => {
+          notificationEl.style.display = "none";
+        }, 3000);
+      }
+
+      // Auto-hide after 8 seconds
+      setTimeout(() => {
+        messageEl.classList.remove("show");
+      }, 8000);
+    }
+
+    function moveAIRobot() {
+      if (aiRobotMoving) return;
+      aiRobotMoving = true;
+      const container = document.getElementById("aiRobotContainer");
+      if (!container) return;
+
+      container.classList.add("ai-robot-moving");
+      setTimeout(() => {
+        container.classList.remove("ai-robot-moving");
+        aiRobotMoving = false;
+      }, 20000);
+    }
+
+    // ==== AI CHAT FUNCTIONS ====
+    let chatHistory = [];
+    
+    function openAIChat() {
+      const chatWidget = document.getElementById("aiChatWidget");
+      if (chatWidget) {
+        chatWidget.classList.add("open");
+        document.getElementById("aiChatInput").focus();
+      }
+    }
+    
+    function closeAIChat() {
+      const chatWidget = document.getElementById("aiChatWidget");
+      if (chatWidget) {
+        chatWidget.classList.remove("open");
+      }
+    }
+    
+    async function sendAIChatMessage() {
+      const input = document.getElementById("aiChatInput");
+      const messages = document.getElementById("aiChatMessages");
+      const message = input.value.trim();
+      
+      if (!message) return;
+      
+      // Add user message
+      const userMsg = document.createElement("div");
+      userMsg.className = "ai-chat-message ai-chat-user";
+      userMsg.innerHTML = `
+        <div class="ai-chat-avatar">👤</div>
+        <div class="ai-chat-text">${message}</div>
+      `;
+      messages.appendChild(userMsg);
+      messages.scrollTop = messages.scrollHeight;
+      
+      // Add to history
+      chatHistory.push({ role: "user", content: message });
+      
+      // Clear input
+      input.value = "";
+      
+      // Show typing indicator
+      const typing = document.createElement("div");
+      typing.className = "ai-chat-message ai-chat-bot";
+      typing.id = "aiChatTyping";
+      typing.innerHTML = `
+        <div class="ai-chat-avatar">🤖</div>
+        <div class="ai-chat-text">Yazıyor...</div>
+      `;
+      messages.appendChild(typing);
+      messages.scrollTop = messages.scrollHeight;
+      
+      try {
+        const res = await fetch("http://localhost:5000/api/analysis/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message: message,
+            history: chatHistory.slice(-10) // Last 10 messages for context
+          })
+        });
+        
+        // Check if response is ok
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        
+        // Remove typing indicator
+        typing.remove();
+        
+        if (data.ok && data.message) {
+          // Add bot response
+          const botMsg = document.createElement("div");
+          botMsg.className = "ai-chat-message ai-chat-bot";
+          botMsg.innerHTML = `
+            <div class="ai-chat-avatar">🤖</div>
+            <div class="ai-chat-text">${data.message}</div>
+          `;
+          messages.appendChild(botMsg);
+          messages.scrollTop = messages.scrollHeight;
+          
+          // Add to history (use "model" role for Gemini)
+          chatHistory.push({ role: "model", content: data.message });
+        } else {
+          // Show error with more details
+          const errorMsg = document.createElement("div");
+          errorMsg.className = "ai-chat-message ai-chat-bot";
+          errorMsg.innerHTML = `
+            <div class="ai-chat-avatar">🤖</div>
+            <div class="ai-chat-text">${data.error || "Bağlantı hatası. Lütfen tekrar deneyin."}</div>
+          `;
+          messages.appendChild(errorMsg);
+          messages.scrollTop = messages.scrollHeight;
+          console.error("Chat API error response:", data);
+        }
+      } catch (err) {
+        console.error("Chat API error:", err);
+        typing.remove();
+        let errorText = "Bağlantı hatası. Lütfen tekrar deneyin.";
+        if (err.message.includes("404")) {
+          errorText = "Chat servisi şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.";
+        } else if (err.message.includes("Failed to fetch") || err.message.includes("NetworkError")) {
+          errorText = "Sunucuya bağlanılamıyor. İnternet bağlantınızı kontrol edin.";
+        }
+        const errorMsg = document.createElement("div");
+        errorMsg.className = "ai-chat-message ai-chat-bot";
+        errorMsg.innerHTML = `
+          <div class="ai-chat-avatar">🤖</div>
+          <div class="ai-chat-text">${errorText}</div>
+        `;
+        messages.appendChild(errorMsg);
+        messages.scrollTop = messages.scrollHeight;
+      }
+    }
+
+    // Initialize AI Robot
+    function initAIRobot() {
+      const robot = document.getElementById("aiRobot");
+      const container = document.getElementById("aiRobotContainer");
+      
+      if (!robot || !container) return;
+
+      // Show initial greeting after 3 seconds
+      setTimeout(() => {
+        showAIMessage(getRandomMessage(), true);
+      }, 3000);
+
+      // Click to open chat
+      robot.addEventListener("click", () => {
+        openAIChat();
+      });
+
+      // Random messages every 30-60 seconds
+      setInterval(() => {
+        if (Math.random() > 0.3) {
+          const priceMsg = getPriceMessage();
+          if (priceMsg) {
+            showAIMessage(priceMsg, true);
+          } else {
+            showAIMessage(getRandomMessage(), true);
+          }
+        }
+      }, 35000);
+
+      // Move robot occasionally
+      setInterval(() => {
+        if (Math.random() > 0.7 && !aiRobotMoving) {
+          moveAIRobot();
+        }
+      }, 60000);
+
+      // Update market data for price messages
+      setInterval(async () => {
+        try {
+          const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false");
+          if (res.ok) {
+            currentMarketData = await res.json();
+          }
+        } catch (e) {
+          console.warn("AI Robot market data fetch failed", e);
+        }
+      }, 10000);
+    }
+
+    // Initialize everything immediately
+    function initializePage() {
+      console.log("Initializing page...");
+      
+      // Load premium packages immediately
+      setTimeout(() => {
+        const grid = document.getElementById("pricingGrid");
+        if (grid) {
+          console.log("Loading premium packages...");
+          loadPremiumPackages();
+        } else {
+          console.error("pricingGrid not found");
+        }
+      }, 100);
+      
+      // Load market data immediately
+      setTimeout(() => {
+        const body = document.getElementById("marketBody");
+        if (body) {
+          console.log("Loading market data...");
+          loadMarket();
+        } else {
+          console.error("marketBody not found");
+        }
+      }, 100);
+      
+      // Initialize AI Robot after a delay
+      setTimeout(initAIRobot, 2000);
+    }
+
+    // Try multiple ways to ensure it loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializePage);
+    } else {
+      initializePage();
+    }
+    
+    window.addEventListener("load", () => {
+      // Double check if packages didn't load
+      setTimeout(() => {
+        const grid = document.getElementById("pricingGrid");
+        if (grid && grid.children.length === 0) {
+          console.log("Retrying premium packages load...");
+          loadPremiumPackages();
+        }
+        
+        const body = document.getElementById("marketBody");
+        if (body && (!body.children.length || (body.children.length === 1 && body.children[0].textContent.includes("unavailable")))) {
+          console.log("Retrying market data load...");
+          loadMarket();
+        }
+      }, 500);
+    });
+
+    // ==== LOAD PREMIUM PACKAGES ====
+    function loadPremiumPackages() {
+      console.log("loadPremiumPackages called");
+      const plans = [
+        {name:"Basic Startup", price:49, credits:5},
+        {name:"Basic Plus", price:79, credits:8},
+        {name:"Starter Pro", price:129, credits:12},
+        {name:"Trader Pack", price:199, credits:18},
+        {name:"Trader Max", price:299, credits:25},
+        {name:"Pro Entry", price:399, credits:35},
+        {name:"Pro Max", price:499, credits:45},
+        {name:"Ultra Lite", price:699, credits:60},
+        {name:"Ultra Trader", price:899, credits:75},
+        {name:"Elite Entry", price:1199, credits:95},
+        {name:"Elite Max", price:1499, credits:120},
+        {name:"Elite Infinity", price:1999, credits:150},
+        {name:"VIP Tier 1", price:2999, credits:200},
+        {name:"VIP Tier 2", price:4999, credits:300},
+        {name:"GODMODE PACK", price:9999, credits:500}
+      ];
+
+      const grid = document.getElementById("pricingGrid");
+      if (!grid) {
+        console.error("pricingGrid not found");
+        return;
+      }
+
+      // Clear grid first
+      grid.innerHTML = "";
+
+      // Add Free Plan first
+      const freeCard = document.createElement("div");
+      freeCard.className = "price-card";
+      freeCard.innerHTML = `
+        <div class="price-name" data-i18n="pricing.free.name">Free plan</div>
+        <div class="price-desc" data-i18n="pricing.free.desc">
+          Perfect for testing the AI and understanding how the system thinks.
+        </div>
+        <div>
+          <span class="price-value">0$</span>
+          <span class="price-unit" data-i18n="pricing.free.unit"> / up to 3 analyses</span>
+        </div>
+        <ul class="price-features">
+          <li><span class="dot"></span><span data-i18n="pricing.free.f1">1 AI analysis per day</span></li>
+          <li><span class="dot"></span><span data-i18n="pricing.free.f2">Up to 3 free analyses per account</span></li>
+          <li><span class="dot"></span><span data-i18n="pricing.free.f3">BTC, ETH and major pairs</span></li>
+        </ul>
+        <button class="price-btn" id="btnActivateFree2" data-i18n="pricing.free.btn">Activate free plan</button>
+      `;
+      grid.appendChild(freeCard);
+
+      // Add premium packages
+      plans.forEach((p, i) => {
+        const isPopular = i === 4 || i === 6 || i === 9; // Trader Max, Pro Max, Elite Max
+        const card = document.createElement("div");
+        card.className = `price-card ${isPopular ? 'highlight' : ''}`;
+        if (isPopular) {
+          const badge = document.createElement("div");
+          badge.className = "price-badge";
+          badge.textContent = "Popular";
+          card.appendChild(badge);
+        }
+        card.innerHTML = `
+          <div class="price-name">${p.name}</div>
+          <div class="price-desc">${p.credits} AI chart analyses included</div>
+          <div>
+            <span class="price-value">${p.price}$</span>
+            <span class="price-unit"> / ${p.credits} analyses</span>
+          </div>
+          <ul class="price-features">
+            <li><span class="dot"></span><span>${p.credits} AI chart analyses</span></li>
+            <li><span class="dot"></span><span>Priority queue & faster response</span></li>
+            <li><span class="dot"></span><span>All timeframes & pairs supported</span></li>
+          </ul>
+          <button class="price-btn ${isPopular ? 'price-btn-highlight' : ''}" onclick="window.location.href='premium.html'">Upgrade with crypto</button>
+        `;
+        grid.appendChild(card);
+      });
+
+      // Re-attach event listener for free plan button
+      const freeBtn = document.getElementById("btnActivateFree2");
+      if (freeBtn) {
+        // Remove existing listeners by cloning
+        const newBtn = freeBtn.cloneNode(true);
+        freeBtn.parentNode.replaceChild(newBtn, freeBtn);
+        
+        newBtn.addEventListener("click", function(){
+          const token = localStorage.getItem("ax_token");
+          if(token){
+            activateFreePlan();
+          } else {
+            window.location.href = "register.html";
+          }
+        });
+      }
+      
+      console.log("Premium packages loaded:", grid.children.length, "cards");
+    }
 
     // ==== LOTTIE ANIMATIONS ====
     function initLottieAnimations(){
@@ -1910,7 +2842,8 @@
       }
       
       // Features section animation
-      if(document.getElementById("lottie-features")){
+      // Lottie features logo removed
+      if(false && document.getElementById("lottie-features")){
         lottie.loadAnimation({
           container: document.getElementById("lottie-features"),
           renderer: "svg",

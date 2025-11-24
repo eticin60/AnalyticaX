@@ -22,6 +22,7 @@ body {
     color: #fff;
     overflow: hidden;
     position: relative;
+    padding-top: 80px;
 }
 
 /* PARTİKÜL CANVAS */
@@ -35,6 +36,145 @@ body {
     transform: translateZ(0);
 }
 
+/* NAVBAR */
+.navbar{
+  position:fixed;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:calc(100% - 80px);
+  max-width:1400px;
+  padding:12px 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  backdrop-filter:blur(30px) saturate(200%);
+  background:rgba(15,23,42,0.75);
+  border:1px solid rgba(255,255,255,0.15);
+  border-top:none;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+  z-index:50;
+  min-height:64px;
+  border-radius:0 0 16px 16px;
+}
+.nav-brand{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  flex-shrink:0;
+  cursor:pointer;
+  transition:opacity 0.3s ease;
+}
+.nav-brand:hover{opacity:0.9;}
+.logo-main{
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:0.05em;
+  background:linear-gradient(90deg, #00E5FF, #7C3AED, #FF4DFF);
+  background-clip:text;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent;
+  line-height:1.2;
+}
+.logo-sub{
+  font-size:11px;
+  color:rgba(148,163,184,0.8);
+  margin-top:2px;
+  font-weight:400;
+}
+.nav-links{
+  display:flex;
+  gap:8px;
+  font-size:13px;
+  color:rgba(255,255,255,0.9);
+  align-items:center;
+  justify-content:center;
+  padding:6px;
+  background:rgba(15,23,42,0.5);
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.1);
+}
+.nav-links a{
+  position:relative;
+  padding:8px 16px;
+  border-radius:8px;
+  transition:all 0.3s ease;
+  font-weight:400;
+  background:transparent;
+  text-decoration:none;
+  color:inherit;
+}
+.nav-links a::after{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%) scaleX(0);
+  width:80%;
+  height:2px;
+  background:linear-gradient(90deg, #00E5FF, #FF4DFF);
+  border-radius:2px;
+  transition:transform 0.3s ease, width 0.3s ease;
+  box-shadow:0 0 10px rgba(0,229,255,0.5);
+}
+.nav-links a:hover{
+  color:#fff;
+  background:rgba(255,255,255,0.05);
+}
+.nav-links a:hover::after{
+  transform:translateX(-50%) scaleX(1);
+  width:90%;
+}
+.nav-links a.active::after{
+  transform:translateX(-50%) scaleX(1);
+  width:90%;
+}
+.nav-actions{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  font-size:13px;
+  flex-wrap:nowrap;
+  padding:6px;
+  background:rgba(15,23,42,0.5);
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.1);
+}
+.btn-outline{
+  border-radius:8px;
+  border:1px solid rgba(148,163,184,0.4);
+  padding:8px 16px;
+  background:rgba(15,23,42,0.7);
+  color:rgba(255,255,255,0.9);
+  cursor:pointer;
+  transition:all 0.3s ease;
+  font-weight:400;
+  font-size:13px;
+}
+.btn-outline:hover{
+  border-color:rgba(148,163,184,0.6);
+  background:rgba(15,23,42,0.9);
+  color:#fff;
+}
+.btn-primary{
+  border-radius:8px;
+  border:none;
+  padding:8px 18px;
+  background:linear-gradient(135deg,#00E5FF,#FF4DFF);
+  color:#020617;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  font-size:13px;
+}
+.btn-primary:hover{
+  box-shadow:0 0 20px rgba(0,229,255,0.5);
+  transform:translateY(-1px);
+}
+
 /* LOGO */
 .big-logo {
     width: 260px;
@@ -44,6 +184,7 @@ body {
     transform: translateX(-50%);
     z-index: 30 !important;
     pointer-events: none;
+    display: none;
 }
 
 /* MAIN CONTAINER */
@@ -975,6 +1116,28 @@ button:active {
 </head>
 
 <body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="nav-brand" onclick="window.location.href='index.html'">
+    <div class="logo-main">AnalyticaX</div>
+    <div class="logo-sub">AI Powered Crypto Chart Analysis</div>
+  </div>
+  
+  <nav class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="analyze.html" class="active">Analyze</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="premium.html">Premium</a>
+    <a href="history.html">History</a>
+    <a href="settings.html">Settings</a>
+  </nav>
+
+  <div class="nav-actions">
+    <button class="btn-outline" onclick="window.location.href='dashboard.html'">Dashboard</button>
+    <button class="btn-primary" onclick="window.location.href='premium.html'">Buy Credits</button>
+  </div>
+</header>
 
 <img src="assets/AnalyticaX.png" class="big-logo" alt="AnalyticaX Logo">
 <canvas id="particles"></canvas>

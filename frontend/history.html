@@ -134,9 +134,10 @@ main{
   width:90%; max-width:1200px;
   margin:auto;
   padding-top:120px;
-  padding-bottom:40px;
-  min-height:calc(100vh - 80px);
+  padding-bottom:60px;
+  min-height:calc(100vh - 200px);
   position:relative;
+  overflow-x:hidden;
 }
 
 /* Title */
@@ -336,8 +337,33 @@ footer{
   </div>
 </main>
 
-<footer>
-  © 2025 AnalyticaX — All rights reserved.
+<footer style="padding:40px 0;margin-top:40px;border-top:1px solid rgba(255,255,255,0.1);background:rgba(15,23,42,0.3);backdrop-filter:blur(10px);">
+  <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:40px;margin-bottom:30px;">
+      <div>
+        <div style="font-size:18px;font-weight:700;background:linear-gradient(90deg,#00E5FF,#FF4DFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;">AnalyticaX</div>
+        <p style="color:var(--text-soft);font-size:13px;line-height:1.6;margin-bottom:16px;">
+          AI-powered cryptocurrency chart analysis platform. Part of the CyberEx ecosystem.
+        </p>
+        <div style="display:flex;gap:12px;">
+          <a href="https://cyberex.com" target="_blank" style="color:#00E5FF;text-decoration:none;font-size:12px;padding:6px 12px;border:1px solid rgba(0,229,255,0.3);border-radius:6px;">CyberEx Platform</a>
+          <a href="https://cyberex.com/wallet" target="_blank" style="color:#FF4DFF;text-decoration:none;font-size:12px;padding:6px 12px;border:1px solid rgba(255,77,255,0.3);border-radius:6px;">CyberEx Wallet</a>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:14px;margin-bottom:16px;color:#fff;">Quick Links</h4>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="index.html" style="color:var(--text-soft);text-decoration:none;font-size:13px;">Home</a>
+          <a href="analyze.html" style="color:var(--text-soft);text-decoration:none;font-size:13px;">Analyze</a>
+          <a href="dashboard.html" style="color:var(--text-soft);text-decoration:none;font-size:13px;">Dashboard</a>
+          <a href="premium.html" style="color:var(--text-soft);text-decoration:none;font-size:13px;">Premium</a>
+        </div>
+      </div>
+    </div>
+    <div style="padding-top:24px;border-top:1px solid rgba(255,255,255,0.1);text-align:center;">
+      <span style="color:var(--text-soft);font-size:12px;">© 2025 AnalyticaX • All rights reserved. • Powered by <a href="https://cyberex.com" target="_blank" style="color:#00E5FF;text-decoration:none;">CyberEx</a></span>
+    </div>
+  </div>
 </footer>
 
 <!-- MODAL -->

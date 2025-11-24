@@ -18,7 +18,7 @@ connectDB();
 // CORS
 // ================================
 app.use(cors({
-  origin: ["http://localhost:5000", "http://127.0.0.1:5000", "http://127.0.0.1:5500"],
+  origin: ["http://localhost:5000", "http://127.0.0.1:5000", "http://127.0.0.1:5500", "http://localhost:5500"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization", "x-device-id", "x-device-fingerprint"]
