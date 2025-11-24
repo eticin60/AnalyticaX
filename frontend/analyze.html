@@ -39,79 +39,157 @@ body {
 /* NAVBAR */
 .navbar{
   position:fixed;
-  top:0;
+  top:20px;
   left:50%;
   transform:translateX(-50%);
   width:calc(100% - 80px);
   max-width:1400px;
-  padding:12px 24px;
+  padding:14px 32px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:12px;
-  backdrop-filter:blur(30px) saturate(200%);
-  background:rgba(15,23,42,0.75);
-  border:1px solid rgba(255,255,255,0.15);
-  border-top:none;
-  box-shadow:0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+  gap:0;
+  backdrop-filter:blur(20px) saturate(180%);
+  background:rgba(15,10,25,0.7);
+  border:none;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
   z-index:50;
-  min-height:64px;
-  border-radius:0 0 16px 16px;
+  border-radius:16px;
+  margin:0;
   transition:transform 0.3s ease, opacity 0.3s ease;
 }
 .navbar.scrolled{
-  transform:translateX(-50%) translateY(-100%);
+  transform:translateX(-50%) translateY(-120%);
   opacity:0;
   pointer-events:none;
+}
+.navbar .nav-brand{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  margin:0;
+  z-index:10;
 }
 .nav-brand{
   display:flex;
   flex-direction:column;
-  align-items:flex-start;
+  align-items:center;
   justify-content:center;
   flex-shrink:0;
   cursor:pointer;
-  transition:opacity 0.3s ease;
+  transition:all 0.3s ease;
+  padding:24px 24px 20px;
+  background:linear-gradient(135deg, rgba(15,23,42,0.9), rgba(30,41,59,0.7));
+  border:1px solid rgba(0,229,255,0.4);
+  border-radius:20px;
+  box-shadow:0 8px 32px rgba(0,229,255,0.3), 0 0 60px rgba(255,77,255,0.2), inset 0 1px 0 rgba(255,255,255,0.15);
+  backdrop-filter:blur(30px) saturate(180%);
+  position:relative;
+  overflow:hidden;
 }
-.nav-brand:hover{opacity:0.9;}
+.nav-brand::after{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:4px;
+  background:linear-gradient(90deg, rgba(0,229,255,1), rgba(255,77,255,1), rgba(0,229,255,1));
+  background-size:200% 100%;
+  border-radius:0 0 20px 20px;
+  box-shadow:0 0 30px rgba(0,229,255,0.8), 0 0 60px rgba(255,77,255,0.6);
+  animation:gradientShift 3s ease infinite;
+}
+@keyframes gradientShift{
+  0%,100%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+}
+.nav-brand:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 40px rgba(0,229,255,0.4), 0 0 80px rgba(255,77,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  border-color:rgba(0,229,255,0.6);
+}
 .logo-main{
-  font-size:22px;
+  font-size:28px;
   font-weight:700;
-  letter-spacing:0.05em;
-  background:linear-gradient(90deg, #00E5FF, #7C3AED, #FF4DFF);
-  background-clip:text;
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  color:transparent;
+  letter-spacing:0.02em;
   line-height:1.2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  color:#fff;
+  text-align:center;
+  position:relative;
+}
+.logo-main::before{
+  content:'';
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  left:-24px;
+  width:1px;
+  height:420px;
+  background:linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.15) 5%, rgba(255,255,255,0.15) 95%, transparent 100%);
+  border-radius:0;
+  opacity:0.6;
+}
+.logo-main::after{
+  content:'';
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  right:-24px;
+  width:1px;
+  height:420px;
+  background:linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.15) 5%, rgba(255,255,255,0.15) 95%, transparent 100%);
+  border-radius:0;
+  opacity:0.6;
 }
 .logo-sub{
   font-size:11px;
-  color:rgba(148,163,184,0.8);
-  margin-top:2px;
+  color:rgba(255,255,255,0.75);
   font-weight:400;
+  letter-spacing:0.08em;
 }
 .nav-links{
   display:flex;
-  gap:8px;
-  font-size:13px;
-  color:rgba(255,255,255,0.9);
+  gap:24px;
   align-items:center;
-  justify-content:center;
-  padding:6px;
-  background:rgba(15,23,42,0.5);
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.1);
+  font-size:14px;
+  flex-wrap:wrap;
+  padding:12px 20px;
+  background:linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));
+  border:1px solid rgba(0,229,255,0.3);
+  border-radius:16px;
+  backdrop-filter:blur(20px) saturate(180%);
+  box-shadow:0 4px 20px rgba(0,229,255,0.2), 0 0 40px rgba(0,229,255,0.1), inset 0 1px 0 rgba(255,255,255,0.1);
+  max-width:100%;
+  position:relative;
+  overflow:hidden;
+}
+.nav-links::before{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:2px;
+  background:linear-gradient(90deg, var(--neon), var(--magenta), var(--neon));
+  transform:translateX(-100%);
+  transition:transform 0.6s ease-out;
+}
+.nav-links:hover::before{
+  transform:translateX(0);
 }
 .nav-links a{
   position:relative;
-  padding:8px 16px;
-  border-radius:8px;
+  padding:0;
   transition:all 0.3s ease;
   font-weight:400;
   background:transparent;
   text-decoration:none;
-  color:inherit;
+  color:rgba(255,255,255,0.9);
 }
 .nav-links a::after{
   content:'';
@@ -140,14 +218,64 @@ body {
 }
 .nav-actions{
   display:flex;
-  gap:8px;
+  gap:24px;
   align-items:center;
-  font-size:13px;
-  flex-wrap:nowrap;
-  padding:6px;
-  background:rgba(15,23,42,0.5);
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.1);
+  font-size:14px;
+  flex-wrap:wrap;
+  padding:12px 20px;
+  background:linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));
+  border:1px solid rgba(255,77,255,0.3);
+  border-radius:16px;
+  backdrop-filter:blur(20px) saturate(180%);
+  box-shadow:0 4px 20px rgba(255,77,255,0.2), 0 0 40px rgba(255,77,255,0.1), inset 0 1px 0 rgba(255,255,255,0.1);
+  max-width:100%;
+  position:relative;
+  overflow:hidden;
+}
+.nav-actions::before{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:3px;
+  background:linear-gradient(90deg, rgba(255,77,255,0.8), rgba(0,229,255,0.8));
+  border-radius:0 0 16px 16px;
+  box-shadow:0 0 20px rgba(255,77,255,0.6), 0 0 40px rgba(0,229,255,0.4);
+}
+.nav-actions a{
+  position:relative;
+  padding:0;
+  transition:all 0.3s ease;
+  font-weight:400;
+  background:transparent;
+  text-decoration:none;
+  color:rgba(255,255,255,0.9);
+}
+.nav-actions a::after{
+  content:'';
+  position:absolute;
+  bottom:-4px;
+  left:50%;
+  transform:translateX(-50%) scaleX(0);
+  width:100%;
+  height:2px;
+  background:linear-gradient(90deg, #00E5FF, #FF4DFF);
+  border-radius:1px;
+  transition:transform 0.3s ease, width 0.3s ease;
+  box-shadow:0 0 10px rgba(0,229,255,0.5);
+}
+.nav-actions a:hover::after{
+  transform:translateX(-50%) scaleX(1);
+  width:100%;
+}
+.nav-actions a:hover{
+  color:#fff;
+}
+.nav-boxes-container.scrolled{
+  transform:translateY(-120%);
+  opacity:0;
+  pointer-events:none;
 }
 .btn-outline{
   border-radius:8px;
@@ -195,7 +323,7 @@ body {
 
 /* MAIN CONTAINER */
 .container {
-    margin-top: 100px;
+    margin-top: 220px;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -1124,13 +1252,21 @@ button:active {
 <body>
 
 <!-- NAVBAR -->
+<!-- NAVBAR -->
 <header class="navbar">
-  <div class="nav-brand" onclick="window.location.href='index.html'">
-    <div class="logo-main">AnalyticaX</div>
-    <div class="logo-sub">AI Powered Crypto Chart Analysis</div>
+  <!-- Center Logo -->
+  <div class="nav-brand" onclick="window.location.href='index.html'" style="position:absolute;left:50%;transform:translateX(-50%);margin:0;z-index:10;">
+    <div class="logo-main" style="display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;padding:0;">
+      <img src="assets/AnalyticaX.png" alt="AnalyticaX Logo" style="height:160px;width:auto;object-fit:contain;filter:drop-shadow(0 0 25px rgba(0,229,255,0.6)) drop-shadow(0 0 50px rgba(255,77,255,0.4));transition:all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)';this.style.filter='drop-shadow(0 0 35px rgba(0,229,255,0.8)) drop-shadow(0 0 70px rgba(255,77,255,0.6))'" onmouseout="this.style.transform='scale(1)';this.style.filter='drop-shadow(0 0 25px rgba(0,229,255,0.6)) drop-shadow(0 0 50px rgba(255,77,255,0.4))'">
+      <div class="logo-sub" style="font-size:11px;color:rgba(255,255,255,0.75);font-weight:400;letter-spacing:0.08em;display:block;margin-top:-4px;text-shadow:0 0 10px rgba(0,229,255,0.3);">AI Powered Crypto Chart Analysis</div>
+    </div>
   </div>
-  
-  <nav class="nav-links">
+</header>
+
+<!-- Navigation Boxes (Below Navbar) -->
+<div style="position:fixed;top:80px;left:0;right:0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:0 40px;pointer-events:none;transition:transform 0.3s ease, opacity 0.3s ease;" class="nav-boxes-container">
+  <!-- Left Navigation Links -->
+  <nav class="nav-links" style="position:static;flex:0 0 auto;pointer-events:auto;">
     <a href="index.html">Home</a>
     <a href="analyze.html" class="active">Analyze</a>
     <a href="dashboard.html">Dashboard</a>
@@ -1139,12 +1275,15 @@ button:active {
     <a href="settings.html">Settings</a>
   </nav>
 
-  <div class="nav-actions">
-    <div id="navCredits" style="padding:6px 12px;border-radius:8px;background:rgba(15,23,42,0.7);border:1px solid rgba(148,163,184,0.3);color:#00E5FF;font-size:12px;font-weight:600;white-space:nowrap;">Credits: --</div>
-    <button class="btn-outline" onclick="window.location.href='dashboard.html'" style="padding:6px 14px;font-size:12px;">Dashboard</button>
-    <button class="btn-primary" onclick="window.location.href='premium.html'" style="padding:6px 14px;font-size:12px;">Buy Credits</button>
+  <!-- Right Actions -->
+  <div class="nav-actions" style="position:static;flex:0 0 auto;pointer-events:auto;">
+    <div id="navLoggedIn" style="display:flex;gap:24px;align-items:center;flex-direction:row;flex-wrap:nowrap;">
+      <div id="navCredits" style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:400;">Credits: --</div>
+      <a href="dashboard.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:400;transition:all 0.3s ease;white-space:nowrap;position:relative;">Dashboard</a>
+      <a href="premium.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:400;transition:all 0.3s ease;white-space:nowrap;position:relative;padding:6px 14px;background:linear-gradient(135deg,#00E5FF,#FF4DFF);border-radius:8px;color:#020617;font-weight:600;">Buy Credits</a>
+    </div>
   </div>
-</header>
+</div>
 
 <img src="assets/AnalyticaX.png" class="big-logo" alt="AnalyticaX Logo">
 <canvas id="particles"></canvas>
@@ -2184,15 +2323,30 @@ async function initAnalyzePage(){
 initAnalyzePage();
 
 // ==== SCROLL HIDE NAVBAR ====
+let lastScrollTop = 0;
+const navbar = document.querySelector('.navbar');
+const navBoxes = document.querySelector('.nav-boxes-container');
+
 window.addEventListener('scroll', () => {
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-  const navbar = document.querySelector('.navbar');
   
   if (scrollTop > 100) {
+    // Scrolling down - hide navbar
     if (navbar) navbar.classList.add('scrolled');
+    if (navBoxes) {
+      navBoxes.style.transform = 'translateY(-120%)';
+      navBoxes.style.opacity = '0';
+    }
   } else {
+    // At top - show navbar
     if (navbar) navbar.classList.remove('scrolled');
+    if (navBoxes) {
+      navBoxes.style.transform = 'translateY(0)';
+      navBoxes.style.opacity = '1';
+    }
   }
+  
+  lastScrollTop = scrollTop;
 }, { passive: true });
 
 </script>

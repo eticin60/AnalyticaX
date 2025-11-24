@@ -41,3 +41,4 @@ Tarayıcıda `http://localhost:5000` açıldı mı?
 
 Detaylı bilgi için `START.md` dosyasına bak!
 
+

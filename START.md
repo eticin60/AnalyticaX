@@ -74,3 +74,4 @@ Backend çalışıyor mu kontrol et:
 3. Tarayıcıda `http://localhost:5000` açılır
 4. Hazırsın! 🎉
 
+

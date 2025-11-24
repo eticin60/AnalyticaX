@@ -29,117 +29,271 @@ body{
   min-height:100vh;
 }
 
-/* Background grid */
+/* BACKGROUND LAYERS */
+canvas#bgParticles{
+  position:fixed;
+  inset:0;
+  z-index:-3;
+}
 .bg-grid{
-  position:fixed;inset:0;
+  position:fixed;
+  inset:0;
   background-image:
     linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),
     linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
   background-size:50px 50px;
-  opacity:.2;
+  opacity:.22;
+  pointer-events:none;
   z-index:-2;
 }
 
-/* Glow Balls */
-.bg-glow{
-  position:fixed;
-  width:420px;height:420px;
-  border-radius:50%;
-  filter:blur(120px);
-  opacity:.55;
-  mix-blend-mode:screen;
-  z-index:-1;
-  animation:float 18s infinite alternate ease-in-out;
-}
-.bg-glow.cyan{ background:rgba(0,229,255,.9); top:-90px; left:-40px; }
-.bg-glow.pink{ background:rgba(255,77,255,.8); bottom:-120px; right:-60px; animation-delay:8s; }
-
-@keyframes float{0%{transform:translate(0,0);}100%{transform:translate(40px,-40px);}}
-
-/* Navbar */
+/* NAVBAR */
 .navbar{
-  position:fixed; inset:0 auto auto 0;
-  width:100%;
-  padding:10px 6%;
-  display:flex; align-items:center; justify-content:space-between;
-  background:rgba(3,7,18,.85);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border-soft);
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:calc(100% - 80px);
+  max-width:1400px;
+  padding:14px 32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0;
+  backdrop-filter:blur(20px) saturate(180%);
+  background:rgba(15,10,25,0.7);
+  border:none;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
   z-index:50;
+  border-radius:16px;
+  margin:0;
   transition:transform 0.3s ease, opacity 0.3s ease;
 }
 .navbar.scrolled{
-  transform:translateY(-100%);
+  transform:translateX(-50%) translateY(-120%);
   opacity:0;
   pointer-events:none;
 }
-.nav-left{display:flex;align-items:center;gap:12px;}
-.logo{
-  width:46px;height:46px;border-radius:14px;
-  background:radial-gradient(circle,rgba(0,229,255,.2),transparent 60%);
-  padding:4px;object-fit:contain;box-shadow:0 0 20px rgba(0,229,255,.5);
+.navbar .nav-brand{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  margin:0;
+  z-index:10;
 }
-.logo-main{font-size:18px;font-weight:600;letter-spacing:.07em;}
-.logo-main span{color:var(--neon);}
-.logo-sub{font-size:11px;color:var(--text-soft);}
-
-.nav-links a{
-  margin-left:22px;
-  font-size:13px;
-  color:var(--text-soft);
-  text-decoration:none;
-  position:relative; padding-bottom:3px;
+.nav-brand{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  padding:24px 24px 20px;
+  background:linear-gradient(135deg, rgba(15,23,42,0.9), rgba(30,41,59,0.7));
+  border:1px solid rgba(0,229,255,0.4);
+  border-radius:20px;
+  box-shadow:0 8px 32px rgba(0,229,255,0.3), 0 0 60px rgba(255,77,255,0.2), inset 0 1px 0 rgba(255,255,255,0.15);
+  backdrop-filter:blur(30px) saturate(180%);
+  position:relative;
+  overflow:hidden;
 }
-.nav-links a.active{color:#fff;font-weight:500;}
-.nav-links a.active::after,
-.nav-links a:hover::after{
+.nav-brand::after{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:4px;
+  background:linear-gradient(90deg, rgba(0,229,255,1), rgba(255,77,255,1), rgba(0,229,255,1));
+  background-size:200% 100%;
+  border-radius:0 0 20px 20px;
+  box-shadow:0 0 30px rgba(0,229,255,0.8), 0 0 60px rgba(255,77,255,0.6);
+  animation:gradientShift 3s ease infinite;
+}
+@keyframes gradientShift{
+  0%,100%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+}
+.nav-brand:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 40px rgba(0,229,255,0.4), 0 0 80px rgba(255,77,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  border-color:rgba(0,229,255,0.6);
+}
+.logo-main{
+  font-size:28px;
+  font-weight:700;
+  letter-spacing:0.02em;
+  line-height:1.2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  color:#fff;
+  text-align:center;
+  position:relative;
+}
+.logo-main::before{
+  content:'';
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  left:-24px;
+  width:1px;
+  height:420px;
+  background:linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.15) 5%, rgba(255,255,255,0.15) 95%, transparent 100%);
+  border-radius:0;
+  opacity:0.6;
+}
+.logo-main::after{
+  content:'';
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  right:-24px;
+  width:1px;
+  height:420px;
+  background:linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.15) 5%, rgba(255,255,255,0.15) 95%, transparent 100%);
+  border-radius:0;
+  opacity:0.6;
+}
+.logo-sub{
+  font-size:11px;
+  color:rgba(255,255,255,0.75);
+  font-weight:400;
+  letter-spacing:0.08em;
+}
+.nav-links{
+  display:flex;
+  gap:24px;
+  align-items:center;
+  font-size:14px;
+  flex-wrap:wrap;
+  padding:12px 20px;
+  background:linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));
+  border:1px solid rgba(0,229,255,0.3);
+  border-radius:16px;
+  backdrop-filter:blur(20px) saturate(180%);
+  box-shadow:0 4px 20px rgba(0,229,255,0.2), 0 0 40px rgba(0,229,255,0.1), inset 0 1px 0 rgba(255,255,255,0.1);
+  max-width:100%;
+  position:relative;
+  overflow:hidden;
+}
+.nav-links::before{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:0;
   width:100%;
+  height:2px;
+  background:linear-gradient(90deg, var(--neon), var(--magenta), var(--neon));
+  transform:translateX(-100%);
+  transition:transform 0.6s ease-out;
+}
+.nav-links:hover::before{
+  transform:translateX(0);
+}
+.nav-links a{
+  position:relative;
+  padding:0;
+  transition:all 0.3s ease;
+  font-weight:400;
+  background:transparent;
+  text-decoration:none;
+  color:rgba(255,255,255,0.9);
 }
 .nav-links a::after{
-  content:""; position:absolute; left:0; bottom:0;
-  width:0; height:2px;
-  background:linear-gradient(90deg,var(--neon),var(--pink));
-  transition:.25s;
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%) scaleX(0);
+  width:80%;
+  height:2px;
+  background:linear-gradient(90deg, var(--neon), var(--pink));
+  border-radius:2px;
+  transition:transform 0.3s ease, width 0.3s ease;
+  box-shadow:0 0 10px rgba(0,229,255,0.5);
 }
-
+.nav-links a:hover{
+  color:#fff;
+  background:rgba(255,255,255,0.05);
+}
+.nav-links a:hover::after{
+  transform:translateX(-50%) scaleX(1);
+  width:90%;
+}
+.nav-links a.active::after{
+  transform:translateX(-50%) scaleX(1);
+  width:90%;
+}
 .nav-actions{
-  display:flex;align-items:center;gap:14px;font-size:12px;
+  display:flex;
+  gap:24px;
+  align-items:center;
+  font-size:14px;
+  flex-wrap:wrap;
+  padding:12px 20px;
+  background:linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));
+  border:1px solid rgba(255,77,255,0.3);
+  border-radius:16px;
+  backdrop-filter:blur(20px) saturate(180%);
+  box-shadow:0 4px 20px rgba(255,77,255,0.2), 0 0 40px rgba(255,77,255,0.1), inset 0 1px 0 rgba(255,255,255,0.1);
+  max-width:100%;
+  position:relative;
+  overflow:hidden;
 }
-.credits-pill{
-  padding:5px 12px;
-  border-radius:999px;
-  background:rgba(255,255,255,.06);
-  border:1px solid var(--border-soft);
-  color:var(--neon);
+.nav-actions::before{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:3px;
+  background:linear-gradient(90deg, rgba(255,77,255,0.8), rgba(0,229,255,0.8));
+  border-radius:0 0 16px 16px;
+  box-shadow:0 0 20px rgba(255,77,255,0.6), 0 0 40px rgba(0,229,255,0.4);
 }
-.user-box{
-  display:flex;align-items:center;gap:8px;
-  padding:5px 10px;
-  background:rgba(255,255,255,.05);
-  border-radius:999px;
-  border:1px solid var(--border-soft);
+.nav-actions a{
+  position:relative;
+  padding:0;
+  transition:all 0.3s ease;
+  font-weight:400;
+  background:transparent;
+  text-decoration:none;
+  color:rgba(255,255,255,0.9);
 }
-.user-avatar{
-  width:24px;height:24px;
-  border-radius:50%;
-  background:radial-gradient(circle,#fff,#a2ecff 40%,#1f2937 65%);
-  color:#000;font-size:12px;font-weight:600;
-  display:flex;align-items:center;justify-content:center;
+.nav-actions a::after{
+  content:'';
+  position:absolute;
+  bottom:-4px;
+  left:50%;
+  transform:translateX(-50%) scaleX(0);
+  width:100%;
+  height:2px;
+  background:linear-gradient(90deg, var(--neon), var(--pink));
+  border-radius:1px;
+  transition:transform 0.3s ease, width 0.3s ease;
+  box-shadow:0 0 10px rgba(0,229,255,0.5);
 }
-
-.btn-logout{
-  padding:6px 14px;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-  border:1px solid var(--border-soft);
-  cursor:pointer;color:#fff;font-size:12px;
+.nav-actions a:hover::after{
+  transform:translateX(-50%) scaleX(1);
+  width:100%;
+}
+.nav-actions a:hover{
+  color:#fff;
+}
+.nav-boxes-container.scrolled{
+  transform:translateY(-120%);
+  opacity:0;
+  pointer-events:none;
 }
 
 /* Page Container */
 main{
   width:90%; max-width:1200px;
   margin:auto;
-  padding-top:120px;
+  padding-top:220px;
   padding-bottom:60px;
   min-height:calc(100vh - 200px);
   position:relative;
@@ -304,35 +458,44 @@ footer{
 
 <body>
 
+<canvas id="bgParticles"></canvas>
 <div class="bg-grid"></div>
-<div class="bg-glow cyan"></div>
-<div class="bg-glow pink"></div>
 
+<!-- NAVBAR -->
 <header class="navbar">
-  <div class="nav-left">
-    <img src="assets/AnalyticaX.png" class="logo" />
-    <div>
-      <div class="logo-main">Analytica<span>X</span></div>
-      <div class="logo-sub">AI Powered Analysis</div>
+  <!-- Center Logo -->
+  <div class="nav-brand" onclick="window.location.href='index.html'" style="position:absolute;left:50%;transform:translateX(-50%);margin:0;z-index:10;">
+    <div class="logo-main" style="display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;padding:0;">
+      <img src="assets/AnalyticaX.png" alt="AnalyticaX Logo" style="height:160px;width:auto;object-fit:contain;filter:drop-shadow(0 0 25px rgba(0,229,255,0.6)) drop-shadow(0 0 50px rgba(255,77,255,0.4));transition:all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)';this.style.filter='drop-shadow(0 0 35px rgba(0,229,255,0.8)) drop-shadow(0 0 70px rgba(255,77,255,0.6))'" onmouseout="this.style.transform='scale(1)';this.style.filter='drop-shadow(0 0 25px rgba(0,229,255,0.6)) drop-shadow(0 0 50px rgba(255,77,255,0.4))'">
+      <div class="logo-sub" style="font-size:11px;color:rgba(255,255,255,0.75);font-weight:400;letter-spacing:0.08em;display:block;margin-top:-4px;text-shadow:0 0 10px rgba(0,229,255,0.3);">AI Powered Crypto Chart Analysis</div>
     </div>
   </div>
+</header>
 
-  <nav class="nav-links">
+<!-- Navigation Boxes (Below Navbar) -->
+<div style="position:fixed;top:80px;left:0;right:0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:0 40px;pointer-events:none;transition:transform 0.3s ease, opacity 0.3s ease;" class="nav-boxes-container">
+  <!-- Left Navigation Links -->
+  <nav class="nav-links" style="position:static;flex:0 0 auto;pointer-events:auto;">
     <a href="dashboard.html">Dashboard</a>
     <a href="history.html" class="active">History</a>
     <a href="premium.html">Premium</a>
     <a href="settings.html">Settings</a>
   </nav>
 
-  <div class="nav-actions">
-    <div class="credits-pill" id="navCredits">Credits: --</div>
-    <div class="user-box">
-      <div class="user-avatar" id="userAvatar">U</div>
-      <div id="userEmail">User</div>
+  <!-- Right Actions -->
+  <div class="nav-actions" style="position:static;flex:0 0 auto;pointer-events:auto;">
+    <div id="navLoggedIn" style="display:flex;gap:24px;align-items:center;flex-direction:row;flex-wrap:nowrap;">
+      <div id="navCredits" style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:400;">Credits: --</div>
+      <div style="display:flex;align-items:center;gap:12px;padding-left:12px;border-left:1px solid rgba(255,255,255,0.15);">
+        <div id="userAvatar" style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--neon),var(--pink));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#020617;flex-shrink:0;cursor:pointer;" onclick="window.location.href='settings.html'">U</div>
+        <div style="display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;cursor:pointer;" onclick="window.location.href='settings.html'">
+          <div id="userEmail" style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;color:#fff;">User</div>
+        </div>
+        <button id="btnLogout" onclick="event.stopPropagation();logoutUser();" style="padding:4px 8px;font-size:10px;color:rgba(249,115,115,1);border:1px solid rgba(249,115,115,0.5);border-radius:6px;white-space:nowrap;background:transparent;cursor:pointer;transition:all 0.3s ease;font-weight:500;line-height:1;" onmouseover="this.style.background='rgba(249,115,115,0.15)';this.style.borderColor='rgba(249,115,115,0.7)'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(249,115,115,0.5)'">Logout</button>
+      </div>
     </div>
-    <button class="btn-logout" id="btnLogout">Logout</button>
+    </div>
   </div>
-</header>
 
 <main>
   <div class="page-title">Analysis History</div>
@@ -405,7 +568,7 @@ document.getElementById("btnLogout").onclick = ()=>{
 /* Load History */
 async function loadHistory() {
   try {
-    const res = await fetch("http://localhost:5000/api/analysis/history", {
+  const res = await fetch("http://localhost:5000/api/analysis/history", {
       headers:{
         "Authorization":"Bearer "+token,
         "x-device-id": localStorage.getItem("ax_device_id"),
@@ -418,12 +581,12 @@ async function loadHistory() {
       return;
     }
 
-    const list = await res.json();
-    const grid = document.getElementById("historyGrid");
+  const list = await res.json();
+  const grid = document.getElementById("historyGrid");
 
-    grid.innerHTML = "";
+  grid.innerHTML = "";
 
-    if(!Array.isArray(list) || list.length===0){
+  if(!Array.isArray(list) || list.length===0){
       grid.innerHTML = `
         <div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-soft);">
           <div style="font-size:48px; margin-bottom:16px;">📊</div>
@@ -432,10 +595,10 @@ async function loadHistory() {
           <a href="analyze.html" style="display:inline-block; margin-top:20px; padding:10px 24px; background:linear-gradient(90deg,var(--neon),var(--pink)); border-radius:999px; text-decoration:none; color:#020617; font-weight:600;">Analyze Chart</a>
         </div>
       `;
-      return;
-    }
+    return;
+  }
 
-    list.forEach(item => {
+list.forEach(item => {
         const img = item.imageBase64 || item.image || item.chartImage || "assets/no-preview.png";
         const symbol = item.symbol || "N/A";
         const timeframe = item.timeframe || "N/A";
@@ -448,40 +611,40 @@ async function loadHistory() {
         const leverage = item.result?.leverage || item.leverage || "N/A";
         const forecast = item.result?.forecast || item.forecast || "N/A";
 
-        grid.innerHTML += `
+    grid.innerHTML += `
           <div class="card" onclick='openModal(${JSON.stringify(item).replace(/'/g, "&#39;")})'>
             <div class="axid">${axId}</div>
 
-            <div class="thumb-wrapper" style="position:relative;">
+        <div class="thumb-wrapper" style="position:relative;">
                 <img class="thumb" src="${img}" onerror="this.src='assets/no-preview.png'">
-                <div class="thumb-coin" style="
-                    position:absolute;
-                    bottom:8px; right:8px;
-                    padding:4px 10px;
+            <div class="thumb-coin" style="
+                position:absolute;
+                bottom:8px; right:8px;
+                padding:4px 10px;
                     background:rgba(0,0,0,.6);
-                    border-radius:8px;
-                    font-size:11px;
+                border-radius:8px;
+                font-size:11px;
                     font-weight:600;
-                    backdrop-filter:blur(6px);
+                backdrop-filter:blur(6px);
                     border:1px solid rgba(255,255,255,.25);
-                ">
+            ">
                     ${symbol.replace("USDT","").replace("USD","")}
-                </div>
             </div>
+        </div>
 
             <div class="row"><div class="label">Symbol</div><div class="val" style="font-weight:600;">${symbol}</div></div>
             <div class="row"><div class="label">Timeframe</div><div class="val"><span class="badge tf">${timeframe}</span></div></div>
             <div class="row"><div class="label">Trend</div><div class="val" style="color:${trend.toLowerCase().includes('up')?'#14f195':trend.toLowerCase().includes('down')?'#ff4d79':'#94a3b8'}">${trend}</div></div>
-            <div class="row"><div class="label">Risk</div><div class="val">
+        <div class="row"><div class="label">Risk</div><div class="val">
                 <span class="badge ${risk==="High"||risk==="high"?"risk-high":"risk-low"}">${risk}</span>
             </div></div>
             <div class="row"><div class="label">Probability</div><div class="val" style="font-size:12px;">
                 <span style="color:#14f195">↑${probUp}%</span> / <span style="color:#ff4d79">↓${probDown}%</span>
-            </div></div>
+        </div></div>
             <div class="row"><div class="label">Date</div><div class="val" style="font-size:11px;color:var(--text-soft);">${createdAt}</div></div>
-          </div>
-        `;
-    });
+      </div>
+    `;
+});
   } catch(err) {
     console.error("History load error:", err);
     document.getElementById("historyGrid").innerHTML = "<div style='color:#f97373'>Error: " + err.message + "</div>";
@@ -607,7 +770,7 @@ function openModal(item){
         <summary style="cursor:pointer; color:var(--text-soft); font-size:12px; margin-bottom:8px;">📋 Full JSON Data</summary>
         <pre style="background:#0b1220;padding:14px;border-radius:12px;overflow:auto; font-size:11px; max-height:300px;">
 ${JSON.stringify(item,null,2)}
-        </pre>
+    </pre>
       </details>
     </div>
   `;
@@ -622,16 +785,83 @@ document.getElementById("modal")?.addEventListener("click", (e) => {
   if(e.target.id === "modal") closeModal();
 });
 
+// ==== PARTICLE BACKGROUND ====
+const canvas = document.getElementById("bgParticles");
+const ctx = canvas.getContext("2d");
+let particles = [];
+const PARTICLE_COUNT = 80;
+
+function resizeCanvas(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+function createParticles(){
+  particles = [];
+  for(let i=0;i<PARTICLE_COUNT;i++){
+    particles.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      r: Math.random()*2+0.5,
+      vx:(Math.random()-0.5)*0.2,
+      vy:(Math.random()-0.5)*0.2,
+      alpha: Math.random()*0.6+0.2
+    });
+  }
+}
+createParticles();
+
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(const p of particles){
+    p.x+=p.vx;
+    p.y+=p.vy;
+    if(p.x<0)p.x=canvas.width;
+    if(p.x>canvas.width)p.x=0;
+    if(p.y<0)p.y=canvas.height;
+    if(p.y>canvas.height)p.y=0;
+
+    const gradient = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*6);
+    gradient.addColorStop(0,`rgba(0,229,255,${p.alpha})`);
+    gradient.addColorStop(0.4,`rgba(255,77,255,${p.alpha*0.7})`);
+    gradient.addColorStop(1,"rgba(0,0,0,0)");
+
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r*6,0,Math.PI*2);
+    ctx.fill();
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
 // ==== SCROLL HIDE NAVBAR ====
+let lastScrollTop = 0;
+const navbar = document.querySelector('.navbar');
+const navBoxes = document.querySelector('.nav-boxes-container');
+
 window.addEventListener('scroll', () => {
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-  const navbar = document.querySelector('.navbar');
   
   if (scrollTop > 100) {
+    // Scrolling down - hide navbar
     if (navbar) navbar.classList.add('scrolled');
+    if (navBoxes) {
+      navBoxes.style.transform = 'translateY(-120%)';
+      navBoxes.style.opacity = '0';
+    }
   } else {
+    // At top - show navbar
     if (navbar) navbar.classList.remove('scrolled');
+    if (navBoxes) {
+      navBoxes.style.transform = 'translateY(0)';
+      navBoxes.style.opacity = '1';
+    }
   }
+  
+  lastScrollTop = scrollTop;
 }, { passive: true });
 
 </script>

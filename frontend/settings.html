@@ -77,94 +77,251 @@
     }
 
     /* NAVBAR (Dashboard ile aynı + Settings linki) */
+    /* NAVBAR */
     .navbar{
       position:fixed;
-      top:0;left:0;
-      width:100%;
-      padding:10px 6%;
+      top:20px;
+      left:50%;
+      transform:translateX(-50%);
+      width:calc(100% - 80px);
+      max-width:1400px;
+      padding:14px 32px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      backdrop-filter:blur(14px);
-      background:linear-gradient(to bottom,rgba(3,7,18,.92),rgba(3,7,18,.35));
-      border-bottom:1px solid rgba(148,163,184,.3);
+      gap:0;
+      backdrop-filter:blur(20px) saturate(180%);
+      background:rgba(15,10,25,0.7);
+      border:none;
+      box-shadow:0 4px 20px rgba(0,0,0,0.3);
+      z-index:50;
+      border-radius:16px;
+      margin:0;
       transition:transform 0.3s ease, opacity 0.3s ease;
     }
     .navbar.scrolled{
-      transform:translateY(-100%);
+      transform:translateX(-50%) translateY(-120%);
       opacity:0;
       pointer-events:none;
     }
-      z-index:50;
+    .navbar .nav-brand{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      margin:0;
+      z-index:10;
     }
-    .nav-left{
+    .nav-brand{
       display:flex;
+      flex-direction:column;
       align-items:center;
-      gap:10px;
+      justify-content:center;
+      flex-shrink:0;
+      cursor:pointer;
+      transition:all 0.3s ease;
+      padding:24px 24px 20px;
+      background:linear-gradient(135deg, rgba(15,23,42,0.9), rgba(30,41,59,0.7));
+      border:1px solid rgba(0,229,255,0.4);
+      border-radius:20px;
+      box-shadow:0 8px 32px rgba(0,229,255,0.3), 0 0 60px rgba(255,77,255,0.2), inset 0 1px 0 rgba(255,255,255,0.15);
+      backdrop-filter:blur(30px) saturate(180%);
+      position:relative;
+      overflow:hidden;
     }
-    .logo-img{
-      width:46px;
-      height:46px;
-      border-radius:16px;
-      object-fit:contain;
-      padding:4px;
-      background:radial-gradient(circle,rgba(0,229,255,.18),transparent 70%);
-      box-shadow:0 0 20px rgba(0,229,255,.6);
+    .nav-brand::after{
+      content:'';
+      position:absolute;
+      bottom:0;
+      left:0;
+      right:0;
+      height:4px;
+      background:linear-gradient(90deg, rgba(0,229,255,1), rgba(255,77,255,1), rgba(0,229,255,1));
+      background-size:200% 100%;
+      border-radius:0 0 20px 20px;
+      box-shadow:0 0 30px rgba(0,229,255,0.8), 0 0 60px rgba(255,77,255,0.6);
+      animation:gradientShift 3s ease infinite;
+    }
+    @keyframes gradientShift{
+      0%,100%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+    }
+    .nav-brand:hover{
+      transform:translateY(-2px);
+      box-shadow:0 12px 40px rgba(0,229,255,0.4), 0 0 80px rgba(255,77,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+      border-color:rgba(0,229,255,0.6);
     }
     .logo-main{
-      font-size:18px;
-      font-weight:600;
-      letter-spacing:.08em;
+      font-size:28px;
+      font-weight:700;
+      letter-spacing:0.02em;
+      line-height:1.2;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:4px;
+      color:#fff;
+      text-align:center;
+      position:relative;
     }
-    .logo-main span{color:var(--neon);}
+    .logo-main::before{
+      content:'';
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      left:-24px;
+      width:1px;
+      height:420px;
+      background:linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.15) 5%, rgba(255,255,255,0.15) 95%, transparent 100%);
+      border-radius:0;
+      opacity:0.6;
+    }
+    .logo-main::after{
+      content:'';
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      right:-24px;
+      width:1px;
+      height:420px;
+      background:linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.15) 5%, rgba(255,255,255,0.15) 95%, transparent 100%);
+      border-radius:0;
+      opacity:0.6;
+    }
     .logo-sub{
       font-size:11px;
-      color:var(--text-soft);
+      color:rgba(255,255,255,0.75);
+      font-weight:400;
+      letter-spacing:0.08em;
     }
     .nav-links{
       display:flex;
-      gap:18px;
-      font-size:13px;
-      color:var(--text-soft);
+      gap:24px;
+      align-items:center;
+      font-size:14px;
+      flex-wrap:wrap;
+      padding:12px 20px;
+      background:linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));
+      border:1px solid rgba(0,229,255,0.3);
+      border-radius:16px;
+      backdrop-filter:blur(20px) saturate(180%);
+      box-shadow:0 4px 20px rgba(0,229,255,0.2), 0 0 40px rgba(0,229,255,0.1), inset 0 1px 0 rgba(255,255,255,0.1);
+      max-width:100%;
+      position:relative;
+      overflow:hidden;
+    }
+    .nav-links::before{
+      content:'';
+      position:absolute;
+      bottom:0;
+      left:0;
+      width:100%;
+      height:2px;
+      background:linear-gradient(90deg, var(--neon), var(--magenta), var(--neon));
+      transform:translateX(-100%);
+      transition:transform 0.6s ease-out;
+    }
+    .nav-links:hover::before{
+      transform:translateX(0);
     }
     .nav-links a{
       position:relative;
-      padding-bottom:3px;
+      padding:0;
+      transition:all 0.3s ease;
+      font-weight:400;
+      background:transparent;
+      text-decoration:none;
+      color:rgba(255,255,255,0.9);
     }
     .nav-links a::after{
-      content:"";
+      content:'';
       position:absolute;
-      left:0;
       bottom:0;
-      width:0;
+      left:50%;
+      transform:translateX(-50%) scaleX(0);
+      width:80%;
       height:2px;
-      background:linear-gradient(90deg,var(--neon),var(--magenta));
-      transition:width .25s ease;
+      background:linear-gradient(90deg, var(--neon), var(--magenta));
+      border-radius:2px;
+      transition:transform 0.3s ease, width 0.3s ease;
+      box-shadow:0 0 10px rgba(0,229,255,0.5);
     }
-    .nav-links a:hover::after{width:100%;}
-    .nav-links a.active{
-      color:#e5e7eb;
-      font-weight:500;
+    .nav-links a:hover{
+      color:#fff;
+      background:rgba(255,255,255,0.05);
     }
-    .nav-links a.active::after{width:100%;}
-    @media(max-width:960px){
-      .navbar{padding-inline:4%;}
-      .nav-links{display:none;}
+    .nav-links a:hover::after{
+      transform:translateX(-50%) scaleX(1);
+      width:90%;
     }
-
+    .nav-links a.active::after{
+      transform:translateX(-50%) scaleX(1);
+      width:90%;
+    }
     .nav-actions{
       display:flex;
-      gap:10px;
+      gap:24px;
       align-items:center;
-      font-size:12px;
+      font-size:14px;
+      flex-wrap:wrap;
+      padding:12px 20px;
+      background:linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));
+      border:1px solid rgba(255,77,255,0.3);
+      border-radius:16px;
+      backdrop-filter:blur(20px) saturate(180%);
+      box-shadow:0 4px 20px rgba(255,77,255,0.2), 0 0 40px rgba(255,77,255,0.1), inset 0 1px 0 rgba(255,255,255,0.1);
+      max-width:100%;
+      position:relative;
+      overflow:hidden;
+    }
+    .nav-actions::before{
+      content:'';
+      position:absolute;
+      bottom:0;
+      left:0;
+      right:0;
+      height:3px;
+      background:linear-gradient(90deg, rgba(255,77,255,0.8), rgba(0,229,255,0.8));
+      border-radius:0 0 16px 16px;
+      box-shadow:0 0 20px rgba(255,77,255,0.6), 0 0 40px rgba(0,229,255,0.4);
+    }
+    .nav-actions a{
+      position:relative;
+      padding:0;
+      transition:all 0.3s ease;
+      font-weight:400;
+      background:transparent;
+      text-decoration:none;
+      color:rgba(255,255,255,0.9);
+    }
+    .nav-actions a::after{
+      content:'';
+      position:absolute;
+      bottom:-4px;
+      left:50%;
+      transform:translateX(-50%) scaleX(0);
+      width:100%;
+      height:2px;
+      background:linear-gradient(90deg, var(--neon), var(--magenta));
+      border-radius:1px;
+      transition:transform 0.3s ease, width 0.3s ease;
+      box-shadow:0 0 10px rgba(0,229,255,0.5);
+    }
+    .nav-actions a:hover::after{
+      transform:translateX(-50%) scaleX(1);
+      width:100%;
+    }
+    .nav-actions a:hover{
+      color:#fff;
+    }
+    .nav-boxes-container.scrolled{
+      transform:translateY(-120%);
+      opacity:0;
+      pointer-events:none;
     }
     .nav-credits{
-      padding:4px 10px;
-      border-radius:999px;
-      border:1px solid rgba(148,163,184,.6);
-      background:rgba(15,23,42,.8);
-      color:var(--neon);
-      font-size:11px;
+      color:rgba(255,255,255,0.9);
+      font-size:14px;
+      font-weight:400;
     }
     .user-pill{
       display:flex;
@@ -172,8 +329,7 @@
       gap:8px;
       padding:4px 9px 4px 5px;
       border-radius:999px;
-      border:1px solid rgba(148,163,184,.6);
-      background:rgba(15,23,42,.9);
+      background:transparent;
       font-size:11px;
     }
     .user-avatar{
@@ -200,7 +356,7 @@
 
     /* MAIN & WRAPPER (Dashboard ile aynı yapı) */
     main{
-      padding-top:96px;
+      padding-top:220px;
       padding-bottom:40px;
       flex:1;
       display:flex;
@@ -528,36 +684,42 @@
 
   <!-- NAVBAR -->
   <header class="navbar">
-    <div class="nav-left">
-      <img src="assets/AnalyticaX.png" alt="AnalyticaX Logo" class="logo-img">
-      <div>
-        <div class="logo-main">Analytica<span>X</span></div>
-        <div class="logo-sub">AI Powered Crypto Chart Analysis</div>
+    <!-- Center Logo -->
+    <div class="nav-brand" onclick="window.location.href='index.html'" style="position:absolute;left:50%;transform:translateX(-50%);margin:0;z-index:10;">
+      <div class="logo-main" style="display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;padding:0;">
+        <img src="assets/AnalyticaX.png" alt="AnalyticaX Logo" style="height:160px;width:auto;object-fit:contain;filter:drop-shadow(0 0 25px rgba(0,229,255,0.6)) drop-shadow(0 0 50px rgba(255,77,255,0.4));transition:all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)';this.style.filter='drop-shadow(0 0 35px rgba(0,229,255,0.8)) drop-shadow(0 0 70px rgba(255,77,255,0.6))'" onmouseout="this.style.transform='scale(1)';this.style.filter='drop-shadow(0 0 25px rgba(0,229,255,0.6)) drop-shadow(0 0 50px rgba(255,77,255,0.4))'">
+        <div class="logo-sub" style="font-size:11px;color:rgba(255,255,255,0.75);font-weight:400;letter-spacing:0.08em;display:block;margin-top:-4px;text-shadow:0 0 10px rgba(0,229,255,0.3);">AI Powered Crypto Chart Analysis</div>
       </div>
     </div>
+  </header>
 
-    <nav class="nav-links">
+  <!-- Navigation Boxes (Below Navbar) -->
+  <div style="position:fixed;top:80px;left:0;right:0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:0 40px;pointer-events:none;transition:transform 0.3s ease, opacity 0.3s ease;" class="nav-boxes-container">
+    <!-- Left Navigation Links -->
+    <nav class="nav-links" style="position:static;flex:0 0 auto;pointer-events:auto;">
       <a href="index.html">Home</a>
       <a href="analyze.html">Analyze</a>
       <a href="dashboard.html">Dashboard</a>
       <a href="history.html">History</a>
       <a href="premium.html">Premium</a>
-      <a href="verify-payment-real.html">Verify payment</a>
       <a href="settings.html" class="active">Settings</a>
     </nav>
 
-    <div class="nav-actions">
-      <div class="nav-credits" id="navCredits">Credits: --</div>
-      <div class="user-pill">
-        <div class="user-avatar" id="userAvatar">U</div>
-        <div>
-          <div id="userEmail">user@demo.com</div>
-          <div id="userPlan" style="font-size:10px;color:var(--text-soft);">Plan: --</div>
+    <!-- Right Actions -->
+    <div class="nav-actions" style="position:static;flex:0 0 auto;pointer-events:auto;">
+      <div id="navLoggedIn" style="display:flex;gap:24px;align-items:center;flex-direction:row;flex-wrap:nowrap;">
+        <div id="navCredits" style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:400;">Credits: --</div>
+        <div style="display:flex;align-items:center;gap:12px;padding-left:12px;border-left:1px solid rgba(255,255,255,0.15);">
+          <div id="userAvatar" style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--neon),var(--magenta));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#020617;flex-shrink:0;cursor:pointer;">U</div>
+          <div style="display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;cursor:pointer;">
+            <div id="userEmail" style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;color:#fff;">user@demo.com</div>
+            <div id="userPlan" style="font-size:10px;color:rgba(255,255,255,0.7);">Plan: --</div>
+          </div>
+          <button class="btn-outline" id="btnLogout" onclick="event.stopPropagation();logoutUser();">Logout</button>
         </div>
       </div>
-      <button class="btn-outline" id="btnLogout">Logout</button>
     </div>
-  </header>
+  </div>
 
   <!-- MAIN -->
   <main>
@@ -950,15 +1112,30 @@
 
     loadProfile();
 // ==== SCROLL HIDE NAVBAR ====
+let lastScrollTop = 0;
+const navbar = document.querySelector('.navbar');
+const navBoxes = document.querySelector('.nav-boxes-container');
+
 window.addEventListener('scroll', () => {
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-  const navbar = document.querySelector('.navbar');
   
   if (scrollTop > 100) {
+    // Scrolling down - hide navbar
     if (navbar) navbar.classList.add('scrolled');
+    if (navBoxes) {
+      navBoxes.style.transform = 'translateY(-120%)';
+      navBoxes.style.opacity = '0';
+    }
   } else {
+    // At top - show navbar
     if (navbar) navbar.classList.remove('scrolled');
+    if (navBoxes) {
+      navBoxes.style.transform = 'translateY(0)';
+      navBoxes.style.opacity = '1';
+    }
   }
+  
+  lastScrollTop = scrollTop;
 }, { passive: true });
 
   </script>
