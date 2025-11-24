@@ -83,6 +83,21 @@
       min-height:64px;
       border-radius:0 0 16px 16px;
     }
+    .navbar .nav-links:first-of-type{
+      position:static;
+      flex:0 0 auto;
+    }
+    .navbar .nav-brand{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      margin:0;
+    }
+    .navbar .nav-actions:last-of-type{
+      position:static;
+      flex:0 0 auto;
+      margin-left:auto;
+    }
     .nav-brand{
       display:flex;
       flex-direction:column;
@@ -1188,21 +1203,26 @@
   <div class="bg-grid"></div>
 
   <!-- NAVBAR -->
-  <header class="navbar" style="justify-content:center;">
-    <nav class="nav-links" style="position:absolute;left:40px;">
+  <header class="navbar" style="justify-content:space-between;position:relative;">
+    <!-- Left Navigation Links -->
+    <nav class="nav-links" style="position:static;flex:0 0 auto;">
+      <a href="index.html" style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:14px;">🏠</span>
+        <span>Home</span>
+      </a>
       <a href="index.html#how" data-i18n="nav.how">How it works</a>
-      <a href="index.html#features" data-i18n="nav.features">What it analyzes</a>
-      <a href="index.html#market" data-i18n="nav.market">Live market</a>
+      <a href="index.html#features" data-i18n="nav.features">Features</a>
       <a href="index.html#pricing" data-i18n="nav.pricing">Plans</a>
       <a href="index.html#legal" data-i18n="nav.legal">Legal</a>
     </nav>
     
-    <div class="nav-brand" onclick="window.location.href='index.html'" style="margin:0 auto;">
-      <div class="logo-main" style="font-size:28px;">AnalyticaX</div>
-      <div class="logo-sub" data-i18n="nav.tagline" style="font-size:12px;">AI Powered Crypto Chart Analysis</div>
+    <!-- Center Logo -->
+    <div class="nav-brand" onclick="window.location.href='index.html'" style="position:absolute;left:50%;transform:translateX(-50%);margin:0;">
+      <div class="logo-main" style="font-size:28px;text-align:center;">AnalyticaX</div>
     </div>
 
-    <div class="nav-actions" style="position:absolute;right:40px;">
+    <!-- Right Actions -->
+    <div class="nav-actions" style="position:static;flex:0 0 auto;margin-left:auto;">
       <div id="navLoggedOut" style="display:flex;gap:10px;align-items:center;">
         <button class="btn-outline" id="btnLogin" data-i18n="nav.login">Log in</button>
         <button class="btn-primary" id="ctaStartFree" data-i18n="nav.startFree">Start free</button>
