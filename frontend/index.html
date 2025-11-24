@@ -64,43 +64,32 @@
     /* NAVBAR */
     .navbar{
       position:fixed;
-      top:0;
+      top:20px;
       left:50%;
       transform:translateX(-50%);
       width:calc(100% - 80px);
       max-width:1400px;
-      padding:20px 32px 16px;
+      padding:16px 32px;
       display:flex;
-      flex-direction:column;
       align-items:center;
-      gap:16px;
+      justify-content:space-between;
+      gap:20px;
       backdrop-filter:blur(20px) saturate(180%);
-      background:rgba(20,15,35,0.4);
+      background:rgba(20,15,35,0.3);
       border:none;
       box-shadow:none;
       z-index:50;
-      border-radius:20px;
-      margin-top:20px;
-    }
-    .navbar-top{
-      display:flex;
-      width:100%;
-      justify-content:center;
-      align-items:center;
-    }
-    .navbar-bottom{
-      display:flex;
-      width:100%;
-      justify-content:space-between;
-      align-items:center;
+      border-radius:0;
+      margin:0;
     }
     .navbar .nav-links:first-of-type{
       position:static;
       flex:0 0 auto;
     }
     .navbar .nav-brand{
-      position:static;
-      transform:none;
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
       margin:0;
     }
     .navbar .nav-actions:last-of-type{
@@ -1233,31 +1222,27 @@
 
   <!-- NAVBAR -->
   <header class="navbar">
-    <!-- Top: Logo Centered -->
-    <div class="navbar-top">
-      <div class="nav-brand" onclick="window.location.href='index.html'">
-        <div class="logo-main" style="color:#fff;font-weight:600;">
-          AnalyticaX
-        </div>
+    <!-- Left Navigation Links -->
+    <nav class="nav-links" style="position:static;flex:0 0 auto;">
+      <a href="index.html" style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:14px;">🏠</span>
+        <span>Home</span>
+      </a>
+      <a href="index.html#how" data-i18n="nav.how">How it works</a>
+      <a href="index.html#features" data-i18n="nav.features">What it analyzes</a>
+      <a href="index.html#pricing" data-i18n="nav.pricing">Plans</a>
+      <a href="index.html#legal" data-i18n="nav.legal">Legal</a>
+    </nav>
+    
+    <!-- Center Logo -->
+    <div class="nav-brand" onclick="window.location.href='index.html'" style="position:absolute;left:50%;transform:translateX(-50%);margin:0;">
+      <div class="logo-main" style="color:#fff;font-weight:600;">
+        AnalyticaX
       </div>
     </div>
-    
-    <!-- Bottom: Left Nav + Right Actions -->
-    <div class="navbar-bottom">
-      <!-- Left Navigation Links -->
-      <nav class="nav-links" style="position:static;flex:0 0 auto;">
-        <a href="index.html" style="display:flex;align-items:center;gap:6px;">
-          <span style="font-size:14px;">🏠</span>
-          <span>Home</span>
-        </a>
-        <a href="index.html#how" data-i18n="nav.how">How it works</a>
-        <a href="index.html#features" data-i18n="nav.features">What it analyzes</a>
-        <a href="index.html#pricing" data-i18n="nav.pricing">Plans</a>
-        <a href="index.html#legal" data-i18n="nav.legal">Legal</a>
-      </nav>
 
-      <!-- Right Actions -->
-      <div class="nav-actions" style="position:static;flex:0 0 auto;margin-left:auto;">
+    <!-- Right Actions -->
+    <div class="nav-actions" style="position:static;flex:0 0 auto;margin-left:auto;">
       <div id="navLoggedOut" style="display:flex;gap:12px;align-items:center;">
         <span style="font-size:12px;color:rgba(255,255,255,0.6);white-space:nowrap;">Istanbul GMT +3</span>
         <button class="btn-primary" id="ctaStartFree" data-i18n="nav.startFree" style="padding:10px 20px;">See Solutions</button>
