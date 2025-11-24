@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Privacy Policy — AnalyticaX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --neon:#00E5FF;
+      --magenta:#FF4DFF;
+      --bg:#020617;
+      --panel:#0b1020;
+      --text-soft:#A0AEC0;
+      --border-soft:rgba(148,163,184,.35);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      font-family:"Poppins",sans-serif;
+      background:radial-gradient(circle at top,#061525 0,var(--bg) 45%,#000 100%);
+      color:#fff;
+      overflow-x:hidden;
+      min-height:100vh;
+      padding-top:80px;
+    }
+    canvas#bgParticles{
+      position:fixed;inset:0;z-index:-1;pointer-events:none;
+    }
+    .bg-grid{
+      position:fixed;inset:0;
+      background-image:linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+      background-size:50px 50px;opacity:.22;z-index:-2;pointer-events:none;
+    }
+    .navbar{
+      position:fixed;top:0;left:50%;transform:translateX(-50%);
+      width:calc(100% - 80px);max-width:1400px;padding:12px 24px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      backdrop-filter:blur(30px) saturate(200%);
+      background:rgba(15,23,42,0.75);
+      border:1px solid rgba(255,255,255,0.15);border-top:none;
+      box-shadow:0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+      z-index:50;min-height:64px;border-radius:0 0 16px 16px;
+    }
+    .nav-brand{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;flex-shrink:0;cursor:pointer;transition:opacity 0.3s ease;}
+    .nav-brand:hover{opacity:0.9;}
+    .logo-main{font-size:22px;font-weight:700;letter-spacing:0.05em;background:linear-gradient(90deg,var(--neon),#7C3AED,var(--magenta));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:transparent;line-height:1.2;}
+    .logo-sub{font-size:11px;color:rgba(148,163,184,0.8);margin-top:2px;font-weight:400;}
+    .nav-links{display:flex;gap:8px;font-size:13px;color:rgba(255,255,255,0.9);align-items:center;justify-content:center;padding:6px;background:rgba(15,23,42,0.5);border-radius:12px;border:1px solid rgba(255,255,255,0.1);}
+    .nav-links a{position:relative;padding:8px 16px;border-radius:8px;transition:all 0.3s ease;font-weight:400;background:transparent;text-decoration:none;color:inherit;}
+    .nav-links a::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%) scaleX(0);width:80%;height:2px;background:linear-gradient(90deg,var(--neon),var(--magenta));border-radius:2px;transition:transform 0.3s ease, width 0.3s ease;box-shadow:0 0 10px rgba(0,229,255,0.5);}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.05);}
+    .nav-links a:hover::after{transform:translateX(-50%) scaleX(1);width:90%;}
+    .nav-links a.active::after{transform:translateX(-50%) scaleX(1);width:90%;}
+    .container{max-width:900px;margin:0 auto;padding:40px 40px 80px;}
+    h1{font-size:32px;margin-bottom:12px;background:linear-gradient(90deg,var(--neon),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:24px;}
+    h2{font-size:22px;margin-top:32px;margin-bottom:12px;color:#fff;}
+    p,li{color:var(--text-soft);line-height:1.8;margin-bottom:12px;font-size:14px;}
+    ul{margin-left:24px;margin-bottom:20px;}
+    .last-updated{color:var(--text-soft);font-size:12px;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border-soft);}
+  </style>
+</head>
+<body>
+  <canvas id="bgParticles"></canvas>
+  <div class="bg-grid"></div>
+  
+  <header class="navbar">
+    <div class="nav-brand" onclick="window.location.href='index.html'">
+      <div class="logo-main">AnalyticaX</div>
+      <div class="logo-sub">AI Powered Crypto Chart Analysis</div>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="analyze.html">Analyze</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="premium.html">Premium</a>
+      <a href="privacy-policy.html" class="active">Privacy</a>
+    </nav>
+    <div style="width:120px;"></div>
+  </header>
+
+  <div class="container">
+    <h1>Privacy Policy</h1>
+    <div class="last-updated">Last updated: January 2025</div>
+    
+    <h2>1. Information We Collect</h2>
+    <p>We collect information that you provide directly to us, including:</p>
+    <ul>
+      <li>Account registration information (email address, password)</li>
+      <li>Chart images and analysis data you upload</li>
+      <li>Payment information (processed securely through third-party providers)</li>
+      <li>Device information and IP addresses for security purposes</li>
+    </ul>
+    
+    <h2>2. How We Use Your Information</h2>
+    <p>We use the information we collect to:</p>
+    <ul>
+      <li>Provide, maintain, and improve our Service</li>
+      <li>Process transactions and manage your account</li>
+      <li>Send you technical notices and support messages</li>
+      <li>Detect, prevent, and address technical issues and security threats</li>
+    </ul>
+    
+    <h2>3. Data Storage and Security</h2>
+    <p>We implement appropriate technical and organizational measures to protect your personal information. However, no method of transmission over the Internet is 100% secure.</p>
+    
+    <h2>4. Data Retention</h2>
+    <p>We retain your personal information for as long as necessary to provide the Service and fulfill the purposes outlined in this Privacy Policy, unless a longer retention period is required by law.</p>
+    
+    <h2>5. Third-Party Services</h2>
+    <p>We may use third-party services (such as payment processors and AI providers) that have their own privacy policies. We are not responsible for the privacy practices of these third parties.</p>
+    
+    <h2>6. Your Rights</h2>
+    <p>You have the right to:</p>
+    <ul>
+      <li>Access your personal information</li>
+      <li>Correct inaccurate data</li>
+      <li>Request deletion of your account and data</li>
+      <li>Opt-out of certain communications</li>
+    </ul>
+    
+    <h2>7. Cookies and Tracking</h2>
+    <p>We use cookies and similar technologies to maintain your session and improve the Service. You can control cookies through your browser settings.</p>
+    
+    <h2>8. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
+    
+    <h2>9. Contact Us</h2>
+    <p>If you have questions about this Privacy Policy, please contact us through the AnalyticaX platform or visit <a href="https://cyberex.com.tr" target="_blank" style="color:var(--neon);text-decoration:none;">CyberEx Platform</a>.</p>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("bgParticles");
+    const ctx = canvas.getContext("2d");
+    function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
+    resize();onresize=resize;
+    let particles=[];
+    for(let i=0;i<60;i++){
+      particles.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*2+0.5,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5});
+    }
+    function animate(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(p=>{
+        p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0||p.x>canvas.width)p.vx*=-1;
+        if(p.y<0||p.y>canvas.height)p.vy*=-1;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(0,229,255,${0.3+p.r*0.1})`;ctx.fill();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
+

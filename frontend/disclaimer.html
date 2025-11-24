@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Disclaimer — AnalyticaX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --neon:#00E5FF;
+      --magenta:#FF4DFF;
+      --bg:#020617;
+      --panel:#0b1020;
+      --text-soft:#A0AEC0;
+      --border-soft:rgba(148,163,184,.35);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      font-family:"Poppins",sans-serif;
+      background:radial-gradient(circle at top,#061525 0,var(--bg) 45%,#000 100%);
+      color:#fff;
+      overflow-x:hidden;
+      min-height:100vh;
+      padding-top:80px;
+    }
+    canvas#bgParticles{
+      position:fixed;inset:0;z-index:-1;pointer-events:none;
+    }
+    .bg-grid{
+      position:fixed;inset:0;
+      background-image:linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+      background-size:50px 50px;opacity:.22;z-index:-2;pointer-events:none;
+    }
+    .navbar{
+      position:fixed;top:0;left:50%;transform:translateX(-50%);
+      width:calc(100% - 80px);max-width:1400px;padding:12px 24px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      backdrop-filter:blur(30px) saturate(200%);
+      background:rgba(15,23,42,0.75);
+      border:1px solid rgba(255,255,255,0.15);border-top:none;
+      box-shadow:0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+      z-index:50;min-height:64px;border-radius:0 0 16px 16px;
+    }
+    .nav-brand{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;flex-shrink:0;cursor:pointer;transition:opacity 0.3s ease;}
+    .nav-brand:hover{opacity:0.9;}
+    .logo-main{font-size:22px;font-weight:700;letter-spacing:0.05em;background:linear-gradient(90deg,var(--neon),#7C3AED,var(--magenta));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:transparent;line-height:1.2;}
+    .logo-sub{font-size:11px;color:rgba(148,163,184,0.8);margin-top:2px;font-weight:400;}
+    .nav-links{display:flex;gap:8px;font-size:13px;color:rgba(255,255,255,0.9);align-items:center;justify-content:center;padding:6px;background:rgba(15,23,42,0.5);border-radius:12px;border:1px solid rgba(255,255,255,0.1);}
+    .nav-links a{position:relative;padding:8px 16px;border-radius:8px;transition:all 0.3s ease;font-weight:400;background:transparent;text-decoration:none;color:inherit;}
+    .nav-links a::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%) scaleX(0);width:80%;height:2px;background:linear-gradient(90deg,var(--neon),var(--magenta));border-radius:2px;transition:transform 0.3s ease, width 0.3s ease;box-shadow:0 0 10px rgba(0,229,255,0.5);}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.05);}
+    .nav-links a:hover::after{transform:translateX(-50%) scaleX(1);width:90%;}
+    .nav-links a.active::after{transform:translateX(-50%) scaleX(1);width:90%;}
+    .container{max-width:900px;margin:0 auto;padding:40px 40px 80px;}
+    h1{font-size:32px;margin-bottom:12px;background:linear-gradient(90deg,var(--neon),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:24px;}
+    h2{font-size:22px;margin-top:32px;margin-bottom:12px;color:#fff;}
+    p,li{color:var(--text-soft);line-height:1.8;margin-bottom:12px;font-size:14px;}
+    ul{margin-left:24px;margin-bottom:20px;}
+    .last-updated{color:var(--text-soft);font-size:12px;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border-soft);}
+    .warning-box{background:rgba(249,115,115,0.1);border:1px solid rgba(249,115,115,0.3);border-radius:12px;padding:20px;margin:24px 0;}
+    .warning-box strong{color:#f97373;display:block;margin-bottom:8px;}
+  </style>
+</head>
+<body>
+  <canvas id="bgParticles"></canvas>
+  <div class="bg-grid"></div>
+  
+  <header class="navbar">
+    <div class="nav-brand" onclick="window.location.href='index.html'">
+      <div class="logo-main">AnalyticaX</div>
+      <div class="logo-sub">AI Powered Crypto Chart Analysis</div>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="analyze.html">Analyze</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="premium.html">Premium</a>
+      <a href="disclaimer.html" class="active">Disclaimer</a>
+    </nav>
+    <div style="width:120px;"></div>
+  </header>
+
+  <div class="container">
+    <h1>Disclaimer</h1>
+    <div class="last-updated">Last updated: January 2025</div>
+    
+    <div class="warning-box">
+      <strong>⚠️ IMPORTANT NOTICE</strong>
+      <p>This disclaimer applies to all services, analyses, and information provided by AnalyticaX. Please read carefully before using our platform.</p>
+    </div>
+    
+    <h2>Not Financial Advice</h2>
+    <p>All analyses, insights, forecasts, and information provided by AnalyticaX are for <strong>educational and informational purposes only</strong>. They do not constitute:</p>
+    <ul>
+      <li>Investment, financial, or trading advice</li>
+      <li>Recommendations to buy, sell, or hold any cryptocurrency or financial instrument</li>
+      <li>Professional financial planning or portfolio management services</li>
+      <li>Licensed financial services of any kind</li>
+    </ul>
+    
+    <h2>High Risk Warning</h2>
+    <p>Cryptocurrency trading and investment carry a <strong>very high level of risk</strong>. You should be aware that:</p>
+    <ul>
+      <li>You may lose all of your invested capital</li>
+      <li>Cryptocurrency markets are highly volatile and unpredictable</li>
+      <li>Past performance does not guarantee future results</li>
+      <li>Leveraged trading can amplify losses</li>
+      <li>Regulatory changes may affect market conditions</li>
+    </ul>
+    
+    <h2>No Guarantees</h2>
+    <p>AnalyticaX makes no guarantees, representations, or warranties regarding:</p>
+    <ul>
+      <li>The accuracy, completeness, or reliability of any analysis</li>
+      <li>The profitability of any trading strategy based on our analyses</li>
+      <li>Market movements or price predictions</li>
+      <li>The success of any trading decisions</li>
+    </ul>
+    
+    <h2>User Responsibility</h2>
+    <p>You acknowledge and agree that:</p>
+    <ul>
+      <li>All trading decisions are made at your own discretion and risk</li>
+      <li>You are solely responsible for any losses or damages resulting from your use of the Service</li>
+      <li>You should consult with qualified financial advisors before making investment decisions</li>
+      <li>You understand the risks involved in cryptocurrency trading</li>
+    </ul>
+    
+    <h2>AI Limitations</h2>
+    <p>While AnalyticaX uses advanced AI technology, artificial intelligence systems have limitations:</p>
+    <ul>
+      <li>AI analyses are based on historical patterns and may not predict future market behavior</li>
+      <li>Market conditions can change rapidly, making analyses outdated</li>
+      <li>AI systems may make errors or misinterpret data</li>
+      <li>Technical analysis is not a guarantee of market performance</li>
+    </ul>
+    
+    <h2>No Liability</h2>
+    <p>To the maximum extent permitted by law, AnalyticaX, its operators, and affiliates shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from your use of the Service or reliance on any analysis provided.</p>
+    
+    <h2>Regulatory Compliance</h2>
+    <p>You are responsible for ensuring that your use of AnalyticaX complies with all applicable laws and regulations in your jurisdiction. Cryptocurrency trading may be restricted or prohibited in some regions.</p>
+    
+    <h2>Acceptance</h2>
+    <p>By using AnalyticaX, you acknowledge that you have read, understood, and agree to this Disclaimer. If you do not agree, please do not use the Service.</p>
+    
+    <h2>Contact</h2>
+    <p>For questions about this Disclaimer, please contact us through the AnalyticaX platform or visit <a href="https://cyberex.com.tr" target="_blank" style="color:var(--neon);text-decoration:none;">CyberEx Platform</a>.</p>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("bgParticles");
+    const ctx = canvas.getContext("2d");
+    function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
+    resize();onresize=resize;
+    let particles=[];
+    for(let i=0;i<60;i++){
+      particles.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*2+0.5,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5});
+    }
+    function animate(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(p=>{
+        p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0||p.x>canvas.width)p.vx*=-1;
+        if(p.y<0||p.y>canvas.height)p.vy*=-1;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(0,229,255,${0.3+p.r*0.1})`;ctx.fill();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
+

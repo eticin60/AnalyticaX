@@ -1134,8 +1134,9 @@ button:active {
   </nav>
 
   <div class="nav-actions">
-    <button class="btn-outline" onclick="window.location.href='dashboard.html'">Dashboard</button>
-    <button class="btn-primary" onclick="window.location.href='premium.html'">Buy Credits</button>
+    <div id="navCredits" style="padding:6px 12px;border-radius:8px;background:rgba(15,23,42,0.7);border:1px solid rgba(148,163,184,0.3);color:#00E5FF;font-size:12px;font-weight:600;white-space:nowrap;">Credits: --</div>
+    <button class="btn-outline" onclick="window.location.href='dashboard.html'" style="padding:6px 14px;font-size:12px;">Dashboard</button>
+    <button class="btn-primary" onclick="window.location.href='premium.html'" style="padding:6px 14px;font-size:12px;">Buy Credits</button>
   </div>
 </header>
 
@@ -2140,8 +2141,38 @@ async function storeFingerprint(){
     }
 }
 
+async function loadUserCredits(){
+    const token = localStorage.getItem("ax_token");
+    if(!token) {
+        const creditsEl = document.getElementById("navCredits");
+        if(creditsEl) creditsEl.textContent = "Credits: --";
+        return;
+    }
+    
+    try {
+        const res = await fetch("http://localhost:5000/api/auth/me", {
+            headers: {
+                "Authorization": "Bearer " + token,
+                "x-device-id": localStorage.getItem("ax_device_id"),
+                "x-device-fingerprint": localStorage.getItem("ax_fingerprint")
+            }
+        });
+        
+        if(res.ok) {
+            const data = await res.json();
+            const creditsEl = document.getElementById("navCredits");
+            if(creditsEl) {
+                creditsEl.textContent = `Credits: ${data.credits || 0}`;
+            }
+        }
+    } catch(err) {
+        console.error("Credits load error:", err);
+    }
+}
+
 async function initAnalyzePage(){
     await storeFingerprint();
+    await loadUserCredits();
 }
 
 initAnalyzePage();

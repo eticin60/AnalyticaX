@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Terms of Service — AnalyticaX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --neon:#00E5FF;
+      --magenta:#FF4DFF;
+      --bg:#020617;
+      --panel:#0b1020;
+      --text-soft:#A0AEC0;
+      --border-soft:rgba(148,163,184,.35);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      font-family:"Poppins",sans-serif;
+      background:radial-gradient(circle at top,#061525 0,var(--bg) 45%,#000 100%);
+      color:#fff;
+      overflow-x:hidden;
+      min-height:100vh;
+      padding-top:80px;
+    }
+    canvas#bgParticles{
+      position:fixed;inset:0;z-index:-1;pointer-events:none;
+    }
+    .bg-grid{
+      position:fixed;inset:0;
+      background-image:linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+      background-size:50px 50px;opacity:.22;z-index:-2;pointer-events:none;
+    }
+    .navbar{
+      position:fixed;top:0;left:50%;transform:translateX(-50%);
+      width:calc(100% - 80px);max-width:1400px;padding:12px 24px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      backdrop-filter:blur(30px) saturate(200%);
+      background:rgba(15,23,42,0.75);
+      border:1px solid rgba(255,255,255,0.15);border-top:none;
+      box-shadow:0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+      z-index:50;min-height:64px;border-radius:0 0 16px 16px;
+    }
+    .nav-brand{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;flex-shrink:0;cursor:pointer;transition:opacity 0.3s ease;}
+    .nav-brand:hover{opacity:0.9;}
+    .logo-main{font-size:22px;font-weight:700;letter-spacing:0.05em;background:linear-gradient(90deg,var(--neon),#7C3AED,var(--magenta));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:transparent;line-height:1.2;}
+    .logo-sub{font-size:11px;color:rgba(148,163,184,0.8);margin-top:2px;font-weight:400;}
+    .nav-links{display:flex;gap:8px;font-size:13px;color:rgba(255,255,255,0.9);align-items:center;justify-content:center;padding:6px;background:rgba(15,23,42,0.5);border-radius:12px;border:1px solid rgba(255,255,255,0.1);}
+    .nav-links a{position:relative;padding:8px 16px;border-radius:8px;transition:all 0.3s ease;font-weight:400;background:transparent;text-decoration:none;color:inherit;}
+    .nav-links a::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%) scaleX(0);width:80%;height:2px;background:linear-gradient(90deg,var(--neon),var(--magenta));border-radius:2px;transition:transform 0.3s ease, width 0.3s ease;box-shadow:0 0 10px rgba(0,229,255,0.5);}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.05);}
+    .nav-links a:hover::after{transform:translateX(-50%) scaleX(1);width:90%;}
+    .nav-links a.active::after{transform:translateX(-50%) scaleX(1);width:90%;}
+    .container{max-width:900px;margin:0 auto;padding:40px 40px 80px;}
+    h1{font-size:32px;margin-bottom:12px;background:linear-gradient(90deg,var(--neon),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:24px;}
+    h2{font-size:22px;margin-top:32px;margin-bottom:12px;color:#fff;}
+    p,li{color:var(--text-soft);line-height:1.8;margin-bottom:12px;font-size:14px;}
+    ul{margin-left:24px;margin-bottom:20px;}
+    .last-updated{color:var(--text-soft);font-size:12px;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border-soft);}
+  </style>
+</head>
+<body>
+  <canvas id="bgParticles"></canvas>
+  <div class="bg-grid"></div>
+  
+  <header class="navbar">
+    <div class="nav-brand" onclick="window.location.href='index.html'">
+      <div class="logo-main">AnalyticaX</div>
+      <div class="logo-sub">AI Powered Crypto Chart Analysis</div>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="analyze.html">Analyze</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="premium.html">Premium</a>
+      <a href="terms-of-service.html" class="active">Terms</a>
+    </nav>
+    <div style="width:120px;"></div>
+  </header>
+
+  <div class="container">
+    <h1>Terms of Service</h1>
+    <div class="last-updated">Last updated: January 2025</div>
+    
+    <h2>1. Acceptance of Terms</h2>
+    <p>By accessing and using AnalyticaX ("Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these Terms of Service, please do not use the Service.</p>
+    
+    <h2>2. Description of Service</h2>
+    <p>AnalyticaX is an AI-powered cryptocurrency chart analysis platform that provides educational and informational analysis of cryptocurrency trading charts. The Service uses artificial intelligence to analyze chart patterns, identify trends, and provide insights for educational purposes only.</p>
+    
+    <h2>3. Not Financial Advice</h2>
+    <p>The analyses, insights, and information provided by AnalyticaX are for educational and general information purposes only. They do not constitute:</p>
+    <ul>
+      <li>Investment advice</li>
+      <li>Financial planning or portfolio management services</li>
+      <li>Licensed financial services</li>
+      <li>Trading signals or recommendations</li>
+    </ul>
+    <p>You acknowledge that all trading decisions are your own responsibility, and AnalyticaX is not liable for any losses incurred from trading decisions based on the Service's analyses.</p>
+    
+    <h2>4. Risk Disclosure</h2>
+    <p>Cryptocurrency trading involves substantial risk of loss. You should carefully consider whether trading is suitable for you in light of your circumstances, knowledge, and financial resources. You may lose all of your capital. Past performance is not indicative of future results.</p>
+    
+    <h2>5. User Accounts</h2>
+    <p>To use certain features of the Service, you must register for an account. You agree to:</p>
+    <ul>
+      <li>Provide accurate, current, and complete information</li>
+      <li>Maintain and update your information</li>
+      <li>Maintain the security of your account</li>
+      <li>Accept responsibility for all activities under your account</li>
+    </ul>
+    
+    <h2>6. Credits and Payments</h2>
+    <p>The Service operates on a credit-based system. Credits are non-refundable and expire according to the terms of your selected plan. All payments are processed securely through third-party payment providers.</p>
+    
+    <h2>7. Intellectual Property</h2>
+    <p>All content, features, and functionality of the Service are owned by AnalyticaX and are protected by international copyright, trademark, and other intellectual property laws.</p>
+    
+    <h2>8. Limitation of Liability</h2>
+    <p>To the maximum extent permitted by law, AnalyticaX shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly.</p>
+    
+    <h2>9. Changes to Terms</h2>
+    <p>We reserve the right to modify these terms at any time. We will notify users of any material changes by posting the new Terms of Service on this page.</p>
+    
+    <h2>10. Contact Information</h2>
+    <p>For questions about these Terms of Service, please contact us through the AnalyticaX platform or visit <a href="https://cyberex.com.tr" target="_blank" style="color:var(--neon);text-decoration:none;">CyberEx Platform</a>.</p>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("bgParticles");
+    const ctx = canvas.getContext("2d");
+    function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
+    resize();onresize=resize;
+    let particles=[];
+    for(let i=0;i<60;i++){
+      particles.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*2+0.5,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5});
+    }
+    function animate(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(p=>{
+        p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0||p.x>canvas.width)p.vx*=-1;
+        if(p.y<0||p.y>canvas.height)p.vy*=-1;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(0,229,255,${0.3+p.r*0.1})`;ctx.fill();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
+
