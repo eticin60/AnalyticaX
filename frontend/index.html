@@ -828,14 +828,31 @@
       transform:translateY(0);
     }
 
+    /* ANIMATIONS */
+    @keyframes float{
+      0%,100%{transform:translate(0,0) scale(1);}
+      50%{transform:translate(20px,-20px) scale(1.1);}
+    }
+    @keyframes pulse{
+      0%,100%{opacity:1;transform:scale(1);}
+      50%{opacity:0.7;transform:scale(1.2);}
+    }
+    @keyframes bounce{
+      0%,100%{transform:translateX(-50%) translateY(0);}
+      50%{transform:translateX(-50%) translateY(10px);}
+    }
+    
     /* RESPONSIVE */
     @media(max-width:960px){
       .hero-grid{grid-template-columns:1fr;}
       .hero-title{font-size:32px;}
       .hero-card-wrap{margin:20px auto 0;}
       .navbar{padding-inline:4%;}
-      .nav-links{display:none;}
+      .navbar .nav-links:first-of-type{display:none;}
+      .navbar .nav-actions{position:static;right:auto;}
       .market-layout{grid-template-columns:1fr;}
+      .hero-section h1{font-size:clamp(36px,10vw,64px)!important;}
+      .hero-section h2{font-size:clamp(18px,4vw,24px)!important;}
     }
     @media(max-width:640px){
       .container{width:92%;}
@@ -1171,21 +1188,21 @@
   <div class="bg-grid"></div>
 
   <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="nav-brand" onclick="window.location.href='index.html'">
-      <div class="logo-main">AnalyticaX</div>
-      <div class="logo-sub" data-i18n="nav.tagline">AI Powered Crypto Chart Analysis</div>
-    </div>
-    
-    <nav class="nav-links">
+  <header class="navbar" style="justify-content:center;">
+    <nav class="nav-links" style="position:absolute;left:40px;">
       <a href="index.html#how" data-i18n="nav.how">How it works</a>
       <a href="index.html#features" data-i18n="nav.features">What it analyzes</a>
       <a href="index.html#market" data-i18n="nav.market">Live market</a>
       <a href="index.html#pricing" data-i18n="nav.pricing">Plans</a>
       <a href="index.html#legal" data-i18n="nav.legal">Legal</a>
     </nav>
+    
+    <div class="nav-brand" onclick="window.location.href='index.html'" style="margin:0 auto;">
+      <div class="logo-main" style="font-size:28px;">AnalyticaX</div>
+      <div class="logo-sub" data-i18n="nav.tagline" style="font-size:12px;">AI Powered Crypto Chart Analysis</div>
+    </div>
 
-    <div class="nav-actions">
+    <div class="nav-actions" style="position:absolute;right:40px;">
       <div id="navLoggedOut" style="display:flex;gap:10px;align-items:center;">
         <button class="btn-outline" id="btnLogin" data-i18n="nav.login">Log in</button>
         <button class="btn-primary" id="ctaStartFree" data-i18n="nav.startFree">Start free</button>
@@ -1229,7 +1246,53 @@
   <main>
     <div class="container">
       <!-- HERO -->
-      <section class="hero-grid reveal">
+      <section class="hero-section reveal" style="min-height:85vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;padding:120px 0 80px;">
+        <!-- Cosmic Background Elements -->
+        <div style="position:absolute;top:20%;left:10%;width:200px;height:200px;background:radial-gradient(circle,rgba(255,77,255,0.3),transparent 70%);border-radius:50%;filter:blur(60px);opacity:0.6;animation:float 20s infinite ease-in-out;"></div>
+        <div style="position:absolute;bottom:15%;right:15%;width:150px;height:150px;background:radial-gradient(circle,rgba(0,229,255,0.3),transparent 70%);border-radius:50%;filter:blur(50px);opacity:0.5;animation:float 25s infinite ease-in-out reverse;"></div>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse at center,rgba(255,77,255,0.2),transparent 60%);border-radius:50%;filter:blur(80px);opacity:0.4;z-index:-1;"></div>
+        
+        <!-- Tagline -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;font-size:14px;color:rgba(255,255,255,0.8);letter-spacing:0.1em;">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--neon),var(--magenta));animation:pulse 2s infinite;"></span>
+          <span>Precision. Speed. Intelligence.</span>
+        </div>
+        
+        <!-- Main Title -->
+        <h1 style="font-size:clamp(48px,8vw,96px);font-weight:800;letter-spacing:-0.02em;margin:0 0 24px;line-height:1.1;text-shadow:0 0 40px rgba(255,77,255,0.5),0 0 80px rgba(0,229,255,0.3);">
+          <span style="background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,0.9) 50%,rgba(255,255,255,0.7) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">ANALYTICAX</span>
+        </h1>
+        
+        <!-- Subtitle -->
+        <h2 style="font-size:clamp(20px,3vw,32px);font-weight:600;margin:0 0 32px;letter-spacing:0.05em;color:rgba(255,255,255,0.95);">
+          STOP GUESSING — START ANALYZING
+        </h2>
+        
+        <!-- Description -->
+        <p style="font-size:clamp(16px,2vw,20px);max-width:700px;margin:0 auto 48px;color:rgba(255,255,255,0.85);line-height:1.6;">
+          Build Your AI-Powered Chart Analysis Infrastructure
+        </p>
+        
+        <!-- CTA Button -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+          <button class="btn-primary" onclick="window.location.href='analyze.html'" style="padding:18px 48px;font-size:18px;font-weight:600;border-radius:12px;background:linear-gradient(135deg,var(--neon),var(--magenta));box-shadow:0 0 40px rgba(0,229,255,0.5),0 0 80px rgba(255,77,255,0.3);transition:all 0.3s ease;position:relative;overflow:hidden;">
+            <span style="position:relative;z-index:2;">Build My Analysis Engine</span>
+            <span style="margin-left:8px;display:inline-block;transform:translate(0,0);transition:transform 0.3s;">→</span>
+          </button>
+          <p style="font-size:13px;color:rgba(255,255,255,0.6);margin:0;">
+            No auto-trading • No financial advice • Analysis only
+          </p>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0.7;animation:bounce 2s infinite;">
+          <span style="font-size:12px;color:rgba(255,255,255,0.6);">Scroll to explore</span>
+          <span style="font-size:20px;">↓</span>
+        </div>
+      </section>
+      
+      <!-- Original Hero Content (Hidden but kept for structure) -->
+      <section class="hero-grid reveal" style="display:none;">
         <div>
           <h1 class="hero-title">
             <span class="gradient">AnalyticaX</span><br>
