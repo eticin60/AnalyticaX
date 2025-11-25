@@ -296,7 +296,7 @@ draw();
 /* ================================
    AUTH + LOAD USER DATA
 ================================ */
-const api = "${window.API_BASE || 'https://analyticax.com.tr'}";
+const api = window.API_BASE || 'https://analyticax.com.tr';
 const token = localStorage.getItem("ax_token");
 if(!token) {
   if(confirm("You need to login to view your profile. Go to login page?")) {
