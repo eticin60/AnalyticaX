@@ -29,14 +29,17 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: List files for debugging
+        run: |
+          echo "Files in frontend directory:"
+          ls -la frontend/ | head -20
+          echo "HTML files:"
+          find frontend -name "*.html" | head -10
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './frontend'
-          exclude-paths: |
-            **/*.md
-            **/.git
-            **/node_modules
 
       - name: Deploy to GitHub Pages
         id: deployment
