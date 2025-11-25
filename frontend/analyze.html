@@ -11034,7 +11034,7 @@ draw();
       const token = localStorage.getItem("ax_token");
       if(!token){
         overlay.classList.remove("active");
-        if(confirm("You need to login first. Go to login page?")) { window.location.href = "login.html"; }
+        if(confirm("You need to login to continue. Go to login page?")) { window.location.href = "login.html"; }
         return;
       }
 
@@ -14449,7 +14449,7 @@ window.addEventListener('scroll', () => {
     const token = localStorage.getItem("ax_token");
     
     if(!token) {
-      if(confirm("You need to login first. Go to login page?")) { window.location.href = "login.html"; }
+      if(confirm("You need to login to continue. Go to login page?")) { window.location.href = "login.html"; }
     }
 
     // Get plan info from URL or localStorage
