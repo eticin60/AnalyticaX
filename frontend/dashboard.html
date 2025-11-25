@@ -1017,7 +1017,7 @@
 
   <!-- JS -->
   <script>
-    const API_BASE = "${window.API_BASE || 'https://analyticax.com.tr'}";
+    const API_BASE = window.API_BASE || 'https://analyticax.com.tr';
 
     // ==== FOOTER YEAR ====
     document.getElementById("footerYear").textContent = new Date().getFullYear();
