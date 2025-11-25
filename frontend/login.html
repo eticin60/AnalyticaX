@@ -677,7 +677,7 @@ async function loadPayments(){
 
 /* LOAD LOGS */
 async function loadLogs(){
-  const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/logs",{
+  const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/logs`, {
     headers:{Authorization:"Bearer "+token}
   });
   const list = await res.json();
@@ -705,7 +705,7 @@ async function addCredit(id){
   const amount = prompt("Kredi miktarı:");
   if(!amount) return;
 
-  await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/user/update",{
+  await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/user/update`, {
     method:"POST",
     headers:{
       "Content-Type":"application/json",
@@ -716,7 +716,7 @@ async function addCredit(id){
 }
 
 async function togglePremium(id){
-  await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/user/update",{
+  await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/user/update`, {
     method:"POST",
     headers:{ "Content-Type":"application/json", Authorization:"Bearer "+token },
     body:JSON.stringify({userId:id,togglePremium:true})
