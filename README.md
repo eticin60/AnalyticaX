@@ -1,10 +1,27 @@
 # AnalyticaX - AI Powered Crypto Chart Analysis
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
+[![Website](https://img.shields.io/badge/Website-analyticax.com.tr-blue.svg)](https://analyticax.com.tr)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-5.0+-green.svg)](https://www.mongodb.com/)
 
 **AnalyticaX** is an AI-powered cryptocurrency chart analysis platform that uses Google Gemini AI to analyze trading charts and provide detailed market insights, trend predictions, and trading recommendations.
+
+🌐 **Live Website:** [https://analyticax.com.tr](https://analyticax.com.tr)
+
+## ⚠️ Copyright & License
+
+**Copyright (c) 2025 AnalyticaX. All Rights Reserved.**
+
+This software and associated documentation files (the "Software") are the proprietary and confidential property of AnalyticaX. Unauthorized copying, modification, distribution, or use of this Software, via any medium, is strictly prohibited without the express written permission of AnalyticaX.
+
+**Terms:**
+- This codebase is **NOT open source**
+- Redistribution and use in source and binary forms are **prohibited**
+- Commercial use is **prohibited** without explicit written permission
+- Reverse engineering, decompilation, or disassembly is **prohibited**
+
+For licensing inquiries, please contact: [legal@analyticax.com.tr](mailto:legal@analyticax.com.tr)
 
 ## ✨ Features
 
@@ -16,103 +33,26 @@
 - 📈 **Technical Indicators**: EMA, ATR, Bollinger Bands, Support/Resistance
 - 🎯 **Trade Ideas**: AI-generated long/short recommendations
 - 📱 **Responsive Design**: Modern, mobile-friendly UI
+- 🔒 **Code Protection**: Obfuscated and protected source code
 
-## 🚀 Local'de Çalıştırma
+## 🚀 Production Deployment
 
-### Gereksinimler
-- Node.js (v16 veya üzeri)
+**Live Site:** [https://analyticax.com.tr](https://analyticax.com.tr)
+
+The production site is automatically deployed via GitHub Pages. All API calls are configured to use the production backend.
+
+## 🛠️ Local Development Setup
+
+### Prerequisites
+- Node.js (v18 veya üzeri)
 - MongoDB (local veya MongoDB Atlas)
 - Google Gemini API Key
 
-### Kurulum
-
-1. **Backend bağımlılıklarını yükle:**
-```bash
-cd backend
-npm install
-```
-
-2. **Environment değişkenlerini ayarla:**
-`backend/.env` dosyası oluştur:
-```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/analyticax
-JWT_SECRET=your-super-secret-jwt-key-here
-GEMINI_API_KEY=your-gemini-api-key-here
-```
-
-3. **Backend'i başlat:**
-```bash
-cd backend
-npm start
-# veya development için:
-npm run dev
-```
-
-Backend `http://localhost:5000` adresinde çalışacak.
-
-4. **Frontend'i aç:**
-Backend aynı zamanda frontend'i de serve ediyor. Tarayıcıda şu adresi aç:
-```
-http://localhost:5000
-```
-
-### Alternatif: Sadece Frontend için Live Server
-
-Eğer sadece frontend'i test etmek istiyorsan:
-
-**VS Code Live Server Extension:**
-1. VS Code'da `frontend/index.html` dosyasını aç
-2. Sağ tık → "Open with Live Server"
-3. Otomatik olarak `http://127.0.0.1:5500` adresinde açılır
-
-**Python HTTP Server:**
-```bash
-cd frontend
-python -m http.server 8000
-# veya Python 3 için:
-python3 -m http.server 8000
-```
-Sonra tarayıcıda: `http://localhost:8000`
-
-**Node.js http-server:**
-```bash
-npm install -g http-server
-cd frontend
-http-server -p 8000
-```
-
-### ⚠️ Önemli Notlar
-
-- Backend çalışmadan frontend tam olarak çalışmaz (API çağrıları için gerekli)
-- MongoDB bağlantısı olmadan kullanıcı kayıt/giriş yapılamaz
-- Gemini API key olmadan görsel analiz çalışmaz
-
-### Test Kullanıcısı
-
-İlk kullanıcıyı kaydetmek için `register.html` sayfasını kullan.
-
-### API Endpoints
-
-- `POST /api/auth/register` - Kullanıcı kaydı
-- `POST /api/auth/login` - Giriş
-- `GET /api/auth/me` - Kullanıcı bilgileri
-- `POST /api/analysis/chart` - Grafik analizi
-- `POST /api/payments/create` - Ödeme oluştur
-- `POST /api/payments/verify` - Ödeme doğrula
-
-## 📦 Installation
-
-### Prerequisites
-- Node.js 18+ 
-- MongoDB (local or MongoDB Atlas)
-- Google Gemini API Key
-
-### Quick Start
+### Installation
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/YOUR_USERNAME/AnalyticaX.git
+git clone https://github.com/eticin60/AnalyticaX.git
 cd AnalyticaX
 ```
 
@@ -126,15 +66,15 @@ npm install
 Create `backend/.env`:
 ```env
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/analyticax
+MONGODB_URI=mongodb://localhost:27017/analyticax
 JWT_SECRET=your-super-secret-jwt-key-min-32-chars
 GEMINI_API_KEY=your-gemini-api-key-here
 ```
 
-4. **Start the server:**
+4. **Start the development server:**
 ```bash
 npm start
-# or for development:
+# or for development with auto-reload:
 npm run dev
 ```
 
@@ -158,6 +98,8 @@ AnalyticaX/
 │   ├── analyze.html     # Chart analysis page
 │   ├── dashboard.html   # User dashboard
 │   ├── premium.html     # Premium plans
+│   ├── js/
+│   │   └── api-config.js # API configuration
 │   └── ...              # Other pages
 └── README.md
 ```
@@ -189,18 +131,21 @@ AnalyticaX/
 - **AI**: Google Generative AI (Gemini 2.0 Flash)
 - **APIs**: Binance API, CoinGecko API
 - **Payment**: OxaPay Integration
+- **Deployment**: GitHub Pages, GitHub Actions
 
-## 📝 License
+## 🔒 Security & Code Protection
 
-MIT License - see LICENSE file for details
+- Source code is protected and obfuscated
+- API keys and secrets are stored in environment variables
+- JWT-based authentication with device fingerprinting
+- CORS protection enabled
+- Rate limiting on API endpoints
 
-## 🤝 Contributing
+## 📧 Contact & Support
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📧 Contact
-
-For questions or support, please open an issue on GitHub.
+- **Website**: [https://analyticax.com.tr](https://analyticax.com.tr)
+- **GitHub**: [https://github.com/eticin60/AnalyticaX](https://github.com/eticin60/AnalyticaX)
+- **Legal Inquiries**: [legal@analyticax.com.tr](mailto:legal@analyticax.com.tr)
 
 ## 🙏 Acknowledgments
 
@@ -211,29 +156,6 @@ For questions or support, please open an issue on GitHub.
 
 ---
 
-Made with ❤️ by AnalyticaX Team
+**© 2025 AnalyticaX. All Rights Reserved.**
 
-### Sorun Giderme
-
-**Login Yapamıyorum:**
-1. Backend'in çalıştığından emin ol (`http://localhost:5000/api` adresini kontrol et)
-2. MongoDB'nin çalıştığından emin ol
-3. `test-login.html` dosyasını aç ve debug yap
-4. Browser console'u aç (F12) ve hataları kontrol et
-
-**CORS Hatası:**
-- Backend'deki CORS ayarlarını kontrol et
-- Frontend'in hangi portta çalıştığını kontrol et
-
-**MongoDB Bağlantı Hatası:**
-- MongoDB'nin çalıştığından emin ol
-- `.env` dosyasındaki `MONGO_URI` değerini kontrol et (MONGODB_URI değil!)
-
-**API Key Hatası:**
-- Gemini API key'in doğru olduğundan emin ol
-- Google Cloud Console'dan API key oluştur
-
-**Test Sayfası:**
-- `test-login.html` dosyasını açarak login sistemini test edebilirsin
-- Bu sayfa backend bağlantısını, register ve login işlemlerini test eder
-
+*This software is proprietary and confidential. Unauthorized use is prohibited.*
