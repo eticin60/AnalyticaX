@@ -2517,8 +2517,10 @@ async function analyze() {
     const token = localStorage.getItem("ax_token");
     if (!token) {
         overlay.style.display = "none";
-        alert("Session expired. Please login again.");
-        return window.location.href = "login.html";
+        if(confirm("You need to login to analyze charts. Go to login page?")) {
+          window.location.href = "login.html";
+        }
+        return;
     }
 
     const reader = new FileReader();
