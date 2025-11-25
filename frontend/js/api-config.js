@@ -11,11 +11,12 @@
   'use strict';
   
   // Detect environment
-  const isProduction = window.location.hostname !== 'localhost' && 
-                       window.location.hostname !== '127.0.0.1' &&
-                       !window.location.hostname.startsWith('192.168.') &&
-                       !window.location.hostname.startsWith('10.') &&
-                       window.location.protocol === 'https:';
+  const isProduction = window.location.hostname === 'analyticax.com.tr' || 
+                       (window.location.hostname !== 'localhost' && 
+                        window.location.hostname !== '127.0.0.1' &&
+                        !window.location.hostname.startsWith('192.168.') &&
+                        !window.location.hostname.startsWith('10.') &&
+                        window.location.protocol === 'https:');
   
   // Set API base URL
   window.API_BASE = isProduction 
