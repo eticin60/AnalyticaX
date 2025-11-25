@@ -9636,7 +9636,7 @@ async function loginUser() {
             data = await res.json();
         } catch (e) {
             console.error("JSON parse error:", e);
-            alert("Server error. Please check if backend is running on ${window.API_BASE || 'https://analyticax.com.tr'}");
+            alert("Server error. Please check your connection.");
             btn.textContent = originalText;
             btn.disabled = false;
             return;
@@ -9669,7 +9669,7 @@ async function loginUser() {
         window.location.href = "dashboard.html";
     } catch (error) {
         console.error("Login error:", error);
-        alert("Network error: " + error.message + "\n\nMake sure backend is running on ${window.API_BASE || 'https://analyticax.com.tr'}");
+        alert("Network error: " + error.message + "\n\nPlease check your connection.");
         btn.textContent = originalText;
         btn.disabled = false;
     }
