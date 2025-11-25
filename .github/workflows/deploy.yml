@@ -33,6 +33,10 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: './frontend'
+          exclude-paths: |
+            **/*.md
+            **/.git
+            **/node_modules
 
       - name: Deploy to GitHub Pages
         id: deployment
