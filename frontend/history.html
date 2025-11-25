@@ -546,7 +546,11 @@ footer{
 
 <script>
 const token = localStorage.getItem("ax_token");
-if(!token) location.href="login.html";
+if(!token) {
+  if(confirm("You need to login to view your history. Go to login page?")) {
+    location.href="login.html";
+  }
+}
 
 /* Load User Info */
 async function loadUser() {
