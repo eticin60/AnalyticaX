@@ -5629,8 +5629,7 @@ footer{
 </div>
 
 <script>
-const token = localStorage.getItem("ax_token");
-if(!token) location.href="login.html";
+// Login page - no token check needed
 
 /* Load User Info */
 async function loadUser() {
@@ -11924,7 +11923,7 @@ async function storeFingerprint() {
 ==================================================== */
 const API = window.API_BASE || 'https://analyticax.com.tr';
 const token = localStorage.getItem("ax_token");
-if (!token) window.location.href = "login.html";
+
 
 document.getElementById("btnLogout").onclick = function(){
   localStorage.removeItem("ax_token");
@@ -12589,8 +12588,7 @@ draw();
    AUTH + LOAD USER DATA
 ================================ */
 const api = window.API_BASE || 'https://analyticax.com.tr';
-const token = localStorage.getItem("ax_token");
-if(!token) location.href="login.html";
+
 
 document.getElementById("btnLogout").onclick=()=>{
   localStorage.removeItem("ax_token");
