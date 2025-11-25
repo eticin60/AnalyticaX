@@ -650,7 +650,7 @@ async function loadUsers(){
 
 /* LOAD PAYMENTS */
 async function loadPayments(){
-  const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/payments",{
+  const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/payments`, {
     headers:{Authorization:"Bearer "+token}
   });
   const list = await res.json();
