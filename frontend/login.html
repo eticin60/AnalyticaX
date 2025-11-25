@@ -4411,7 +4411,7 @@ function quick(text){
 
   <!-- JS -->
   <script>
-    const API_BASE = `${window.API_BASE || 'https://analyticax.com.tr'}";;
+    const API_BASE = window.API_BASE || 'https://analyticax.com.tr';
 
     // ==== FOOTER YEAR ====
     document.getElementById("footerYear").textContent = new Date().getFullYear();
@@ -11921,7 +11921,7 @@ async function storeFingerprint() {
 /* ====================================================
    AUTH + LOAD USER
 ==================================================== */
-const API = `${window.API_BASE || 'https://analyticax.com.tr'}";;
+const API = window.API_BASE || 'https://analyticax.com.tr';
 const token = localStorage.getItem("ax_token");
 if (!token) window.location.href = "login.html";
 
@@ -12587,7 +12587,7 @@ draw();
 /* ================================
    AUTH + LOAD USER DATA
 ================================ */
-const api = `${window.API_BASE || 'https://analyticax.com.tr'}";;
+const api = window.API_BASE || 'https://analyticax.com.tr';
 const token = localStorage.getItem("ax_token");
 if(!token) location.href="login.html";
 
@@ -13758,7 +13758,7 @@ async function registerUser() {
 
   <!-- JS -->
   <script>
-    const API_BASE = `${window.API_BASE || 'https://analyticax.com.tr'}";;
+    const API_BASE = window.API_BASE || 'https://analyticax.com.tr';
 
     // ==== FOOTER YEAR ====
     document.getElementById("footerYear").textContent = new Date().getFullYear();
@@ -14446,7 +14446,7 @@ window.addEventListener('scroll', () => {
   </div>
 
   <script>
-    const API = `${window.API_BASE || 'https://analyticax.com.tr'}";;
+    const API = window.API_BASE || 'https://analyticax.com.tr';
     const token = localStorage.getItem("ax_token");
     
     if(!token) {
