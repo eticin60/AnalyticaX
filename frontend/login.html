@@ -621,7 +621,7 @@ const token = localStorage.getItem("ax_admin_token");
 
 /* LOAD USERS */
 async function loadUsers(){
-  const res = await fetch("${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/users",{
+  const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/users`, {
     headers:{Authorization:"Bearer "+token}
   });
   const list = await res.json();
@@ -650,7 +650,7 @@ async function loadUsers(){
 
 /* LOAD PAYMENTS */
 async function loadPayments(){
-  const res = await fetch("${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/payments",{
+  const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/payments",{
     headers:{Authorization:"Bearer "+token}
   });
   const list = await res.json();
@@ -675,7 +675,7 @@ async function loadPayments(){
 
 /* LOAD LOGS */
 async function loadLogs(){
-  const res = await fetch("${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/logs",{
+  const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/logs",{
     headers:{Authorization:"Bearer "+token}
   });
   const list = await res.json();
@@ -703,7 +703,7 @@ async function addCredit(id){
   const amount = prompt("Kredi miktarı:");
   if(!amount) return;
 
-  await fetch("${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/user/update",{
+  await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/user/update",{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
@@ -714,7 +714,7 @@ async function addCredit(id){
 }
 
 async function togglePremium(id){
-  await fetch("${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/user/update",{
+  await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/user/update",{
     method:"POST",
     headers:{ "Content-Type":"application/json", Authorization:"Bearer "+token },
     body:JSON.stringify({userId:id,togglePremium:true})
@@ -733,7 +733,7 @@ async function deleteUser(id){
 }
 
 async function approvePay(id){
-  await fetch("${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/payment/approve",{
+  await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/payment/approve",{
     method:"POST",
     headers:{ "Content-Type":"application/json", Authorization:"Bearer "+token },
     body:JSON.stringify({payId:id})
@@ -4411,7 +4411,7 @@ function quick(text){
 
   <!-- JS -->
   <script>
-    const API_BASE = "${window.API_BASE || 'https://analyticax.com.tr'}";
+    const API_BASE = `${window.API_BASE || 'https://analyticax.com.tr'}";;
 
     // ==== FOOTER YEAR ====
     document.getElementById("footerYear").textContent = new Date().getFullYear();
@@ -8157,7 +8157,7 @@ window.addEventListener('scroll', () => {
       if (token) {
         // Verify token is valid
         try {
-          const res = await fetch("${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/me", {
+          const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/me", {
             headers: {
               "Authorization": "Bearer " + token,
               "x-device-id": localStorage.getItem("ax_device_id"),
@@ -8980,7 +8980,7 @@ window.addEventListener('scroll', () => {
       messages.scrollTop = messages.scrollHeight;
       
       try {
-        const res = await fetch("${window.API_BASE || 'https://analyticax.com.tr'}/api/analysis/chat", {
+        const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/analysis/chat", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -9615,7 +9615,7 @@ async function loginUser() {
 
         console.log("Attempting login...", { email, deviceId, deviceFingerprint });
 
-        let res = await fetch("${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/login", {
+        let res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/login", {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json"
@@ -10205,7 +10205,7 @@ async function verifyOtp() {
     let otp = document.getElementById("otp").value;
     let email = localStorage.getItem("pending_email");
 
-    let res = await fetch("${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/verify-otp", {
+    let res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp })
@@ -11039,7 +11039,7 @@ draw();
       }
 
       try{
-        const res = await fetch("${window.API_BASE || 'https://analyticax.com.tr'}/api/payments/verify", {
+        const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/payments/verify", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -11064,7 +11064,7 @@ draw();
           // Update localStorage credits
           if(data.credits) {
             // Reload user data
-            const meRes = await fetch("${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/me", {
+            const meRes = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/me", {
               headers: {
                 "Authorization": "Bearer " + token,
                 "x-device-id": localStorage.getItem("ax_device_id"),
@@ -11920,7 +11920,7 @@ async function storeFingerprint() {
 /* ====================================================
    AUTH + LOAD USER
 ==================================================== */
-const API = "${window.API_BASE || 'https://analyticax.com.tr'}";
+const API = `${window.API_BASE || 'https://analyticax.com.tr'}";;
 const token = localStorage.getItem("ax_token");
 if (!token) window.location.href = "login.html";
 
@@ -12586,7 +12586,7 @@ draw();
 /* ================================
    AUTH + LOAD USER DATA
 ================================ */
-const api = "${window.API_BASE || 'https://analyticax.com.tr'}";
+const api = `${window.API_BASE || 'https://analyticax.com.tr'}";;
 const token = localStorage.getItem("ax_token");
 if(!token) location.href="login.html";
 
@@ -12836,7 +12836,7 @@ async function registerUser() {
     const password = document.getElementById("password").value.trim();
 
     try {
-        let res = await fetch("${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/register", {
+        let res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/register", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({ email, password })
@@ -13757,7 +13757,7 @@ async function registerUser() {
 
   <!-- JS -->
   <script>
-    const API_BASE = "${window.API_BASE || 'https://analyticax.com.tr'}";
+    const API_BASE = `${window.API_BASE || 'https://analyticax.com.tr'}";;
 
     // ==== FOOTER YEAR ====
     document.getElementById("footerYear").textContent = new Date().getFullYear();
@@ -14445,7 +14445,7 @@ window.addEventListener('scroll', () => {
   </div>
 
   <script>
-    const API = "${window.API_BASE || 'https://analyticax.com.tr'}";
+    const API = `${window.API_BASE || 'https://analyticax.com.tr'}";;
     const token = localStorage.getItem("ax_token");
     
     if(!token) {
