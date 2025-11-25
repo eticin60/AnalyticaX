@@ -599,7 +599,19 @@ async function loadHistory() {
   }
 
 list.forEach(item => {
-        const img = item.imageBase64 || item.image || item.chartImage || "assets/no-preview.png";
+        // Resim URL'ini düzgün formatla - base64 verisi varsa data:image prefix'i ekle
+        let img = item.imageBase64 || item.image || item.chartImage || "assets/no-preview.png";
+        
+        // Base64 verisi varsa ama data: prefix'i yoksa ekle
+        if (img && img !== "assets/no-preview.png" && img.trim().length > 0) {
+          if (!img.startsWith("data:") && !img.startsWith("http") && !img.startsWith("/") && !img.startsWith("assets/")) {
+            // Base64 string'i data URI formatına çevir
+            img = `data:image/png;base64,${img}`;
+          }
+        } else {
+          img = "assets/no-preview.png";
+        }
+        
         const symbol = item.symbol || "N/A";
         const timeframe = item.timeframe || "N/A";
         const trend = item.trend || item.result?.trend || "N/A";
@@ -658,7 +670,20 @@ function openModal(item){
   const body = document.getElementById("modalBody");
 
   const result = item.result || item;
-  const img = item.imageBase64 || item.image || item.chartImage || "assets/no-preview.png";
+  
+  // Resim URL'ini düzgün formatla - base64 verisi varsa data:image prefix'i ekle
+  let img = item.imageBase64 || item.image || item.chartImage || "assets/no-preview.png";
+  
+  // Base64 verisi varsa ama data: prefix'i yoksa ekle
+  if (img && img !== "assets/no-preview.png" && img.trim().length > 0) {
+    if (!img.startsWith("data:") && !img.startsWith("http") && !img.startsWith("/") && !img.startsWith("assets/")) {
+      // Base64 string'i data URI formatına çevir
+      img = `data:image/png;base64,${img}`;
+    }
+  } else {
+    img = "assets/no-preview.png";
+  }
+  
   const symbol = item.symbol || "N/A";
   const timeframe = item.timeframe || "N/A";
   const trend = result.trend || item.trend || "N/A";

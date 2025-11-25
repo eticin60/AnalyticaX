@@ -87,10 +87,11 @@ const UserSchema = new mongoose.Schema(
         timeframe: String,
         trend: String,
         risk: String,
-            userId: String,
+        userId: String,
         status: String,
-            symbol: String,
-            image: String,
+        image: String,
+        imageBase64: String,
+        axId: String,
         result: Object,
         createdAt: Date
       }
