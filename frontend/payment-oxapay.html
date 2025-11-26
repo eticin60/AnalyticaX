@@ -636,14 +636,24 @@
       updateSteps(); // Initialize steps on load
       initParticles();
       
-      // If method was pre-selected, mark it as selected
+      // If method was pre-selected from URL, mark it as selected and auto-advance
       if(selectedMethod) {
         setTimeout(() => {
           const methodCard = document.querySelector(`[data-method="${selectedMethod}"]`);
           if(methodCard) {
             methodCard.classList.add("selected");
+            // Auto-advance to step 2 if method is already selected
+            if(currentStep === 1) {
+              if(selectedMethod === "OXAPAY") {
+                // For OxaPay, skip wallet step
+                currentStep = 2;
+                nextStep();
+              } else {
+                nextStep();
+              }
+            }
           }
-        }, 100);
+        }, 200);
       }
     }
 
@@ -782,14 +792,18 @@
       });
     }
 
-    document.getElementById("btnContinue2").addEventListener("click", () => {
-      const wallet = document.getElementById("walletAddress").value.trim();
-      if(!wallet){
-        alert("Please enter your wallet address");
-        return;
-      }
-      nextStep();
-    });
+    const btnContinue2 = document.getElementById("btnContinue2");
+    if(btnContinue2) {
+      btnContinue2.addEventListener("click", () => {
+        // Skip wallet address for OxaPay
+        if(selectedMethod === "OXAPAY") {
+          nextStep();
+          return;
+        }
+        // Wallet address is optional, continue anyway
+        nextStep();
+      });
+    }
 
     document.getElementById("btnMadePayment").addEventListener("click", () => {
       nextStep();
