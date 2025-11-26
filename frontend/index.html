@@ -3,8 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AnalyticaX – AI Powered Crypto Chart Analysis</title>
+  <title>AnalyticaX – AI Powered Crypto Chart Analysis | Kripto Para Analiz | Hisse Analiz</title>
+  <meta name="description" content="AI-powered cryptocurrency and stock chart analysis platform. Analyze BTC, ETH, stocks with professional AI insights. Kripto para analiz, hisse analiz, teknik analiz." />
+  <meta name="keywords" content="crypto analysis, kripto para analiz, cryptocurrency analysis, bitcoin analysis, ethereum analysis, stock analysis, hisse analiz, technical analysis, AI trading, chart analysis, crypto chart, trading analysis, BTC analysis, ETH analysis, AI crypto, blockchain analysis" />
+  <meta name="author" content="AnalyticaX" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://analyticax.com.tr" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://analyticax.com.tr" />
+  <meta property="og:title" content="AnalyticaX – AI Powered Crypto Chart Analysis" />
+  <meta property="og:description" content="AI-powered cryptocurrency and stock chart analysis. Professional AI insights for BTC, ETH, stocks and more." />
+  <meta property="og:image" content="https://analyticax.com.tr/assets/AnalyticaX.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="AnalyticaX" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="tr_TR" />
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://analyticax.com.tr" />
+  <meta name="twitter:title" content="AnalyticaX – AI Powered Crypto Chart Analysis" />
+  <meta name="twitter:description" content="AI-powered cryptocurrency and stock chart analysis. Professional AI insights for BTC, ETH, stocks and more." />
+  <meta name="twitter:image" content="https://analyticax.com.tr/assets/AnalyticaX.png" />
+  
   <link rel="icon" type="image/png" href="assets/AnalyticaX.png" />
+  <link rel="apple-touch-icon" href="assets/AnalyticaX.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
   
@@ -1600,9 +1626,21 @@
             <span data-i18n="nav.logout">Logout</span>
           </button>
         </div>
-        <div class="lang-switch" style="margin-left:12px;margin-right:0;" onclick="event.stopPropagation();">
-        <button class="lang-btn active" data-lang-btn="en">EN</button>
-        <button class="lang-btn" data-lang-btn="tr">TR</button>
+        <div class="lang-switch" style="margin-left:12px;margin-right:0;position:relative;" onclick="event.stopPropagation();">
+        <button class="lang-btn active" data-lang-btn="en" title="English">EN</button>
+        <button class="lang-btn" data-lang-btn="tr" title="Türkçe">TR</button>
+        <div class="lang-dropdown" style="position:absolute;top:100%;right:0;margin-top:8px;background:rgba(15,23,42,0.95);border:1px solid rgba(0,229,255,0.3);border-radius:12px;padding:8px;min-width:120px;display:none;z-index:1000;backdrop-filter:blur(20px);box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+          <button class="lang-option" data-lang-btn="en" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:#fff;cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)'" onmouseout="this.style.background='transparent'">🇬🇧 English</button>
+          <button class="lang-option" data-lang-btn="tr" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:#fff;cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)'" onmouseout="this.style.background='transparent'">🇹🇷 Türkçe</button>
+          <div style="height:1px;background:rgba(255,255,255,0.1);margin:4px 0;"></div>
+          <button class="lang-option" data-lang-btn="es" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.7)'">🇪🇸 Español</button>
+          <button class="lang-option" data-lang-btn="de" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.7)'">🇩🇪 Deutsch</button>
+          <button class="lang-option" data-lang-btn="fr" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.7)'">🇫🇷 Français</button>
+          <button class="lang-option" data-lang-btn="ru" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.7)'">🇷🇺 Русский</button>
+          <button class="lang-option" data-lang-btn="zh" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.7)'">🇨🇳 中文</button>
+          <button class="lang-option" data-lang-btn="ja" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.7)'">🇯🇵 日本語</button>
+          <button class="lang-option" data-lang-btn="ar" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.7)'">🇸🇦 العربية</button>
+        </div>
       </div>
     </div>
     </div>
