@@ -84,8 +84,10 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
+    console.log("🔐 Login attempt:", req.body.email);
     const { email, password, deviceId, deviceFingerprint } = req.body;
     const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    console.log("📍 IP:", ip);
 
     if (await isProxy(ip))
       return res.json({ ok: false, message: "VPN / Proxy detected." });
@@ -196,9 +198,11 @@ exports.login = async (req, res) => {
 
     await user.save();
 
+    console.log("✅ Login successful for:", email);
     return res.json({ ok: true, token, message: "Login successful" });
 
   } catch (err) {
+    console.error("❌ Login error:", err);
     return res.json({ ok: false, error: err.message });
   }
 };
