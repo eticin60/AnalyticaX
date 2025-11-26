@@ -119,7 +119,7 @@
       z-index:-2;
     }
 
-    /* NAVBAR */
+    /* NAVBAR - Transparent/Invisible */
     .navbar{
       position:fixed;
       top:20px;
@@ -134,11 +134,11 @@
       justify-content:space-between;
       gap:0;
       backdrop-filter:blur(20px) saturate(180%);
-      background:rgba(15,10,25,0.2);
+      background:transparent; /* Tamamen şeffaf */
       border:none;
-      box-shadow:0 4px 20px rgba(0,0,0,0.15);
+      box-shadow:none; /* Shadow yok */
       z-index:50;
-      border-radius:16px;
+      border-radius:0; /* Border radius yok */
       margin:0;
       transition:transform 0.3s ease, opacity 0.3s ease;
       overflow:visible; /* Logo taşmasını engellemek için */
@@ -294,11 +294,11 @@
       align-items:center;
       justify-content:flex-start;
       padding:12px 20px;
-      background:rgba(15,23,42,0.15);
-      border:1px solid rgba(0,229,255,0.25);
+      background:rgba(15,23,42,0.08); /* Çok daha şeffaf */
+      border:1px solid rgba(0,229,255,0.2); /* Daha ince border */
       border-radius:16px;
       backdrop-filter:blur(20px) saturate(180%);
-      box-shadow:0 4px 20px rgba(0,229,255,0.15), 0 0 40px rgba(0,229,255,0.08);
+      box-shadow:0 2px 15px rgba(0,229,255,0.1), 0 0 30px rgba(0,229,255,0.05); /* Daha hafif shadow */
       flex:0 0 auto;
       flex-wrap:wrap;
       max-width:100%;
@@ -312,9 +312,9 @@
       left:0;
       right:0;
       height:2px;
-      background:linear-gradient(90deg, rgba(0,229,255,0.6), rgba(255,77,255,0.6));
+      background:linear-gradient(90deg, rgba(0,229,255,0.5), rgba(255,77,255,0.5));
       border-radius:0 0 16px 16px;
-      box-shadow:0 0 15px rgba(0,229,255,0.4), 0 0 30px rgba(255,77,255,0.3);
+      box-shadow:0 0 12px rgba(0,229,255,0.3), 0 0 25px rgba(255,77,255,0.2);
     }
     .nav-links a{
       position:relative;
@@ -374,11 +374,11 @@
       font-size:14px;
       flex-wrap:wrap;
       padding:12px 20px;
-      background:rgba(15,23,42,0.15);
-      border:1px solid rgba(255,77,255,0.25);
+      background:rgba(15,23,42,0.08); /* Çok daha şeffaf */
+      border:1px solid rgba(255,77,255,0.2); /* Daha ince border */
       border-radius:16px;
       backdrop-filter:blur(20px) saturate(180%);
-      box-shadow:0 4px 20px rgba(255,77,255,0.15), 0 0 40px rgba(255,77,255,0.08);
+      box-shadow:0 2px 15px rgba(255,77,255,0.1), 0 0 30px rgba(255,77,255,0.05); /* Daha hafif shadow */
       max-width:100%;
       position:relative;
       overflow:hidden;
@@ -390,9 +390,9 @@
       left:0;
       right:0;
       height:2px;
-      background:linear-gradient(90deg, rgba(255,77,255,0.6), rgba(0,229,255,0.6));
+      background:linear-gradient(90deg, rgba(255,77,255,0.5), rgba(0,229,255,0.5));
       border-radius:0 0 16px 16px;
-      box-shadow:0 0 15px rgba(255,77,255,0.4), 0 0 30px rgba(0,229,255,0.3);
+      box-shadow:0 0 12px rgba(255,77,255,0.3), 0 0 25px rgba(0,229,255,0.2);
     }
     .nav-actions a{
       position:relative;
