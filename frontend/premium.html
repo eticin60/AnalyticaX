@@ -974,10 +974,20 @@ async function startPayment(method) {
     window.location.href = `payment-oxapay.html?plan=${encodeURIComponent(selectedPlan.name)}&price=${selectedPlan.price}&credits=${selectedPlan.credits}`;
     return;
   } else if (method === "BINANCE-PAY") {
-    alert("Binance Pay integration coming soon.");
+    // Binance Pay - redirect to payment page
+    localStorage.setItem("selectedPlanName", selectedPlan.name);
+    localStorage.setItem("selectedPlanPrice", selectedPlan.price);
+    localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
+    localStorage.setItem("selectedPaymentMethod", method);
+    window.location.href = `payment-oxapay.html?plan=${encodeURIComponent(selectedPlan.name)}&price=${selectedPlan.price}&credits=${selectedPlan.credits}&method=${method}`;
     return;
   } else if (method === "SHOPIER") {
-    alert("Shopier integration coming soon.");
+    // Shopier - redirect to payment page
+    localStorage.setItem("selectedPlanName", selectedPlan.name);
+    localStorage.setItem("selectedPlanPrice", selectedPlan.price);
+    localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
+    localStorage.setItem("selectedPaymentMethod", method);
+    window.location.href = `payment-oxapay.html?plan=${encodeURIComponent(selectedPlan.name)}&price=${selectedPlan.price}&credits=${selectedPlan.credits}&method=${method}`;
     return;
   }
 

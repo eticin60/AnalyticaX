@@ -26,6 +26,14 @@
 
     * {
         box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    
+    html {
+        overflow-x: hidden;
+        max-width: 100vw;
+        width: 100%;
     }
     
     body {
@@ -34,13 +42,17 @@
         font-family: 'Poppins', sans-serif;
         min-height: 100vh;
         height: 100vh;
-        overflow-x: hidden;
+        overflow-x: hidden !important;
         overflow-y: auto;
         background: radial-gradient(circle at top, #1b1f3a, #000014);
         position: relative;
         color: #fff;
         width: 100%;
         max-width: 100vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
     /* NAVBAR - Hidden, only logo visible */
@@ -207,17 +219,32 @@
     
     /* MOBILE RESPONSIVE */
     @media (max-width: 768px) {
-        body {
-            overflow-x: hidden;
+        html, body {
+            overflow-x: hidden !important;
             overflow-y: auto;
             height: auto;
             min-height: 100vh;
+            width: 100%;
+            max-width: 100vw;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 80px;
         }
         
         .nav-brand {
             top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
             padding: 10px 14px 8px;
             max-width: calc(100% - 30px);
+            width: auto;
         }
         
         .nav-brand img {
@@ -229,9 +256,9 @@
             top: auto;
             left: auto;
             transform: none;
-            width: 100%;
-            max-width: calc(100% - 30px);
-            margin: 120px auto 40px;
+            width: calc(100% - 30px);
+            max-width: 400px;
+            margin: 0 auto 40px;
             padding: 30px 24px;
         }
         
@@ -243,24 +270,39 @@
         .login-card input {
             padding: 12px 14px;
             font-size: 14px;
+            width: 100%;
         }
         
         .login-card button {
             padding: 12px;
             font-size: 15px;
+            width: 100%;
         }
         
         #particles {
             position: fixed;
             width: 100vw;
             height: 100vh;
+            left: 0;
+            right: 0;
         }
     }
     
     @media (max-width: 480px) {
+        html, body {
+            overflow-x: hidden !important;
+            width: 100%;
+            max-width: 100vw;
+        }
+        
+        body {
+            padding-top: 70px;
+        }
+        
         .nav-brand {
             top: 10px;
             padding: 8px 12px 6px;
+            max-width: calc(100% - 20px);
         }
         
         .nav-brand img {
@@ -268,7 +310,9 @@
         }
         
         .login-card {
-            margin: 100px auto 30px;
+            width: calc(100% - 20px);
+            max-width: 100%;
+            margin: 0 auto 30px;
             padding: 24px 20px;
             border-radius: 16px;
         }
@@ -282,24 +326,20 @@
             padding: 11px 12px;
             font-size: 14px;
             margin: 10px 0;
+            width: 100%;
         }
         
         .login-card button {
             padding: 11px;
             font-size: 14px;
             margin-top: 16px;
+            width: 100%;
         }
         
         .register-link {
             font-size: 13px;
             margin-top: 12px;
         }
-    }
-    
-    /* Prevent horizontal scroll */
-    html {
-        overflow-x: hidden;
-        max-width: 100vw;
     }
 </style>
 <script src="js/api-config.js"></script>
