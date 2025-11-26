@@ -17,16 +17,14 @@
 
 ### ✅ Adım 3: Backend Klasörünü Seç (ÖNEMLİ!)
 
-Railway'da root directory ayarı farklı yerlerde olabilir. Şu yöntemleri dene:
+**ÇOK KOLAY! Ekranda görüyorsun:**
 
-**Yöntem 1: Service Settings'ten**
-1. Railway projeyi deploy etmeye başladıktan sonra
-2. Sol tarafta oluşan **service**'e (genellikle repo adıyla aynı) tıkla
-3. Üstteki **"Settings"** sekmesine tıkla
-4. Aşağı kaydır, **"Source"** veya **"Build"** bölümünü bul
-5. **"Root Directory"** veya **"Working Directory"** alanını bul
-6. **`backend`** yaz
-7. **"Save"** butonuna tıkla
+1. **Settings** sekmesinde, **"Source"** bölümünde
+2. **"Add Root Directory"** linkine tıkla (mavi link)
+3. Açılan alana **`backend`** yaz
+4. **"Save"** veya **"Add"** butonuna tıkla
+
+**TAMAM!** Artık Railway sadece `backend` klasörünü deploy edecek.
 
 **Yöntem 2: Service Oluştururken**
 1. Eğer henüz service oluşturmadıysan:
