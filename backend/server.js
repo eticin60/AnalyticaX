@@ -121,16 +121,16 @@ app.get("/api", (req, res) => {
   res.json({ ok: true, message: "AnalyticaX backend running 🚀" });
 });
 
+// Debug: Log all API requests BEFORE routes
+app.use("/api/*", (req, res, next) => {
+  console.log(`📡 API Request: ${req.method} ${req.path}`, req.body);
+  next();
+});
+
 // API routes - MUST be before static files
 app.use("/api/auth", authRoutes);
 app.use("/api/analysis", analysisRoutes);
 app.use("/api/payments", paymentRoutes);
-
-// Debug: Log all API requests
-app.use("/api/*", (req, res, next) => {
-  console.log(`📡 API Request: ${req.method} ${req.path}`);
-  next();
-});
 
 // Serve frontend static files
 const path = require("path");
