@@ -796,6 +796,15 @@
           // Continue to next step for verification
           nextStep();
           return;
+        } else if(selectedMethod === "SHOPIER" || selectedMethod === "BINANCE-PAY"){
+          // Store plan info for Shopier/Binance Pay
+          localStorage.setItem("selectedPlanName", selectedPlan.name);
+          localStorage.setItem("selectedPlanPrice", selectedPlan.price);
+          localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
+          localStorage.setItem("selectedPaymentMethod", selectedMethod);
+          // Continue to next step
+          nextStep();
+          return;
         }
         // Store selected method
         localStorage.setItem("selectedPaymentMethod", selectedMethod);
