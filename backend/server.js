@@ -126,7 +126,7 @@ app.get("/404.html", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/404.html"));
 });
 
-// Serve index.html for all other non-API routes
+// Serve index.html for all other non-API routes (ONLY GET requests)
 app.get("*", (req, res) => {
   if (!req.path.startsWith("/api")) {
     // Check if file exists, otherwise serve 404
@@ -137,6 +137,9 @@ app.get("*", (req, res) => {
     } else {
       res.sendFile(path.join(__dirname, "../frontend/index.html"));
     }
+  } else {
+    // API route but method not allowed - return proper error
+    res.status(405).json({ ok: false, error: "Method not allowed" });
   }
 });
 
