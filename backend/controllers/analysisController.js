@@ -3,8 +3,16 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const User = require("../models/User");
 const crypto = require("crypto");
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+// Check if GEMINI_API_KEY is set
+if (!process.env.GEMINI_API_KEY) {
+  console.error("❌ GEMINI_API_KEY is not set in environment variables!");
+  console.error("Please set GEMINI_API_KEY in Railway environment variables.");
+}
+
+const genAI = process.env.GEMINI_API_KEY 
+  ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+  : null;
+const model = genAI ? genAI.getGenerativeModel({ model: "gemini-2.0-flash" }) : null;
 
 function generateAXID() {
   return "AX-" + crypto.randomBytes(6).toString("hex").toUpperCase();
@@ -62,6 +70,9 @@ function calculateATR(highs, lows, closes, period = 14) {
 }
 
 async function extractChartMetadata(imageBase64) {
+  if (!model) {
+    throw new Error("GEMINI_API_KEY is not configured");
+  }
   const prompt = `
 You are an advanced OCR and image recognition engine specialized in cryptocurrency trading charts and assets.
 
@@ -101,6 +112,9 @@ If you cannot detect, return empty strings but try to identify the assetType.
 
 
 async function askGemini(prompt, imageBase64) {
+  if (!model) {
+    throw new Error("GEMINI_API_KEY is not configured");
+  }
   const result = await model.generateContent([
     prompt,
     {
@@ -118,6 +132,15 @@ async function askGemini(prompt, imageBase64) {
 
 exports.analyzeChart = async (req, res) => {
   try {
+    // Check if GEMINI_API_KEY is configured
+    if (!process.env.GEMINI_API_KEY || !genAI || !model) {
+      console.error("❌ GEMINI_API_KEY is not configured!");
+      return res.json({ 
+        ok: false, 
+        error: "AI service is temporarily unavailable. Please contact support@AnalyticaX.com.tr" 
+      });
+    }
+
     const queryId = generateQueryId();
 
     const user = await User.findById(req.user._id);

@@ -20,7 +20,8 @@ body {
     min-height: 100vh;
     background: radial-gradient(circle at center, #1b1f3a, #000014);
     color: #fff;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: relative;
     padding-top: 80px;
 }
@@ -323,15 +324,13 @@ body {
 
 /* MAIN CONTAINER */
 .container {
-    margin-top: 220px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    margin-top: 180px;
+    margin-bottom: 40px;
+    position: relative;
     width: 95%;
     max-width: 1480px;
-    max-height: 95vh;
-    overflow-y: auto;
+    margin-left: auto;
+    margin-right: auto;
     padding: 32px 32px 40px;
     background: radial-gradient(circle at top left, rgba(0,255,200,0.06), transparent 55%),
                 radial-gradient(circle at bottom right, rgba(0,140,255,0.12), transparent 60%),
@@ -1288,7 +1287,7 @@ button:active {
 
 <canvas id="particles"></canvas>
 
-<div class="container center-in-screen">
+<div class="container">
     <div class="layout">
         <!-- LEFT PANEL -->
         <div class="left-panel">
@@ -2360,6 +2359,64 @@ window.addEventListener('scroll', () => {
   lastScrollTop = scrollTop;
 }, { passive: true });
 
+</script>
+
+<!-- FOOTER -->
+<footer style="padding:40px 0;margin-top:80px;border-top:none;background:rgba(15,23,42,0.05);backdrop-filter:blur(2px);position:relative;z-index:5;">
+  <div class="container" style="max-width:1400px;margin:0 auto;padding:0 40px;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:40px;margin-bottom:30px;">
+      <div>
+        <div class="logo-main" style="margin-bottom:12px;">AnalyticaX</div>
+        <p style="color:var(--text-soft);font-size:13px;line-height:1.6;margin-bottom:16px;">
+          AI-powered cryptocurrency chart analysis platform. Part of the CyberEx ecosystem.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;">
+          <a href="https://cyberex.com.tr" target="_blank" style="color:var(--neon);text-decoration:none;font-size:12px;padding:6px 12px;border:1px solid rgba(0,229,255,0.3);border-radius:6px;transition:all 0.3s;">CyberEx Platform</a>
+          <a href="https://cyberex.com.tr/web3wallet" target="_blank" style="color:var(--magenta);text-decoration:none;font-size:12px;padding:6px 12px;border:1px solid rgba(255,77,255,0.3);border-radius:6px;transition:all 0.3s;">CyberEx Web3 Wallet</a>
+          <a href="https://cyberex.com.tr/web3extension" target="_blank" style="color:#14f195;text-decoration:none;font-size:12px;padding:6px 12px;border:1px solid rgba(20,241,149,0.3);border-radius:6px;transition:all 0.3s;">CyberEx Extension</a>
+          <a href="https://cyberex.com.tr/web3app" target="_blank" style="color:#627eea;text-decoration:none;font-size:12px;padding:6px 12px;border:1px solid rgba(98,126,234,0.3);border-radius:6px;transition:all 0.3s;">CyberEx Web3 App</a>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:14px;margin-bottom:16px;color:#fff;">Quick Links</h4>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="index.html#how" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">How it works</a>
+          <a href="index.html#features" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Features</a>
+          <a href="index.html#pricing" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Pricing</a>
+          <a href="dashboard.html" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Dashboard</a>
+          <a href="analyze.html" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Analyze</a>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:14px;margin-bottom:16px;color:#fff;">Legal</h4>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="terms-of-service.html" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Terms of Service</a>
+          <a href="privacy-policy.html" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Privacy Policy</a>
+          <a href="disclaimer.html" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Disclaimer</a>
+          <a href="refund-policy.html" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Refund Policy</a>
+          <a href="cookie-policy.html" style="color:var(--text-soft);text-decoration:none;font-size:13px;transition:color 0.3s;">Cookie Policy</a>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:14px;margin-bottom:16px;color:#fff;">Connect</h4>
+        <p style="color:var(--text-soft);font-size:12px;line-height:1.6;margin-bottom:12px;">
+          Payments powered by CyberEx Platform and CyberEx Wallet. Secure, fast, and reliable crypto transactions.
+        </p>
+        <p style="color:var(--text-soft);font-size:12px;">
+          Support: <a href="mailto:support@AnalyticaX.com.tr" style="color:var(--neon);text-decoration:none;">support@AnalyticaX.com.tr</a>
+        </p>
+      </div>
+    </div>
+    <div style="padding-top:24px;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+      <span style="color:var(--text-soft);font-size:12px;">© <span id="footerYear">2025</span> AnalyticaX • All rights reserved.</span>
+      <span style="color:var(--text-soft);font-size:12px;">Analysis only • No investment advice • Powered by <a href="https://cyberex.com.tr" target="_blank" style="color:var(--neon);text-decoration:none;">CyberEx</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Footer year
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
 </script>
 
 </body>
