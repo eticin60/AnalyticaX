@@ -1503,18 +1503,62 @@
         flex-wrap: wrap !important;
         justify-content: center !important;
       }
+      
+      /* AI Robot & Chat Mobile */
+      .ai-robot-container {
+        bottom: 15px !important;
+        right: 15px !important;
+        width: 60px !important;
+        height: 60px !important;
+      }
+      
+      .ai-robot {
+        font-size: 30px !important;
+      }
+      
+      .ai-robot-message {
+        min-width: 240px !important;
+        max-width: calc(100vw - 40px) !important;
+        right: -10px !important;
+      }
+      
+      .ai-chat-widget {
+        width: calc(100vw - 20px) !important;
+        max-width: 400px !important;
+        height: calc(100vh - 100px) !important;
+        max-height: 600px !important;
+        bottom: 80px !important;
+        right: 10px !important;
+      }
     }
-    @media(max-width:640px){
-      .container{width:92%;}
-      .hero-title{font-size:27px;}
-      footer .right{float:none;display:block;margin-top:6px;}
-      .hero-card{padding:18px 16px 18px;}
-      .carousel{height:280px;}
-      .carousel-card{width:230px;}
-      .features-logo{display:none;}
-      .market-header-row{flex-direction:column;align-items:flex-start;}
-      .market-search{width:100%;max-width:none;}
+    
+    @media(max-width: 480px){
+      .ai-robot-container {
+        bottom: 10px !important;
+        right: 10px !important;
+        width: 50px !important;
+        height: 50px !important;
+      }
+      
+      .ai-robot {
+        font-size: 24px !important;
+      }
+      
+      .ai-robot-message {
+        min-width: 200px !important;
+        max-width: calc(100vw - 32px) !important;
+        right: -5px !important;
+        font-size: 12px !important;
+      }
+      
+      .ai-chat-widget {
+        width: calc(100vw - 16px) !important;
+        height: calc(100vh - 80px) !important;
+        bottom: 70px !important;
+        right: 8px !important;
+      }
     }
+    /* Duplicate removed - using the comprehensive 640px media query above */
 
     /* AI ROBOT ASSISTANT */
     .ai-robot-container{
