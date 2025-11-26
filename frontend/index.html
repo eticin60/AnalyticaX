@@ -3478,41 +3478,7 @@
       setTimeout(initAIRobot, 2000);
     }
 
-    // ==== SCROLL HIDE NAVBAR (Throttled for Performance) ====
-    let lastScrollTop = 0;
-    let ticking = false;
-    const navbar = document.querySelector('.navbar');
-    const navBoxes = document.querySelector('.nav-boxes-container');
-    
-    function updateNavbar() {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
-      if (scrollTop > 100) {
-        // Scrolling down - hide navbar
-        if (navbar) navbar.classList.add('scrolled');
-        if (navBoxes) {
-          navBoxes.style.transform = 'translateY(-120%)';
-          navBoxes.style.opacity = '0';
-        }
-      } else {
-        // At top - show navbar
-        if (navbar) navbar.classList.remove('scrolled');
-        if (navBoxes) {
-          navBoxes.style.transform = 'translateY(0)';
-          navBoxes.style.opacity = '1';
-        }
-      }
-      
-      lastScrollTop = scrollTop;
-      ticking = false;
-    }
-    
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        window.requestAnimationFrame(updateNavbar);
-        ticking = true;
-      }
-    }, { passive: true });
+    // Navbar removed - no scroll hide needed
 
     // ==== CAROUSEL AUTO ROTATE ==== (REMOVED - Now using grid layout for features section)
 
