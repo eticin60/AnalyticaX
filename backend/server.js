@@ -164,13 +164,16 @@ app.get("*", (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🔥 Server running on port ${PORT}`);
-  console.log(`🌐 Frontend: http://localhost:${PORT}`);
-  console.log(`📡 API: http://localhost:${PORT}/api`);
+const HOST = process.env.HOST || '0.0.0.0'; // Production için 0.0.0.0 gerekli
+
+app.listen(PORT, HOST, () => {
+  console.log(`🔥 Server running on ${HOST}:${PORT}`);
+  console.log(`🌐 Frontend: http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
+  console.log(`📡 API: http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}/api`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   
-  // Windows'ta otomatik tarayıcı aç (opsiyonel)
-  if (process.platform === 'win32' && process.env.AUTO_OPEN !== 'false') {
+  // Windows'ta otomatik tarayıcı aç (sadece development'ta)
+  if (process.platform === 'win32' && process.env.AUTO_OPEN !== 'false' && !process.env.NODE_ENV) {
     const { exec } = require('child_process');
     setTimeout(() => {
       exec(`start http://localhost:${PORT}`, (err) => {
