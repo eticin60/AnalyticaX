@@ -1,0 +1,36 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://analyticax.com.tr/sitemap.xml
+
+# Disallow admin and private pages
+Disallow: /admin.html
+Disallow: /chat.html
+Disallow: /404.html
+Disallow: /500.html
+Disallow: /maintenance.html
+Disallow: /offline.html
+Disallow: /logout.html
+Disallow: /fail.html
+Disallow: /success.html
+
+# Allow all public pages
+Allow: /index.html
+Allow: /analyze.html
+Allow: /dashboard.html
+Allow: /premium.html
+Allow: /history.html
+Allow: /settings.html
+Allow: /login.html
+Allow: /register.html
+Allow: /otp.html
+Allow: /terms-of-service.html
+Allow: /privacy-policy.html
+Allow: /disclaimer.html
+Allow: /refund-policy.html
+Allow: /cookie-policy.html
+
+# Crawl delay (optional - be nice to servers)
+Crawl-delay: 1
+

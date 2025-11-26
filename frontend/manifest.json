@@ -1,0 +1,46 @@
+{
+  "name": "AnalyticaX - AI Crypto Chart Analysis",
+  "short_name": "AnalyticaX",
+  "description": "AI-powered cryptocurrency and stock chart analysis platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#00E5FF",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "assets/AnalyticaX.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/AnalyticaX.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "business", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Analyze Chart",
+      "short_name": "Analyze",
+      "description": "Upload and analyze crypto charts",
+      "url": "/analyze.html",
+      "icons": [{ "src": "assets/AnalyticaX.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View your analysis history",
+      "url": "/dashboard.html",
+      "icons": [{ "src": "assets/AnalyticaX.png", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
+

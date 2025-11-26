@@ -2,8 +2,30 @@
 <html lang="en" data-lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="AnalyticaX" />
+  <meta name="theme-color" content="#00E5FF" />
+  <meta name="msapplication-TileColor" content="#00E5FF" />
+  <meta name="msapplication-config" content="/browserconfig.xml" />
   <title>AnalyticaX – AI Powered Crypto Chart Analysis | Kripto Para Analiz | Hisse Analiz</title>
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+  
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" href="assets/AnalyticaX.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="assets/AnalyticaX.png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="assets/AnalyticaX.png" />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/AnalyticaX.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/AnalyticaX.png" />
+  
+  <!-- Google Search Console Verification (Add your verification code here) -->
+  <meta name="google-site-verification" content="" />
   <meta name="description" content="AI-powered cryptocurrency and stock chart analysis platform. Analyze BTC, ETH, stocks with professional AI insights. Kripto para analiz, hisse analiz, teknik analiz." />
   <meta name="keywords" content="crypto analysis, kripto para analiz, cryptocurrency analysis, bitcoin analysis, ethereum analysis, stock analysis, hisse analiz, technical analysis, AI trading, chart analysis, crypto chart, trading analysis, BTC analysis, ETH analysis, AI crypto, blockchain analysis" />
   <meta name="author" content="AnalyticaX" />
@@ -1228,6 +1250,27 @@
       50%{transform:translateX(-50%) translateY(10px);}
     }
 
+    /* PERFORMANCE OPTIMIZATIONS */
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+    img {
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+    .carousel-card, .price-card, .feature-card, .about-card {
+      will-change: transform;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    
     /* RESPONSIVE */
     @media(max-width:1400px){
       .nav-links{gap:20px;font-size:13px;padding:10px 16px;}
@@ -3285,12 +3328,13 @@
       setTimeout(initAIRobot, 2000);
     }
 
-    // ==== SCROLL HIDE NAVBAR ====
+    // ==== SCROLL HIDE NAVBAR (Throttled for Performance) ====
     let lastScrollTop = 0;
+    let ticking = false;
     const navbar = document.querySelector('.navbar');
     const navBoxes = document.querySelector('.nav-boxes-container');
     
-    window.addEventListener('scroll', () => {
+    function updateNavbar() {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       
       if (scrollTop > 100) {
@@ -3310,6 +3354,14 @@
       }
       
       lastScrollTop = scrollTop;
+      ticking = false;
+    }
+    
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateNavbar);
+        ticking = true;
+      }
     }, { passive: true });
 
     // ==== CAROUSEL AUTO ROTATE ==== (REMOVED - Now using grid layout for features section)
@@ -3319,6 +3371,176 @@
       document.addEventListener('DOMContentLoaded', initializePage);
     } else {
       initializePage();
+    }
+    
+    // ==== PWA SERVICE WORKER REGISTRATION ====
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then((registration) => {
+            console.log('[PWA] Service Worker registered:', registration.scope);
+            
+            // Check for updates
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('[PWA] New version available!');
+                  // Optional: Show update notification
+                }
+              });
+            });
+          })
+          .catch((error) => {
+            console.warn('[PWA] Service Worker registration failed:', error);
+          });
+      });
+    }
+    
+    // ==== INSTALL APP PROMPT ====
+    let deferredPrompt;
+    const installBanner = document.createElement('div');
+    installBanner.id = 'installBanner';
+    installBanner.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, rgba(15,23,42,0.98), rgba(30,41,59,0.95));
+      border: 1px solid rgba(0,229,255,0.4);
+      border-radius: 16px;
+      padding: 16px 20px;
+      box-shadow: 0 8px 32px rgba(0,229,255,0.2), 0 0 40px rgba(0,229,255,0.1);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      gap: 16px;
+      max-width: 90%;
+      width: auto;
+      backdrop-filter: blur(20px) saturate(180%);
+      animation: slideUp 0.3s ease;
+    `;
+    installBanner.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <img src="assets/AnalyticaX.png" alt="AnalyticaX" style="width: 40px; height: 40px; border-radius: 8px;" />
+        <div>
+          <div style="font-weight: 600; font-size: 14px; color: #fff; margin-bottom: 2px;">Install AnalyticaX</div>
+          <div style="font-size: 12px; color: rgba(255,255,255,0.7);">Add to home screen for quick access</div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button id="installBtn" style="
+          background: linear-gradient(135deg, var(--neon), var(--magenta));
+          color: #020617;
+          border: none;
+          border-radius: 8px;
+          padding: 8px 16px;
+          font-size: 13px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          white-space: nowrap;
+        ">Install</button>
+        <button id="dismissInstall" style="
+          background: transparent;
+          color: rgba(255,255,255,0.7);
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 8px;
+          padding: 8px 12px;
+          font-size: 13px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        ">✕</button>
+      </div>
+    `;
+    document.body.appendChild(installBanner);
+    
+    // Show install prompt when available
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      
+      // Check if already installed
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        return; // Already installed
+      }
+      
+      // Show banner after 3 seconds
+      setTimeout(() => {
+        installBanner.style.display = 'flex';
+      }, 3000);
+    });
+    
+    // Install button click
+    document.getElementById('installBtn')?.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      
+      if (outcome === 'accepted') {
+        console.log('[PWA] User accepted install prompt');
+        installBanner.style.display = 'none';
+      } else {
+        console.log('[PWA] User dismissed install prompt');
+      }
+      
+      deferredPrompt = null;
+    });
+    
+    // Dismiss button
+    document.getElementById('dismissInstall')?.addEventListener('click', () => {
+      installBanner.style.display = 'none';
+      // Remember dismissal for 7 days
+      localStorage.setItem('installBannerDismissed', Date.now().toString());
+    });
+    
+    // Check if dismissed recently
+    const dismissed = localStorage.getItem('installBannerDismissed');
+    if (dismissed) {
+      const dismissedTime = parseInt(dismissed);
+      const daysSinceDismissed = (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24);
+      if (daysSinceDismissed < 7) {
+        // Don't show if dismissed within 7 days
+        installBanner.style.display = 'none';
+      }
+    }
+    
+    // Add CSS animation
+    if (!document.getElementById('installBannerStyle')) {
+      const style = document.createElement('style');
+      style.id = 'installBannerStyle';
+      style.textContent = `
+        @keyframes slideUp {
+          from {
+            transform: translateX(-50%) translateY(100px);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+          }
+        }
+        @media (max-width: 640px) {
+          #installBanner {
+            flex-direction: column;
+            gap: 12px;
+            padding: 14px 16px;
+            max-width: calc(100% - 20px);
+          }
+          #installBanner > div:first-child {
+            width: 100%;
+          }
+          #installBanner > div:last-child {
+            width: 100%;
+            justify-content: stretch;
+          }
+          #installBtn, #dismissInstall {
+            flex: 1;
+          }
+        }
+      `;
+      document.head.appendChild(style);
     }
     
     window.addEventListener("load", () => {
