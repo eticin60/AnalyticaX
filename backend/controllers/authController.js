@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
+const { sendOTPEmail } = require("../utils/emailService");
 
 let otpStore = {};
 let loginAttempts = {};
@@ -137,10 +138,12 @@ exports.login = async (req, res) => {
           newIp: ip,
         };
         console.log("OTP for", user.email, "=", otp);
+        // Email ile OTP gönder
+        await sendOTPEmail(user.email, otp);
         return res.json({
           ok: false,
           otpRequired: true,
-          message: "New device detected. OTP verification needed."
+          message: "New device detected. OTP verification needed. Check your email."
         });
       }
     }
@@ -160,10 +163,12 @@ exports.login = async (req, res) => {
           newIp: ip,
         };
         console.log("OTP for", user.email, "=", otp);
+        // Email ile OTP gönder
+        await sendOTPEmail(user.email, otp);
         return res.json({
           ok: false,
           otpRequired: true,
-          message: "Browser changed. OTP verification needed."
+          message: "Browser changed. OTP verification needed. Check your email."
         });
       }
     }
@@ -179,11 +184,13 @@ exports.login = async (req, res) => {
       };
 
       console.log("OTP for", user.email, "=", otp);
+      // Email ile OTP gönder
+      await sendOTPEmail(user.email, otp);
 
       return res.json({
         ok: false,
         otpRequired: true,
-        message: "IP changed. OTP verification needed."
+        message: "IP changed. OTP verification needed. Check your email."
       });
     }
 
