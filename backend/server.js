@@ -112,17 +112,25 @@ app.get("/api/binance/ohlc", async (req, res) => {
     }
 });
 
+// Body parser - MUST be before routes
 app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 // API root - MUST be before other routes
 app.get("/api", (req, res) => {
   res.json({ ok: true, message: "AnalyticaX backend running 🚀" });
 });
 
-// API routes
+// API routes - MUST be before static files
 app.use("/api/auth", authRoutes);
 app.use("/api/analysis", analysisRoutes);
 app.use("/api/payments", paymentRoutes);
+
+// Debug: Log all API requests
+app.use("/api/*", (req, res, next) => {
+  console.log(`📡 API Request: ${req.method} ${req.path}`);
+  next();
+});
 
 // Serve frontend static files
 const path = require("path");
