@@ -13,6 +13,12 @@ const {
 
 const { protect } = require("../middleware/authMiddleware");
 
+// Debug middleware
+router.use((req, res, next) => {
+  console.log(`🔍 Auth route: ${req.method} ${req.path}`);
+  next();
+});
+
 router.post("/register", register);
 router.post("/login", login);
 router.post("/verify-otp", verifyOtp);
