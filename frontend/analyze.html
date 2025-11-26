@@ -1286,7 +1286,6 @@ button:active {
   </div>
 </div>
 
-<img src="assets/AnalyticaX.png" class="big-logo" alt="AnalyticaX Logo">
 <canvas id="particles"></canvas>
 
 <div class="container center-in-screen">
@@ -1509,46 +1508,57 @@ const COIN_THEMES = {
         spark: "linear-gradient(90deg,#f0b90b,#ffce45,#ffe391)"
     }
 };
-/* PARTICLES BACKGROUND */
+/* PARTICLES BACKGROUND (Dashboard ile aynı) */
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 let particles = [];
+const PARTICLE_COUNT = 80;
 
-function resize(){
+function resizeCanvas(){
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
-resize();
-window.addEventListener("resize", resize);
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
 
-class Particle{
-  constructor(){
-    this.x = Math.random()*canvas.width;
-    this.y = Math.random()*canvas.height;
-    this.size = Math.random()*2+1;
-    this.speedY = Math.random()*0.6+0.2;
-    this.alpha = Math.random()*0.5+0.25;
+function createParticles(){
+  particles = [];
+  for(let i=0;i<PARTICLE_COUNT;i++){
+    particles.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      r: Math.random()*2+0.5,
+      vx:(Math.random()-0.5)*0.2,
+      vy:(Math.random()-0.5)*0.2,
+      alpha: Math.random()*0.6+0.2
+    });
   }
-  update(){
-    this.y += this.speedY;
-    if(this.y > canvas.height) this.y = 0;
-  }
-  draw(){
-    ctx.fillStyle = `rgba(0,150,255,${this.alpha})`;
+}
+createParticles();
+
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(const p of particles){
+    p.x+=p.vx;
+    p.y+=p.vy;
+    if(p.x<0)p.x=canvas.width;
+    if(p.x>canvas.width)p.x=0;
+    if(p.y<0)p.y=canvas.height;
+    if(p.y>canvas.height)p.y=0;
+
+    const gradient = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*6);
+    gradient.addColorStop(0,`rgba(0,229,255,${p.alpha})`);
+    gradient.addColorStop(0.4,`rgba(255,77,255,${p.alpha*0.7})`);
+    gradient.addColorStop(1,"rgba(0,0,0,0)");
+
+    ctx.fillStyle = gradient;
     ctx.beginPath();
-    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.arc(p.x,p.y,p.r*6,0,Math.PI*2);
     ctx.fill();
   }
+  requestAnimationFrame(drawParticles);
 }
-
-for(let i=0;i<200;i++) particles.push(new Particle());
-
-function animate(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach(p=>{p.update();p.draw();});
-  requestAnimationFrame(animate);
-}
-animate();
+drawParticles();
 
 /* DROPZONE LOGIC */
 const dropzone = document.getElementById("dropzone");
@@ -1766,7 +1776,7 @@ async function analyze() {
         try {
             const base64 = reader.result;
 
-            const aiRes = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/analysis/chart", {
+            const aiRes = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/analysis/chart`, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json",
@@ -1929,7 +1939,7 @@ function updateRightPanelFromAI(ai, timeframe){
 
 async function fetchOHLC(symbol, interval) {
 
-    const url = `${window.API_BASE || 'https://analyticax.com.tr'}/api/binance/ohlc?symbol=${symbol}&interval=${interval}`;
+    const url = `${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/binance/ohlc?symbol=${symbol}&interval=${interval}`;
 
     try {
         const res = await fetch(url);
@@ -2296,7 +2306,7 @@ async function loadUserCredits(){
     }
     
     try {
-        const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/me", {
+        const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/auth/me`, {
             headers: {
                 "Authorization": "Bearer " + token,
                 "x-device-id": localStorage.getItem("ax_device_id"),
