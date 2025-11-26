@@ -30,10 +30,21 @@ body{
 }
 
 /* BACKGROUND LAYERS */
+#particles {
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1 !important;
+  pointer-events: none;
+  transform: translateZ(0);
+}
 canvas#bgParticles{
   position:fixed;
   inset:0;
   z-index:-3;
+  display:none; /* Hide old particles, use new one */
 }
 .bg-grid{
   position:fixed;
@@ -459,6 +470,7 @@ footer{
 
 <body>
 
+<canvas id="particles"></canvas>
 <canvas id="bgParticles"></canvas>
 <div class="bg-grid"></div>
 
@@ -554,26 +566,59 @@ if(!token) {
 
 /* Load User Info */
 async function loadUser() {
-  const r = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/me", {
-    headers:{Authorization:"Bearer "+token}
-  });
-  const d = await r.json();
+  try {
+    const API_BASE = window.API_BASE || 'https://analyticax.com.tr';
+    const r = await fetch(`${API_BASE}/api/auth/me`, {
+      headers:{Authorization:"Bearer "+token}
+    });
+    
+    if(!r.ok) {
+      console.error("Failed to load user:", r.status);
+      if(r.status === 401) {
+        localStorage.removeItem("ax_token");
+        window.location.href = "login.html";
+        return;
+      }
+    }
+    
+    const d = await r.json();
+    
+    if(!d.ok) {
+      console.error("User data error:", d.error || d.message);
+      if(d.error && d.error.includes("expired")) {
+        localStorage.removeItem("ax_token");
+        window.location.href = "login.html";
+        return;
+      }
+    }
 
-  document.getElementById("navCredits").textContent = "Credits: " + d.credits;
-  document.getElementById("userEmail").textContent = d.email;
-  document.getElementById("userAvatar").textContent = d.email[0].toUpperCase();
+    document.getElementById("navCredits").textContent = "Credits: " + (d.credits || 0);
+    document.getElementById("userEmail").textContent = d.email || "User";
+    document.getElementById("userAvatar").textContent = (d.email || "U")[0].toUpperCase();
+  } catch(err) {
+    console.error("Load user error:", err);
+  }
 }
 loadUser();
 
-document.getElementById("btnLogout").onclick = ()=>{
+function logoutUser() {
   localStorage.removeItem("ax_token");
-  location.href="login.html";
+  localStorage.removeItem("ax_device_id");
+  localStorage.removeItem("ax_fingerprint");
+  window.location.href = "login.html";
+}
+
+document.getElementById("btnLogout").onclick = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  logoutUser();
 };
 
 /* Load History */
 async function loadHistory() {
   try {
-  const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/analysis/history", {
+    const API_BASE = window.API_BASE || 'https://analyticax.com.tr';
+    const res = await fetch(`${API_BASE}/api/analysis/history`, {
       headers:{
         "Authorization":"Bearer "+token,
         "x-device-id": localStorage.getItem("ax_device_id"),
@@ -582,7 +627,13 @@ async function loadHistory() {
     });
 
     if(!res.ok) {
-      document.getElementById("historyGrid").innerHTML = "<div style='color:#f97373'>Error loading history. Please try again.</div>";
+      console.error("History load failed:", res.status, res.statusText);
+      if(res.status === 401) {
+        localStorage.removeItem("ax_token");
+        window.location.href = "login.html";
+        return;
+      }
+      document.getElementById("historyGrid").innerHTML = `<div style='color:#f97373; text-align:center; padding:40px;'>Error loading history (${res.status}). Please try again.</div>`;
       return;
     }
 
@@ -815,57 +866,46 @@ document.getElementById("modal")?.addEventListener("click", (e) => {
   if(e.target.id === "modal") closeModal();
 });
 
-// ==== PARTICLE BACKGROUND ====
-const canvas = document.getElementById("bgParticles");
+// ==== PARTICLE BACKGROUND (Analyze.html style) ====
+const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 let particles = [];
-const PARTICLE_COUNT = 80;
 
-function resizeCanvas(){
+function resize(){
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
-window.addEventListener("resize", resizeCanvas);
-resizeCanvas();
+resize();
+window.addEventListener("resize", resize);
 
-function createParticles(){
-  particles = [];
-  for(let i=0;i<PARTICLE_COUNT;i++){
-    particles.push({
-      x: Math.random()*canvas.width,
-      y: Math.random()*canvas.height,
-      r: Math.random()*2+0.5,
-      vx:(Math.random()-0.5)*0.2,
-      vy:(Math.random()-0.5)*0.2,
-      alpha: Math.random()*0.6+0.2
-    });
+class Particle{
+  constructor(){
+    this.x = Math.random()*canvas.width;
+    this.y = Math.random()*canvas.height;
+    this.size = Math.random()*2+1;
+    this.speedY = Math.random()*0.6+0.2;
+    this.alpha = Math.random()*0.5+0.25;
   }
-}
-createParticles();
-
-function drawParticles(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  for(const p of particles){
-    p.x+=p.vx;
-    p.y+=p.vy;
-    if(p.x<0)p.x=canvas.width;
-    if(p.x>canvas.width)p.x=0;
-    if(p.y<0)p.y=canvas.height;
-    if(p.y>canvas.height)p.y=0;
-
-    const gradient = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*6);
-    gradient.addColorStop(0,`rgba(0,229,255,${p.alpha})`);
-    gradient.addColorStop(0.4,`rgba(255,77,255,${p.alpha*0.7})`);
-    gradient.addColorStop(1,"rgba(0,0,0,0)");
-
-    ctx.fillStyle = gradient;
+  update(){
+    this.y += this.speedY;
+    if(this.y > canvas.height) this.y = 0;
+  }
+  draw(){
+    ctx.fillStyle = `rgba(0,150,255,${this.alpha})`;
     ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r*6,0,Math.PI*2);
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
     ctx.fill();
   }
-  requestAnimationFrame(drawParticles);
 }
-drawParticles();
+
+for(let i=0;i<200;i++) particles.push(new Particle());
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{p.update();p.draw();});
+  requestAnimationFrame(animate);
+}
+animate();
 
 // ==== SCROLL HIDE NAVBAR ====
 let lastScrollTop = 0;
