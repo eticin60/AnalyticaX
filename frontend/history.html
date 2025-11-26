@@ -637,12 +637,18 @@ async function loadHistory() {
       return;
     }
 
-  const list = await res.json();
-  const grid = document.getElementById("historyGrid");
+    const list = await res.json();
+    
+    if(!list || !Array.isArray(list)) {
+      console.error("Invalid history data:", list);
+      document.getElementById("historyGrid").innerHTML = `<div style='color:#f97373; text-align:center; padding:40px;'>Invalid data received from server.</div>`;
+      return;
+    }
+    
+    const grid = document.getElementById("historyGrid");
+    grid.innerHTML = "";
 
-  grid.innerHTML = "";
-
-  if(!Array.isArray(list) || list.length===0){
+    if(list.length === 0){
       grid.innerHTML = `
         <div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-soft);">
           <div style="font-size:48px; margin-bottom:16px;">📊</div>
