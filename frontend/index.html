@@ -140,6 +140,7 @@
       border-radius:16px;
       margin:0;
       transition:transform 0.3s ease, opacity 0.3s ease;
+      overflow:visible;
     }
     .navbar.scrolled{
       transform:translateX(-50%) translateY(-120%);
@@ -1886,7 +1887,7 @@
   <!-- NAVBAR -->
   <header class="navbar">
     <!-- Center Logo -->
-    <div class="nav-brand" onclick="window.location.href='index.html'" style="position:absolute;left:50%;top:20px;transform:translateX(-50%);margin:0;z-index:10;width:auto;max-width:400px;pointer-events:auto;">
+    <div class="nav-brand" onclick="window.location.href='index.html'" style="position:absolute;left:50%;transform:translateX(-50%);margin:0;z-index:10;">
       <div class="logo-main" style="display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;padding:0;">
         <img src="assets/AnalyticaX.png" alt="AnalyticaX Logo" style="height:140px;width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 0 25px rgba(0,229,255,0.6)) drop-shadow(0 0 50px rgba(255,77,255,0.4));transition:all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)';this.style.filter='drop-shadow(0 0 35px rgba(0,229,255,0.8)) drop-shadow(0 0 70px rgba(255,77,255,0.6))'" onmouseout="this.style.transform='scale(1)';this.style.filter='drop-shadow(0 0 25px rgba(0,229,255,0.6)) drop-shadow(0 0 50px rgba(255,77,255,0.4))'">
         <div class="logo-sub" style="font-size:11px;color:rgba(255,255,255,0.75);font-weight:400;letter-spacing:0.08em;display:block;margin-top:-4px;text-shadow:0 0 10px rgba(0,229,255,0.3);white-space:nowrap;">AI Powered Crypto Chart Analysis</div>
