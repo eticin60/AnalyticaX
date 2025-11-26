@@ -3312,43 +3312,7 @@
       lastScrollTop = scrollTop;
     }, { passive: true });
 
-    // ==== CAROUSEL AUTO ROTATE ====
-    function initCarousel() {
-      const cards = document.querySelectorAll('.carousel-card');
-      if (cards.length === 0) return;
-      
-      let currentIndex = 0;
-      
-      function updateCarousel() {
-        cards.forEach((card, index) => {
-          card.classList.remove('active', 'prev', 'next');
-          
-          if (index === currentIndex) {
-            card.classList.add('active');
-          } else if (index === (currentIndex - 1 + cards.length) % cards.length) {
-            card.classList.add('prev');
-          } else if (index === (currentIndex + 1) % cards.length) {
-            card.classList.add('next');
-          }
-        });
-      }
-      
-      // Initialize
-      updateCarousel();
-      
-      // Auto rotate every 4 seconds
-      setInterval(() => {
-        currentIndex = (currentIndex + 1) % cards.length;
-        updateCarousel();
-      }, 4000);
-    }
-    
-    // Initialize carousel when DOM is ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initCarousel);
-    } else {
-      initCarousel();
-    }
+    // ==== CAROUSEL AUTO ROTATE ==== (REMOVED - Now using grid layout for features section)
 
     // Try multiple ways to ensure it loads
     if (document.readyState === 'loading') {
