@@ -35,36 +35,16 @@
         color: #fff;
     }
 
-    /* NAVBAR */
+    /* NAVBAR - Hidden, only logo visible */
     .navbar{
-      position:fixed;
-      top:20px;
-      left:50%;
-      transform:translateX(-50%);
-      width:calc(100% - 80px);
-      max-width:1400px;
-      padding:14px 32px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:0;
-      backdrop-filter:blur(20px) saturate(180%);
-      background:rgba(15,10,25,0.7);
-      border:none;
-      box-shadow:0 4px 20px rgba(0,0,0,0.3);
-      z-index:50;
-      border-radius:16px;
-      margin:0;
-    }
-    .navbar .nav-brand{
-      position:absolute;
-      left:50%;
-      transform:translateX(-50%);
-      margin:0;
-      z-index:10;
-      cursor:pointer;
+      display:none !important;
+      visibility:hidden !important;
     }
     .nav-brand{
+      position:fixed;
+      top:30px;
+      left:50%;
+      transform:translateX(-50%);
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -78,6 +58,8 @@
       border-radius:16px;
       box-shadow:0 8px 32px rgba(0,229,255,0.3), 0 0 60px rgba(255,77,255,0.2);
       backdrop-filter:blur(30px) saturate(180%);
+      z-index:100;
+      margin:0;
     }
     .nav-brand:hover{
       transform:translateX(-50%) translateY(-2px);
