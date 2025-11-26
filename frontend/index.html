@@ -127,7 +127,7 @@
       width:calc(100% - 80px);
       max-width:1400px;
       min-height:180px; /* Logo için minimum yükseklik */
-      padding:180px 32px 20px 32px; /* Üstte logo için alan, altta normal padding */
+      padding:180px 32px 20px 32px; /* Üstte logo için alan (180px), altta normal padding (20px) */
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
@@ -140,6 +140,7 @@
       border-radius:16px;
       margin:0;
       transition:transform 0.3s ease, opacity 0.3s ease;
+      overflow:visible; /* Logo taşmasını engellemek için */
     }
     .navbar.scrolled{
       transform:translateX(-50%) translateY(-120%);
