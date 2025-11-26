@@ -644,8 +644,8 @@
             methodCard.classList.add("selected");
             // Auto-advance to step 2 if method is already selected
             if(currentStep === 1) {
-              if(selectedMethod === "OXAPAY") {
-                // For OxaPay, skip wallet step
+              if(selectedMethod === "OXAPAY" || selectedMethod === "SHOPIER" || selectedMethod === "BINANCE-PAY") {
+                // For gateway methods, skip wallet step
                 currentStep = 2;
                 nextStep();
               } else {
@@ -815,8 +815,8 @@
     const btnContinue2 = document.getElementById("btnContinue2");
     if(btnContinue2) {
       btnContinue2.addEventListener("click", () => {
-        // Skip wallet address for OxaPay
-        if(selectedMethod === "OXAPAY") {
+        // Skip wallet address for gateway methods
+        if(selectedMethod === "OXAPAY" || selectedMethod === "SHOPIER" || selectedMethod === "BINANCE-PAY") {
           nextStep();
           return;
         }
