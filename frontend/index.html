@@ -288,12 +288,12 @@
     }
     .nav-links{
       display:flex;
-      gap:28px;
-      font-size:14px;
+      gap:clamp(12px, 2vw, 28px);
+      font-size:clamp(11px, 1.2vw, 14px);
       color:rgba(255,255,255,0.95);
       align-items:center;
       justify-content:flex-start;
-      padding:12px 20px;
+      padding:clamp(8px, 1.2vw, 12px) clamp(12px, 1.8vw, 20px);
       background:linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));
       border:1px solid rgba(0,229,255,0.3);
       border-radius:16px;
@@ -334,12 +334,13 @@
     }
     .nav-links a{
       position:relative;
-      padding:8px 16px;
+      padding:clamp(6px, 0.8vw, 8px) clamp(10px, 1.2vw, 16px);
       border-radius:8px;
       transition:all 0.3s ease;
       font-weight:400;
       background:transparent;
       text-decoration:none;
+      font-size:clamp(11px, 1.2vw, 14px);
     }
     .nav-links a::after{
       content:'';
@@ -369,11 +370,11 @@
 
     .nav-actions{
       display:flex;
-      gap:24px;
+      gap:clamp(12px, 1.8vw, 24px);
       align-items:center;
-      font-size:14px;
+      font-size:clamp(11px, 1.2vw, 14px);
       flex-wrap:wrap;
-      padding:12px 20px;
+      padding:clamp(8px, 1.2vw, 12px) clamp(12px, 1.8vw, 20px);
       background:linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));
       border:1px solid rgba(255,77,255,0.3);
       border-radius:16px;
@@ -1896,7 +1897,7 @@
     </div>  </header>
 
   <!-- Navigation Boxes (Below Navbar) -->
-  <div style="position:fixed;top:200px;left:0;right:0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:0 40px;pointer-events:none;transition:transform 0.3s ease, opacity 0.3s ease;" class="nav-boxes-container">
+  <div style="position:fixed;top:200px;left:0;right:0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:0 clamp(20px, 3vw, 40px);pointer-events:none;transition:transform 0.3s ease, opacity 0.3s ease;max-width:1400px;margin:0 auto;left:50%;transform:translateX(-50%);" class="nav-boxes-container">
     <!-- Left Navigation Links -->
     <nav class="nav-links" style="position:static;flex:0 0 auto;pointer-events:auto;">
       <a href="index.html#how" data-i18n="nav.how">How it works</a>
@@ -1910,13 +1911,13 @@
     <!-- Right Actions -->
     <div class="nav-actions" style="position:static;flex:0 0 auto;pointer-events:auto;">
       <div id="navLoggedOut" style="display:flex;gap:24px;align-items:center;">
-        <a href="login.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:400;transition:all 0.3s ease;position:relative;" data-i18n="nav.login">Log in</a>
-        <a href="register.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:400;transition:all 0.3s ease;position:relative;" data-i18n="nav.startFree">Start free</a>
+        <a href="login.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:clamp(11px, 1.2vw, 14px);font-weight:400;transition:all 0.3s ease;position:relative;" data-i18n="nav.login">Log in</a>
+        <a href="register.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:clamp(11px, 1.2vw, 14px);font-weight:400;transition:all 0.3s ease;position:relative;" data-i18n="nav.startFree">Start free</a>
       </div>
       <div id="navLoggedIn" style="display:none;gap:24px;align-items:center;flex-direction:row;flex-wrap:nowrap;">
         <!-- Action Buttons -->
-        <a href="dashboard.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:400;transition:all 0.3s ease;white-space:nowrap;position:relative;" data-i18n="nav.dashboard">Dashboard</a>
-        <a href="analyze.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:400;transition:all 0.3s ease;white-space:nowrap;display:flex;align-items:center;gap:4px;position:relative;" data-i18n="nav.analyze">
+        <a href="dashboard.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:clamp(11px, 1.2vw, 14px);font-weight:400;transition:all 0.3s ease;white-space:nowrap;position:relative;" data-i18n="nav.dashboard">Dashboard</a>
+        <a href="analyze.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:clamp(11px, 1.2vw, 14px);font-weight:400;transition:all 0.3s ease;white-space:nowrap;display:flex;align-items:center;gap:4px;position:relative;" data-i18n="nav.analyze">
           <span>Analyze</span>
           <span style="font-size:12px;">↗</span>
         </a>
@@ -1924,16 +1925,16 @@
         <div style="display:flex;align-items:center;gap:12px;padding-left:12px;border-left:1px solid rgba(255,255,255,0.15);">
           <div id="userProfileAvatar" style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--neon),var(--magenta));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#020617;flex-shrink:0;cursor:pointer;" onclick="window.location.href='settings.html'">U</div>
           <div style="display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;cursor:pointer;" onclick="window.location.href='settings.html'">
-            <div id="userProfileEmail" style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;color:#fff;">user@email.com</div>
-            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-              <div id="userProfilePlan" style="font-size:10px;color:rgba(255,255,255,0.7);">Free</div>
+            <div id="userProfileEmail" style="font-size:clamp(10px, 1vw, 12px);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:clamp(100px, 12vw, 140px);color:#fff;">user@email.com</div>
+            <div style="display:flex;align-items:center;gap:clamp(4px, 0.6vw, 6px);flex-wrap:wrap;">
+              <div id="userProfilePlan" style="font-size:clamp(9px, 0.9vw, 10px);color:rgba(255,255,255,0.7);">Free</div>
               <div style="width:1px;height:10px;background:rgba(255,255,255,0.2);"></div>
-              <div id="userCreditsBadge" style="font-size:10px;color:rgba(255,255,255,0.9);font-weight:600;">
+              <div id="userCreditsBadge" style="font-size:clamp(9px, 0.9vw, 10px);color:rgba(255,255,255,0.9);font-weight:600;">
                 <span id="userCreditsCount">0</span> Credits
               </div>
             </div>
           </div>
-          <button id="btnLogoutNav" onclick="event.stopPropagation();logoutUser();" style="padding:4px 8px;font-size:10px;color:rgba(249,115,115,1);border:1px solid rgba(249,115,115,0.5);border-radius:6px;white-space:nowrap;background:transparent;cursor:pointer;transition:all 0.3s ease;font-weight:500;line-height:1;" onmouseover="this.style.background='rgba(249,115,115,0.15)';this.style.borderColor='rgba(249,115,115,0.7)'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(249,115,115,0.5)'">
+          <button id="btnLogoutNav" onclick="event.stopPropagation();logoutUser();" style="padding:clamp(3px, 0.5vw, 4px) clamp(6px, 0.8vw, 8px);font-size:clamp(9px, 0.9vw, 10px);color:rgba(249,115,115,1);border:1px solid rgba(249,115,115,0.5);border-radius:6px;white-space:nowrap;background:transparent;cursor:pointer;transition:all 0.3s ease;font-weight:500;line-height:1;" onmouseover="this.style.background='rgba(249,115,115,0.15)';this.style.borderColor='rgba(249,115,115,0.7)'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(249,115,115,0.5)'">
             <span data-i18n="nav.logout">Logout</span>
           </button>
         </div>
