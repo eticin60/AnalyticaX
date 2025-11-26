@@ -127,19 +127,20 @@ app.get("/404.html", (req, res) => {
 });
 
 // Serve index.html for all other non-API routes (ONLY GET requests)
+// IMPORTANT: This must be LAST and only handle GET requests
 app.get("*", (req, res) => {
-  if (!req.path.startsWith("/api")) {
-    // Check if file exists, otherwise serve 404
-    const filePath = path.join(__dirname, "../frontend", req.path);
-    const fs = require("fs");
-    if (fs.existsSync(filePath) && req.path.endsWith(".html")) {
-      res.sendFile(filePath);
-    } else {
-      res.sendFile(path.join(__dirname, "../frontend/index.html"));
-    }
+  // Never handle API routes here - they should be handled by API routes above
+  if (req.path.startsWith("/api")) {
+    return res.status(404).json({ ok: false, error: "API endpoint not found" });
+  }
+  
+  // Check if file exists, otherwise serve index.html
+  const filePath = path.join(__dirname, "../frontend", req.path);
+  const fs = require("fs");
+  if (fs.existsSync(filePath) && req.path.endsWith(".html")) {
+    res.sendFile(filePath);
   } else {
-    // API route but method not allowed - return proper error
-    res.status(405).json({ ok: false, error: "Method not allowed" });
+    res.sendFile(path.join(__dirname, "../frontend/index.html"));
   }
 });
 
