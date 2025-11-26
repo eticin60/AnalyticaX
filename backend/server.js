@@ -1,4 +1,7 @@
-require("dotenv").config();
+// Load .env file only in development (Railway uses environment variables directly)
+if (process.env.NODE_ENV !== 'production') {
+  require("dotenv").config();
+}
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
