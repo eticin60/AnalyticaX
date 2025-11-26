@@ -730,11 +730,14 @@
           
           // Hide wallet section for OxaPay
           const walletSection = document.querySelector("#panel2 .wallet-section");
+          const warningBox = document.querySelector("#panel2 .warning-box");
           if(walletSection) {
             if(selectedMethod === "OXAPAY") {
               walletSection.style.display = "none";
+              if(warningBox) warningBox.style.display = "none";
             } else {
               walletSection.style.display = "block";
+              if(warningBox) warningBox.style.display = "block";
             }
           }
         }
@@ -744,7 +747,7 @@
           const payAddressEl = document.getElementById("payAddress");
           const payAmountEl = document.getElementById("payAmount");
           const payNetworkEl = document.getElementById("payNetwork");
-          if(payAddressEl) payAddressEl.textContent = "OxaPay Gateway";
+          if(payAddressEl) payAddressEl.textContent = "OxaPay Gateway - Payment completed in new tab";
           if(payAmountEl) payAmountEl.textContent = `$${selectedPlan.price} USD`;
           if(payNetworkEl) payNetworkEl.textContent = "OxaPay";
           // Open OxaPay in new tab if not already opened
