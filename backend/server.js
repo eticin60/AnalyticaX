@@ -103,6 +103,12 @@ app.get("/api/binance/ohlc", async (req, res) => {
 
 app.use(express.json({ limit: "50mb" }));
 
+// API root - MUST be before other routes
+app.get("/api", (req, res) => {
+  res.json({ ok: true, message: "AnalyticaX backend running 🚀" });
+});
+
+// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/analysis", analysisRoutes);
 app.use("/api/payments", paymentRoutes);
@@ -110,11 +116,6 @@ app.use("/api/payments", paymentRoutes);
 // Serve frontend static files
 const path = require("path");
 app.use(express.static(path.join(__dirname, "../frontend")));
-
-// API root
-app.get("/api", (req, res) => {
-  res.json({ ok: true, message: "AnalyticaX backend running 🚀" });
-});
 
 // Serve specific HTML files
 app.get("/verify-payment.html", (req, res) => {
