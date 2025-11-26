@@ -135,36 +135,49 @@ app.use("/api/auth", authRoutes);
 app.use("/api/analysis", analysisRoutes);
 app.use("/api/payments", paymentRoutes);
 
-// Serve frontend static files
-const path = require("path");
-app.use(express.static(path.join(__dirname, "../frontend")));
+// In production (Railway), frontend is served by GitHub Pages
+// Backend only serves API endpoints
+if (process.env.NODE_ENV !== 'production') {
+  // Serve frontend static files only in development
+  const path = require("path");
+  app.use(express.static(path.join(__dirname, "../frontend")));
 
-// Serve specific HTML files
-app.get("/verify-payment.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/verify-payment.html"));
-});
+  // Serve specific HTML files
+  app.get("/verify-payment.html", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/verify-payment.html"));
+  });
 
-app.get("/404.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/404.html"));
-});
+  app.get("/404.html", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/404.html"));
+  });
 
-// Serve index.html for all other non-API routes (ONLY GET requests)
-// IMPORTANT: This must be LAST and only handle GET requests
-app.get("*", (req, res) => {
-  // Never handle API routes here - they should be handled by API routes above
-  if (req.path.startsWith("/api")) {
-    return res.status(404).json({ ok: false, error: "API endpoint not found" });
-  }
-  
-  // Check if file exists, otherwise serve index.html
-  const filePath = path.join(__dirname, "../frontend", req.path);
-  const fs = require("fs");
-  if (fs.existsSync(filePath) && req.path.endsWith(".html")) {
-    res.sendFile(filePath);
-  } else {
-    res.sendFile(path.join(__dirname, "../frontend/index.html"));
-  }
-});
+  // Serve index.html for all other non-API routes (ONLY GET requests)
+  app.get("*", (req, res) => {
+    // Never handle API routes here - they should be handled by API routes above
+    if (req.path.startsWith("/api")) {
+      return res.status(404).json({ ok: false, error: "API endpoint not found" });
+    }
+    
+    // Check if file exists, otherwise serve index.html
+    const filePath = path.join(__dirname, "../frontend", req.path);
+    const fs = require("fs");
+    if (fs.existsSync(filePath) && req.path.endsWith(".html")) {
+      res.sendFile(filePath);
+    } else {
+      res.sendFile(path.join(__dirname, "../frontend/index.html"));
+    }
+  });
+} else {
+  // In production, only handle API routes
+  // All other routes return 404 (frontend is on GitHub Pages)
+  app.get("*", (req, res) => {
+    if (req.path.startsWith("/api")) {
+      return res.status(404).json({ ok: false, error: "API endpoint not found" });
+    }
+    // Frontend is on GitHub Pages, not here
+    return res.status(404).json({ ok: false, error: "Not found. Frontend is served by GitHub Pages." });
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 const HOST = process.env.HOST || '0.0.0.0'; // Production için 0.0.0.0 gerekli
