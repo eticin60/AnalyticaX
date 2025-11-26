@@ -839,11 +839,30 @@
           const payAmountEl = document.getElementById("payAmount");
           const payNetworkEl = document.getElementById("payNetwork");
           const currencyTypeEl = document.getElementById("currencyType");
+          const payLabel = document.getElementById("pay-label");
+          const netInline = document.getElementById("net-inline");
+          const netInline2 = document.getElementById("net-inline-2");
+          const pdNet = document.getElementById("pd-net");
+          const pdPrice = document.getElementById("pd-price");
+          const pdProd = document.getElementById("pd-prod");
+          const pdName = document.getElementById("pd-name");
+          const pdNetworkDisplay = document.getElementById("pd-network-display");
+          
+          const networkName = PAYMENT_METHODS.find(m => m.id === selectedMethod)?.name || selectedMethod;
+          const currency = PAYMENT_CURRENCY[selectedMethod] || "USDT";
           
           if(payAddressEl) payAddressEl.textContent = PAYMENT_ADDRESSES[selectedMethod];
-          if(payAmountEl) payAmountEl.textContent = `$${selectedPlan.price} ${PAYMENT_CURRENCY[selectedMethod] || "USDT"}`;
-          if(payNetworkEl) payNetworkEl.textContent = PAYMENT_METHODS.find(m => m.id === selectedMethod)?.name || selectedMethod;
-          if(currencyTypeEl) currencyTypeEl.textContent = PAYMENT_CURRENCY[selectedMethod] || "USDT";
+          if(payAmountEl) payAmountEl.textContent = `$${selectedPlan.price} ${currency}`;
+          if(payNetworkEl) payNetworkEl.textContent = networkName;
+          if(currencyTypeEl) currencyTypeEl.textContent = currency;
+          if(payLabel) payLabel.textContent = `${networkName} Payment Address:`;
+          if(netInline) netInline.textContent = currency;
+          if(netInline2) netInline2.textContent = currency;
+          if(pdNet) pdNet.textContent = networkName;
+          if(pdPrice) pdPrice.textContent = `$${selectedPlan.price}`;
+          if(pdProd) pdProd.textContent = `${selectedPlan.credits} Credits`;
+          if(pdName) pdName.textContent = selectedPlan.name;
+          if(pdNetworkDisplay) pdNetworkDisplay.textContent = networkName;
         }
       }
     }
