@@ -296,12 +296,12 @@ draw();
 /* ================================
    AUTH + LOAD USER DATA
 ================================ */
-const api = window.API_BASE || 'https://analyticax.com.tr';
+const API_BASE = window.API_BASE || 'https://analyticax.com.tr';
 const token = localStorage.getItem("ax_token");
 if(!token) {
-  if(confirm("You need to login to view your profile. Go to login page?")) {
-    location.href="login.html";
-  }
+  alert("You need to login to view your profile.");
+  window.location.href = "login.html";
+  throw new Error("Not authenticated");
 }
 
 document.getElementById("btnLogout").onclick=()=>{
@@ -310,7 +310,7 @@ document.getElementById("btnLogout").onclick=()=>{
 };
 
 async function loadProfile(){
-  const res = await fetch(api+"/api/auth/me",{headers:{Authorization:"Bearer "+token}});
+  const res = await fetch(`${API_BASE}/api/auth/me`,{headers:{Authorization:"Bearer "+token}});
   const d = await res.json();
   if(!d.ok){location.href="login.html";return;}
 

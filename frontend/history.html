@@ -547,9 +547,9 @@ footer{
 <script>
 const token = localStorage.getItem("ax_token");
 if(!token) {
-  if(confirm("You need to login to view your history. Go to login page?")) {
-    location.href="login.html";
-  }
+  alert("You need to login to view your history.");
+  window.location.href = "login.html";
+  throw new Error("Not authenticated");
 }
 
 /* Load User Info */
