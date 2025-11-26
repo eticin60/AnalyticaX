@@ -698,6 +698,8 @@
         const stepEl = document.getElementById(`step${i}`);
         const panelEl = document.getElementById(`panel${i}`);
         
+        if(!stepEl || !panelEl) continue; // Safety check
+        
         stepEl.classList.remove("active", "completed");
         panelEl.classList.remove("active");
         
@@ -713,17 +715,43 @@
       if(currentStep === 2){
         if(selectedMethod){
           const network = PAYMENT_METHODS.find(m => m.id === selectedMethod)?.name || selectedMethod;
-          document.getElementById("infoNetwork").textContent = network;
+          const infoNetworkEl = document.getElementById("infoNetwork");
+          if(infoNetworkEl) infoNetworkEl.textContent = network;
+          
+          // Hide wallet section for OxaPay
+          const walletSection = document.querySelector("#panel2 .wallet-section");
+          if(walletSection) {
+            if(selectedMethod === "OXAPAY") {
+              walletSection.style.display = "none";
+            } else {
+              walletSection.style.display = "block";
+            }
+          }
         }
       } else if(currentStep === 3){
-        if(selectedMethod && PAYMENT_ADDRESSES[selectedMethod]){
-          document.getElementById("payAddress").textContent = PAYMENT_ADDRESSES[selectedMethod];
-          document.getElementById("payAmount").textContent = `$${selectedPlan.price} ${PAYMENT_CURRENCY[selectedMethod] || "USDT"}`;
-          document.getElementById("payNetwork").textContent = PAYMENT_METHODS.find(m => m.id === selectedMethod)?.name || selectedMethod;
-          document.getElementById("currencyType").textContent = PAYMENT_CURRENCY[selectedMethod] || "USDT";
-        } else if(selectedMethod === "OXAPAY"){
-          // Redirect to OxaPay
-          window.open("https://pay.oxapay.com/13369911", "_blank");
+        if(selectedMethod === "OXAPAY"){
+          // For OxaPay, show message
+          const payAddressEl = document.getElementById("payAddress");
+          const payAmountEl = document.getElementById("payAmount");
+          const payNetworkEl = document.getElementById("payNetwork");
+          if(payAddressEl) payAddressEl.textContent = "OxaPay Gateway";
+          if(payAmountEl) payAmountEl.textContent = `$${selectedPlan.price} USD`;
+          if(payNetworkEl) payNetworkEl.textContent = "OxaPay";
+          // Open OxaPay in new tab if not already opened
+          if(!window.oxapayOpened) {
+            window.open("https://pay.oxapay.com/13369911", "_blank");
+            window.oxapayOpened = true;
+          }
+        } else if(selectedMethod && PAYMENT_ADDRESSES[selectedMethod]){
+          const payAddressEl = document.getElementById("payAddress");
+          const payAmountEl = document.getElementById("payAmount");
+          const payNetworkEl = document.getElementById("payNetwork");
+          const currencyTypeEl = document.getElementById("currencyType");
+          
+          if(payAddressEl) payAddressEl.textContent = PAYMENT_ADDRESSES[selectedMethod];
+          if(payAmountEl) payAmountEl.textContent = `$${selectedPlan.price} ${PAYMENT_CURRENCY[selectedMethod] || "USDT"}`;
+          if(payNetworkEl) payNetworkEl.textContent = PAYMENT_METHODS.find(m => m.id === selectedMethod)?.name || selectedMethod;
+          if(currencyTypeEl) currencyTypeEl.textContent = PAYMENT_CURRENCY[selectedMethod] || "USDT";
         }
       }
     }
