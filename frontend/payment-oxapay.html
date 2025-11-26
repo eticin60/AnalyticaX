@@ -818,9 +818,23 @@
           const payAddressEl = document.getElementById("payAddress");
           const payAmountEl = document.getElementById("payAmount");
           const payNetworkEl = document.getElementById("payNetwork");
+          const payLabel = document.getElementById("pay-label");
+          const pdName = document.getElementById("pd-name");
+          const pdNetworkDisplay = document.getElementById("pd-network-display");
+          const pdPrice = document.getElementById("pd-price");
+          const pdProd = document.getElementById("pd-prod");
+          const pdNet = document.getElementById("pd-net");
+          
           if(payAddressEl) payAddressEl.textContent = "OxaPay Gateway - Payment completed in new tab";
           if(payAmountEl) payAmountEl.textContent = `$${selectedPlan.price} USD`;
           if(payNetworkEl) payNetworkEl.textContent = "OxaPay";
+          if(payLabel) payLabel.textContent = "OxaPay Payment Gateway:";
+          if(pdName) pdName.textContent = selectedPlan.name;
+          if(pdNetworkDisplay) pdNetworkDisplay.textContent = "OxaPay";
+          if(pdPrice) pdPrice.textContent = `$${selectedPlan.price}`;
+          if(pdProd) pdProd.textContent = `${selectedPlan.credits} Credits`;
+          if(pdNet) pdNet.textContent = "OxaPay";
+          
           // Open OxaPay in new tab if not already opened
           if(!window.oxapayOpened) {
             window.open("https://pay.oxapay.com/13369911", "_blank");
@@ -828,12 +842,26 @@
           }
         } else if(selectedMethod === "SHOPIER" || selectedMethod === "BINANCE-PAY"){
           // For Shopier and Binance Pay, show gateway info
+          const gatewayName = selectedMethod === "SHOPIER" ? "Shopier" : "Binance Pay";
           const payAddressEl = document.getElementById("payAddress");
           const payAmountEl = document.getElementById("payAmount");
           const payNetworkEl = document.getElementById("payNetwork");
-          if(payAddressEl) payAddressEl.textContent = `${selectedMethod === "SHOPIER" ? "Shopier" : "Binance Pay"} Gateway`;
+          const payLabel = document.getElementById("pay-label");
+          const pdName = document.getElementById("pd-name");
+          const pdNetworkDisplay = document.getElementById("pd-network-display");
+          const pdPrice = document.getElementById("pd-price");
+          const pdProd = document.getElementById("pd-prod");
+          const pdNet = document.getElementById("pd-net");
+          
+          if(payAddressEl) payAddressEl.textContent = `${gatewayName} Gateway`;
           if(payAmountEl) payAmountEl.textContent = `$${selectedPlan.price} USD`;
-          if(payNetworkEl) payNetworkEl.textContent = selectedMethod === "SHOPIER" ? "Shopier Payment Gateway" : "Binance Pay";
+          if(payNetworkEl) payNetworkEl.textContent = gatewayName;
+          if(payLabel) payLabel.textContent = `${gatewayName} Payment Gateway:`;
+          if(pdName) pdName.textContent = selectedPlan.name;
+          if(pdNetworkDisplay) pdNetworkDisplay.textContent = gatewayName;
+          if(pdPrice) pdPrice.textContent = `$${selectedPlan.price}`;
+          if(pdProd) pdProd.textContent = `${selectedPlan.credits} Credits`;
+          if(pdNet) pdNet.textContent = gatewayName;
         } else if(selectedMethod && PAYMENT_ADDRESSES[selectedMethod]){
           const payAddressEl = document.getElementById("payAddress");
           const payAmountEl = document.getElementById("payAmount");
