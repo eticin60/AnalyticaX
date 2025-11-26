@@ -15,12 +15,37 @@
 3. GitHub repo listesinden **"AnalyticaX"** repo'sunu bul ve seç
 4. **"Deploy Now"** butonuna tıkla
 
-### ✅ Adım 3: Backend Klasörünü Seç
-1. Railway projeyi deploy etmeye başladıktan sonra:
-   - Sol tarafta **"Settings"** sekmesine tıkla
-   - **"Root Directory"** bölümünü bul
-   - **`backend`** yaz (sadece backend klasörünü deploy etmek için)
-   - **"Save"** butonuna tıkla
+### ✅ Adım 3: Backend Klasörünü Seç (ÖNEMLİ!)
+
+Railway'da root directory ayarı farklı yerlerde olabilir. Şu yöntemleri dene:
+
+**Yöntem 1: Service Settings'ten**
+1. Railway projeyi deploy etmeye başladıktan sonra
+2. Sol tarafta oluşan **service**'e (genellikle repo adıyla aynı) tıkla
+3. Üstteki **"Settings"** sekmesine tıkla
+4. Aşağı kaydır, **"Source"** veya **"Build"** bölümünü bul
+5. **"Root Directory"** veya **"Working Directory"** alanını bul
+6. **`backend`** yaz
+7. **"Save"** butonuna tıkla
+
+**Yöntem 2: Service Oluştururken**
+1. Eğer henüz service oluşturmadıysan:
+   - Proje içinde **"+ New"** butonuna tıkla
+   - **"GitHub Repo"** seçeneğini seç
+   - **"AnalyticaX"** repo'sunu seç
+   - **"Root Directory"** alanına **`backend`** yaz
+   - **"Deploy"** butonuna tıkla
+
+**Yöntem 3: Settings → Source**
+1. Sol tarafta **"Settings"** sekmesine tıkla (proje seviyesinde)
+2. **"Source"** bölümünü bul
+3. **"Root Directory"** alanına **`backend`** yaz
+4. **"Save"** butonuna tıkla
+
+**Yöntem 4: Eğer hiçbirini bulamazsan:**
+- Railway otomatik olarak `package.json` dosyasını arar
+- `backend` klasöründe `package.json` olduğu için otomatik bulabilir
+- Ama yine de **Settings** → **"Source"** veya **"Build"** bölümünde **Root Directory** alanına **`backend`** yazmayı dene
 
 ### ✅ Adım 4: Environment Variables Ekle
 1. Sol tarafta **"Variables"** sekmesine tıkla
