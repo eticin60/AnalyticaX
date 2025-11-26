@@ -23,9 +23,7 @@
     ? 'https://analyticax.com.tr' 
     : 'http://localhost:5000';
   
-  // Log for debugging (only in development)
-  if (!isProduction) {
-    console.log('🔧 API Base URL:', window.API_BASE);
-  }
+  // Log for debugging (always log in production too for troubleshooting)
+  console.log('🔧 API Base URL:', window.API_BASE, '| Hostname:', window.location.hostname, '| Protocol:', window.location.protocol);
 })();
 

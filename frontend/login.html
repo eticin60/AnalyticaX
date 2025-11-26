@@ -232,9 +232,14 @@ async function loginUser() {
         }
 
         console.log("Attempting login...", { email, deviceId, deviceFingerprint });
+        console.log("🌐 API_BASE:", window.API_BASE);
+        console.log("📍 Current URL:", window.location.href);
 
         const API_BASE = window.API_BASE || 'https://analyticax.com.tr';
-        let res = await fetch(`${API_BASE}/api/auth/login`, {
+        const loginUrl = `${API_BASE}/api/auth/login`;
+        console.log("🔗 Login URL:", loginUrl);
+        
+        let res = await fetch(loginUrl, {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json"
@@ -248,6 +253,8 @@ async function loginUser() {
         });
 
         console.log("Response status:", res.status);
+        console.log("Response headers:", res.headers);
+        console.log("Response URL:", res.url);
 
         // Check if response is ok before parsing
         if (!res.ok) {
