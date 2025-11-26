@@ -196,7 +196,7 @@
   </div>
 
   <script>
-    const API = "${window.API_BASE || 'https://analyticax.com.tr'}";
+    const API_BASE = window.API_BASE || 'https://analyticax.com.tr';
     const token = localStorage.getItem("ax_token");
     
     if(!token) {
@@ -231,7 +231,7 @@
       document.getElementById("loadingText").textContent = "Verifying Payment...";
 
       try {
-        const res = await fetch(`${API}/api/payments/verify`, {
+        const res = await fetch(`${API_BASE}/api/payments/verify`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -274,6 +274,7 @@
   </script>
 </body>
 </html>
+
 
 
 

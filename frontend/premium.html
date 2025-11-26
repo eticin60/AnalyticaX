@@ -774,7 +774,7 @@ async function storeFingerprint() {
 /* ====================================================
    AUTH + LOAD USER
 ==================================================== */
-const API = "${window.API_BASE || 'https://analyticax.com.tr'}";
+const API_BASE = window.API_BASE || 'https://analyticax.com.tr';
 const token = localStorage.getItem("ax_token");
 if (!token) window.location.href = "login.html";
 
@@ -784,7 +784,7 @@ document.getElementById("btnLogout").onclick = function(){
 };
 
 async function loadMe(){
-  const res = await fetch(API + "/api/auth/me", {
+  const res = await fetch(`${API_BASE}/api/auth/me`, {
     headers: {
       "Authorization": "Bearer " + token,
       "x-device-id": localStorage.getItem("ax_device_id"),
