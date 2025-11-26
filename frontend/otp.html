@@ -149,8 +149,8 @@ button{
   <input id="otp" maxlength="6" placeholder="••••••" />
 
   <button onclick="verifyOtp()">Verify Code</button>
-  <div class="resend" onclick="alert('OTP zaten console.log ile backendde görünüyor');">
-    Didn't receive code?
+  <div class="resend" onclick="resendOTP()">
+    Didn't receive code? Resend
   </div>
 </div>
 
@@ -160,7 +160,12 @@ async function verifyOtp() {
     let otp = document.getElementById("otp").value;
     let email = localStorage.getItem("pending_email");
 
-    let res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/verify-otp", {
+    if (!otp || otp.length !== 6) {
+        alert("Please enter a valid 6-digit OTP code");
+        return;
+    }
+
+    let res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/auth/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp })
@@ -169,12 +174,27 @@ async function verifyOtp() {
     let data = await res.json();
 
     if (!data.ok) {
-        alert(data.message);
+        alert(data.message || "Invalid OTP. Please try again.");
         return;
     }
 
     localStorage.setItem("ax_token", data.token);
     window.location.href = "dashboard.html";
+}
+
+/* RESEND OTP */
+async function resendOTP() {
+    let email = localStorage.getItem("pending_email");
+    if (!email) {
+        alert("Email not found. Please login again.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    // OTP'yi yeniden göndermek için login endpoint'ini tekrar çağır
+    // Bu, backend'de OTP'yi yeniden generate edip email gönderecek
+    alert("Please try logging in again to receive a new OTP code.");
+    window.location.href = "login.html";
 }
 
 /* PARTICLE BACKGROUND (same as dashboard) */
