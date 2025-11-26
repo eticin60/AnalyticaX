@@ -249,12 +249,29 @@ async function loginUser() {
 
         console.log("Response status:", res.status);
 
+        // Check if response is ok before parsing
+        if (!res.ok) {
+            let errorText = "";
+            try {
+                const errorData = await res.json();
+                errorText = errorData.message || errorData.error || `HTTP ${res.status}: ${res.statusText}`;
+            } catch (e) {
+                errorText = `HTTP ${res.status}: ${res.statusText}`;
+            }
+            alert(`Login failed: ${errorText}\n\nPlease check your credentials or try again later.`);
+            btn.textContent = originalText;
+            btn.disabled = false;
+            return;
+        }
+
         let data;
         try {
             data = await res.json();
         } catch (e) {
             console.error("JSON parse error:", e);
-            alert("Server error. Please check your connection.");
+            const responseText = await res.text();
+            console.error("Response text:", responseText);
+            alert(`Server error: Invalid response from server.\n\nStatus: ${res.status}\nPlease check if the backend is running.`);
             btn.textContent = originalText;
             btn.disabled = false;
             return;
