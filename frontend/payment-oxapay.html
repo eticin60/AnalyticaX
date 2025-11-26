@@ -728,11 +728,11 @@
           const infoNetworkEl = document.getElementById("infoNetwork");
           if(infoNetworkEl) infoNetworkEl.textContent = network;
           
-          // Hide wallet section for OxaPay
+          // Hide wallet section for gateway methods
           const walletSection = document.querySelector("#panel2 .wallet-section");
           const warningBox = document.querySelector("#panel2 .warning-box");
           if(walletSection) {
-            if(selectedMethod === "OXAPAY") {
+            if(selectedMethod === "OXAPAY" || selectedMethod === "SHOPIER" || selectedMethod === "BINANCE-PAY") {
               walletSection.style.display = "none";
               if(warningBox) warningBox.style.display = "none";
             } else {
@@ -755,6 +755,14 @@
             window.open("https://pay.oxapay.com/13369911", "_blank");
             window.oxapayOpened = true;
           }
+        } else if(selectedMethod === "SHOPIER" || selectedMethod === "BINANCE-PAY"){
+          // For Shopier and Binance Pay, show gateway info
+          const payAddressEl = document.getElementById("payAddress");
+          const payAmountEl = document.getElementById("payAmount");
+          const payNetworkEl = document.getElementById("payNetwork");
+          if(payAddressEl) payAddressEl.textContent = `${selectedMethod === "SHOPIER" ? "Shopier" : "Binance Pay"} Gateway`;
+          if(payAmountEl) payAmountEl.textContent = `$${selectedPlan.price} USD`;
+          if(payNetworkEl) payNetworkEl.textContent = selectedMethod === "SHOPIER" ? "Shopier Payment Gateway" : "Binance Pay";
         } else if(selectedMethod && PAYMENT_ADDRESSES[selectedMethod]){
           const payAddressEl = document.getElementById("payAddress");
           const payAmountEl = document.getElementById("payAmount");
