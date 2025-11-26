@@ -403,16 +403,37 @@
     .plan-card{
       position:relative;
       border-radius:22px;
-      background:rgba(15,23,42,.96);
+      background:linear-gradient(135deg, rgba(15,23,42,.98), rgba(30,41,59,.95));
       border:1px solid rgba(148,163,184,.35);
-      padding:18px 20px;
+      padding:24px 22px;
       overflow:hidden;
-      box-shadow:0 18px 40px rgba(15,23,42,.9);
-      transition:.25s;
+      box-shadow:0 18px 40px rgba(15,23,42,.9), 0 0 0 1px rgba(0,229,255,.1);
+      transition:all 0.3s ease;
+      display:flex;
+      flex-direction:column;
     }
     .plan-card:hover{
-      transform:translateY(-4px);
-      box-shadow:0 25px 55px rgba(15,23,42,.95);
+      transform:translateY(-6px);
+      box-shadow:0 30px 60px rgba(15,23,42,.95), 0 0 40px rgba(0,229,255,.2);
+      border-color:rgba(0,229,255,.5);
+    }
+    .plan-card.featured{
+      border:2px solid rgba(0,229,255,.6);
+      background:linear-gradient(135deg, rgba(15,23,42,1), rgba(30,41,59,.98));
+      box-shadow:0 20px 50px rgba(0,229,255,.3), 0 0 60px rgba(255,77,255,.2);
+    }
+    .plan-card.featured::after{
+      content:"POPULAR";
+      position:absolute;
+      top:16px;
+      right:16px;
+      background:linear-gradient(135deg, #00E5FF, #FF4DFF);
+      color:#020617;
+      font-size:10px;
+      font-weight:700;
+      padding:4px 10px;
+      border-radius:12px;
+      letter-spacing:0.5px;
     }
     .plan-card::before{
       content:"";
@@ -445,14 +466,24 @@
     }
     .btn-buy{
       border:none;
-      border-radius:999px;
-      padding:8px 16px;
-      background:linear-gradient(90deg,var(--neon),var(--magenta));
+      border-radius:12px;
+      padding:12px 20px;
+      background:linear-gradient(135deg,var(--neon),var(--magenta));
       color:#020617;
       font-weight:600;
+      font-size:14px;
       cursor:pointer;
       width:100%;
-      margin-top:10px;
+      margin-top:auto;
+      transition:all 0.3s ease;
+      box-shadow:0 4px 15px rgba(0,229,255,0.3);
+    }
+    .btn-buy:hover{
+      transform:translateY(-2px);
+      box-shadow:0 6px 20px rgba(0,229,255,0.5);
+    }
+    .btn-buy:active{
+      transform:translateY(0);
       box-shadow:0 0 20px rgba(0,229,255,.5);
       transition:.3s;
     }
@@ -824,31 +855,48 @@ async function loadMe(){
    PREMIUM PACKAGE LIST (15 PACKAGES)
 ==================================================== */
 const plans = [
-  {name:"Basic Startup", price:49, credits:5},
-  {name:"Basic Plus", price:79, credits:8},
-  {name:"Starter Pro", price:129, credits:12},
-  {name:"Trader Pack", price:199, credits:18},
-  {name:"Trader Max", price:299, credits:25},
-  {name:"Pro Entry", price:399, credits:35},
-  {name:"Pro Max", price:499, credits:45},
-  {name:"Ultra Lite", price:699, credits:60},
-  {name:"Ultra Trader", price:899, credits:75},
-  {name:"Elite Entry", price:1199, credits:95},
-  {name:"Elite Max", price:1499, credits:120},
-  {name:"Elite Infinity", price:1999, credits:150},
-  {name:"VIP Tier 1", price:2999, credits:200},
-  {name:"VIP Tier 2", price:4999, credits:300},
-  {name:"GODMODE PACK", price:9999, credits:500},
+  {name:"Basic Startup", price:49, credits:5, pricePerCredit:9.8, badge:"Starter", featured:false},
+  {name:"Basic Plus", price:79, credits:8, pricePerCredit:9.88, badge:"Popular", featured:true},
+  {name:"Starter Pro", price:129, credits:12, pricePerCredit:10.75, badge:"Value", featured:false},
+  {name:"Trader Pack", price:199, credits:18, pricePerCredit:11.06, badge:"Best Value", featured:true},
+  {name:"Trader Max", price:299, credits:25, pricePerCredit:11.96, badge:"Pro", featured:false},
+  {name:"Pro Entry", price:399, credits:35, pricePerCredit:11.4, badge:"Pro", featured:false},
+  {name:"Pro Max", price:499, credits:45, pricePerCredit:11.09, badge:"Pro", featured:false},
+  {name:"Ultra Lite", price:699, credits:60, pricePerCredit:11.65, badge:"Ultra", featured:false},
+  {name:"Ultra Trader", price:899, credits:75, pricePerCredit:11.99, badge:"Ultra", featured:false},
+  {name:"Elite Entry", price:1199, credits:95, pricePerCredit:12.62, badge:"Elite", featured:false},
+  {name:"Elite Max", price:1499, credits:120, pricePerCredit:12.49, badge:"Elite", featured:false},
+  {name:"Elite Infinity", price:1999, credits:150, pricePerCredit:13.33, badge:"Elite", featured:false},
+  {name:"VIP Tier 1", price:2999, credits:200, pricePerCredit:14.99, badge:"VIP", featured:false, kyc:true},
+  {name:"VIP Tier 2", price:4999, credits:300, pricePerCredit:16.66, badge:"VIP", featured:false, kyc:true},
+  {name:"GODMODE PACK", price:9999, credits:500, pricePerCredit:19.99, badge:"GODMODE", featured:true, kyc:true},
 ];
 
 const grid = document.querySelector(".plan-grid");
 plans.forEach((p,i)=>{
+  const featuredClass = p.featured ? ' featured' : '';
+  const kycWarning = p.kyc ? '<div style="font-size:11px;color:#f97373;margin-top:8px;padding:6px;background:rgba(249,115,115,0.1);border-radius:8px;border:1px solid rgba(249,115,115,0.3);"><strong>⚠️ KYC Required</strong> (Payment > $5,000)</div>' : '';
   grid.innerHTML += `
-    <div class="plan-card">
-      <div class="plan-title">${p.name}</div>
-      <div class="plan-price">$${p.price}</div>
-      <div class="plan-credit">${p.credits} Credits</div>
-      <button class="btn-buy" onclick="openPayment(${i})">Buy Now</button>
+    <div class="plan-card${featuredClass}">
+      ${p.badge ? `<div style="position:absolute;top:12px;left:12px;background:rgba(0,229,255,0.15);color:#00E5FF;font-size:10px;font-weight:600;padding:4px 10px;border-radius:10px;border:1px solid rgba(0,229,255,0.3);">${p.badge}</div>` : ''}
+      <div class="plan-title" style="margin-top:${p.badge ? '28px' : '0'};margin-bottom:12px;">${p.name}</div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">
+        <div class="plan-price">$${p.price}</div>
+        <div style="font-size:13px;color:var(--text-soft);">USD</div>
+      </div>
+      <div class="plan-credit" style="margin-bottom:12px;">${p.credits} Analysis Credits</div>
+      <div style="font-size:11px;color:var(--text-soft);margin-bottom:12px;padding:8px;background:rgba(0,229,255,0.05);border-radius:8px;border:1px solid rgba(0,229,255,0.1);">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+          <span>Price per credit:</span>
+          <strong style="color:#00E5FF;">$${p.pricePerCredit.toFixed(2)}</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span>Total analyses:</span>
+          <strong style="color:#00E5FF;">${p.credits}</strong>
+        </div>
+      </div>
+      ${kycWarning}
+      <button class="btn-buy" onclick="openPayment(${i})" style="margin-top:auto;">Buy Now</button>
     </div>
   `;
 });
@@ -887,8 +935,9 @@ const OXAPAY_URL = "https://pay.oxapay.com/13369911";
 
 function openPayment(id){
   selectedPlan = plans[id];
+  let kycNote = selectedPlan.kyc ? '<br><span style="color:#f97373;font-size:12px;">⚠️ KYC verification required for this purchase</span>' : '';
   document.getElementById("selectedPlanInfo").innerHTML =
-    `<b>${selectedPlan.name}</b> — $${selectedPlan.price} — ${selectedPlan.credits} credits`;
+    `<b>${selectedPlan.name}</b> — $${selectedPlan.price} USD — ${selectedPlan.credits} credits${kycNote}`;
   document.getElementById("paymentModal").style.display = "flex";
 }
 
