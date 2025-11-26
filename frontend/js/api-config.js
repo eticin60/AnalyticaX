@@ -20,7 +20,7 @@
   
   // Set API base URL
   window.API_BASE = isProduction 
-    ? 'https://analyticax.com.tr' 
+    ? 'https://analyticax-production.up.railway.app' 
     : 'http://localhost:5000';
   
   // Log for debugging (always log in production too for troubleshooting)
