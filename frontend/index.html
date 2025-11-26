@@ -98,7 +98,7 @@
       max-width:1240px;
       margin:0 auto;
     }
-    main{padding-top:200px;padding-bottom:80px;} /* Logo için yeterli alan */
+    main{padding-top:280px;padding-bottom:80px;} /* Logo + navbar + nav-boxes için yeterli alan */
     section{margin-top:70px;}
 
     /* BACKGROUND LAYERS */
@@ -1885,11 +1885,75 @@
   <canvas id="bgParticles"></canvas>
   <div class="bg-grid"></div>
 
-  <!-- LOGO ONLY (Centered Top) -->
-  <div class="logo-only" onclick="window.location.href='index.html'" style="position:fixed;left:50%;top:30px;transform:translateX(-50%);z-index:50;width:auto;max-width:400px;pointer-events:auto;cursor:pointer;">
-    <div class="logo-main" style="display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;padding:0;">
-      <img src="assets/AnalyticaX.png" alt="AnalyticaX Logo" style="height:140px;width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 0 25px rgba(0,229,255,0.6)) drop-shadow(0 0 50px rgba(255,77,255,0.4));transition:all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)';this.style.filter='drop-shadow(0 0 35px rgba(0,229,255,0.8)) drop-shadow(0 0 70px rgba(255,77,255,0.6))'" onmouseout="this.style.transform='scale(1)';this.style.filter='drop-shadow(0 0 25px rgba(0,229,255,0.6)) drop-shadow(0 0 50px rgba(255,77,255,0.4))'">
-      <div class="logo-sub" style="font-size:11px;color:rgba(255,255,255,0.75);font-weight:400;letter-spacing:0.08em;display:block;margin-top:-4px;text-shadow:0 0 10px rgba(0,229,255,0.3);white-space:nowrap;">AI Powered Crypto Chart Analysis</div>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <!-- Center Logo -->
+    <div class="nav-brand" onclick="window.location.href='index.html'" style="position:absolute;left:50%;top:20px;transform:translateX(-50%);margin:0;z-index:10;width:auto;max-width:400px;pointer-events:auto;">
+      <div class="logo-main" style="display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;padding:0;">
+        <img src="assets/AnalyticaX.png" alt="AnalyticaX Logo" style="height:140px;width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 0 25px rgba(0,229,255,0.6)) drop-shadow(0 0 50px rgba(255,77,255,0.4));transition:all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)';this.style.filter='drop-shadow(0 0 35px rgba(0,229,255,0.8)) drop-shadow(0 0 70px rgba(255,77,255,0.6))'" onmouseout="this.style.transform='scale(1)';this.style.filter='drop-shadow(0 0 25px rgba(0,229,255,0.6)) drop-shadow(0 0 50px rgba(255,77,255,0.4))'">
+        <div class="logo-sub" style="font-size:11px;color:rgba(255,255,255,0.75);font-weight:400;letter-spacing:0.08em;display:block;margin-top:-4px;text-shadow:0 0 10px rgba(0,229,255,0.3);white-space:nowrap;">AI Powered Crypto Chart Analysis</div>
+      </div>
+    </div>  </header>
+
+  <!-- Navigation Boxes (Below Navbar) -->
+  <div style="position:fixed;top:200px;left:0;right:0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:0 40px;pointer-events:none;transition:transform 0.3s ease, opacity 0.3s ease;" class="nav-boxes-container">
+    <!-- Left Navigation Links -->
+    <nav class="nav-links" style="position:static;flex:0 0 auto;pointer-events:auto;">
+      <a href="index.html#how" data-i18n="nav.how">How it works</a>
+      <a href="index.html#features" data-i18n="nav.features">What it analyzes</a>
+      <a href="index.html#market" data-i18n="nav.market">Live market</a>
+      <a href="index.html#pricing" data-i18n="nav.pricing">Plans</a>
+      <a href="index.html#legal" data-i18n="nav.legal">Legal</a>
+      <a href="#about" onclick="event.preventDefault();document.getElementById('about').scrollIntoView({behavior:'smooth',block:'start'});">About</a>
+    </nav>
+
+    <!-- Right Actions -->
+    <div class="nav-actions" style="position:static;flex:0 0 auto;pointer-events:auto;">
+      <div id="navLoggedOut" style="display:flex;gap:24px;align-items:center;">
+        <a href="login.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:400;transition:all 0.3s ease;position:relative;" data-i18n="nav.login">Log in</a>
+        <a href="register.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:400;transition:all 0.3s ease;position:relative;" data-i18n="nav.startFree">Start free</a>
+      </div>
+      <div id="navLoggedIn" style="display:none;gap:24px;align-items:center;flex-direction:row;flex-wrap:nowrap;">
+        <!-- Action Buttons -->
+        <a href="dashboard.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:400;transition:all 0.3s ease;white-space:nowrap;position:relative;" data-i18n="nav.dashboard">Dashboard</a>
+        <a href="analyze.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:400;transition:all 0.3s ease;white-space:nowrap;display:flex;align-items:center;gap:4px;position:relative;" data-i18n="nav.analyze">
+          <span>Analyze</span>
+          <span style="font-size:12px;">↗</span>
+        </a>
+        <!-- User Profile with Credits and Logout -->
+        <div style="display:flex;align-items:center;gap:12px;padding-left:12px;border-left:1px solid rgba(255,255,255,0.15);">
+          <div id="userProfileAvatar" style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--neon),var(--magenta));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#020617;flex-shrink:0;cursor:pointer;" onclick="window.location.href='settings.html'">U</div>
+          <div style="display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;cursor:pointer;" onclick="window.location.href='settings.html'">
+            <div id="userProfileEmail" style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;color:#fff;">user@email.com</div>
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <div id="userProfilePlan" style="font-size:10px;color:rgba(255,255,255,0.7);">Free</div>
+              <div style="width:1px;height:10px;background:rgba(255,255,255,0.2);"></div>
+              <div id="userCreditsBadge" style="font-size:10px;color:rgba(255,255,255,0.9);font-weight:600;">
+                <span id="userCreditsCount">0</span> Credits
+              </div>
+            </div>
+          </div>
+          <button id="btnLogoutNav" onclick="event.stopPropagation();logoutUser();" style="padding:4px 8px;font-size:10px;color:rgba(249,115,115,1);border:1px solid rgba(249,115,115,0.5);border-radius:6px;white-space:nowrap;background:transparent;cursor:pointer;transition:all 0.3s ease;font-weight:500;line-height:1;" onmouseover="this.style.background='rgba(249,115,115,0.15)';this.style.borderColor='rgba(249,115,115,0.7)'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(249,115,115,0.5)'">
+            <span data-i18n="nav.logout">Logout</span>
+          </button>
+        </div>
+        <div class="lang-switch" style="margin-left:12px;margin-right:0;position:relative;" onclick="event.stopPropagation();">
+        <button class="lang-btn active" data-lang-btn="en" title="English">EN</button>
+        <button class="lang-btn" data-lang-btn="tr" title="Turkish">TR</button>
+        <div class="lang-dropdown" style="position:absolute;top:100%;right:0;margin-top:8px;background:rgba(15,23,42,0.95);border:1px solid rgba(0,229,255,0.3);border-radius:12px;padding:8px;min-width:120px;display:none;z-index:1000;backdrop-filter:blur(20px);box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+          <button class="lang-option" data-lang-btn="en" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:#fff;cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)'" onmouseout="this.style.background='transparent'">🇬🇧 English</button>
+          <button class="lang-option" data-lang-btn="tr" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:#fff;cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)'" onmouseout="this.style.background='transparent'">🇹🇷 Turkish</button>
+          <div style="height:1px;background:rgba(255,255,255,0.1);margin:4px 0;"></div>
+          <button class="lang-option" data-lang-btn="es" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.7)'">🇪🇸 Español</button>
+          <button class="lang-option" data-lang-btn="de" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.7)'">🇩🇪 Deutsch</button>
+          <button class="lang-option" data-lang-btn="fr" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.7)'">🇫🇷 Français</button>
+          <button class="lang-option" data-lang-btn="ru" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.7)'">🇷🇺 Русский</button>
+          <button class="lang-option" data-lang-btn="zh" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.7)'">🇨🇳 中文</button>
+          <button class="lang-option" data-lang-btn="ja" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.7)'">🇯🇵 日本語</button>
+          <button class="lang-option" data-lang-btn="ar" style="width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;border-radius:8px;font-size:13px;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.7)'">🇸🇦 العربية</button>
+        </div>
+      </div>
+    </div>
     </div>
   </div>
 
@@ -3478,7 +3542,41 @@
       setTimeout(initAIRobot, 2000);
     }
 
-    // Navbar removed - no scroll hide needed
+    // ==== SCROLL HIDE NAVBAR (Throttled for Performance) ====
+    let lastScrollTop = 0;
+    let ticking = false;
+    const navbar = document.querySelector('.navbar');
+    const navBoxes = document.querySelector('.nav-boxes-container');
+    
+    function updateNavbar() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      if (scrollTop > 100) {
+        // Scrolling down - hide navbar
+        if (navbar) navbar.classList.add('scrolled');
+        if (navBoxes) {
+          navBoxes.style.transform = 'translateY(-120%)';
+          navBoxes.style.opacity = '0';
+        }
+      } else {
+        // At top - show navbar
+        if (navbar) navbar.classList.remove('scrolled');
+        if (navBoxes) {
+          navBoxes.style.transform = 'translateY(0)';
+          navBoxes.style.opacity = '1';
+        }
+      }
+      
+      lastScrollTop = scrollTop;
+      ticking = false;
+    }
+    
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateNavbar);
+        ticking = true;
+      }
+    }, { passive: true });
 
     // ==== CAROUSEL AUTO ROTATE ==== (REMOVED - Now using grid layout for features section)
 
