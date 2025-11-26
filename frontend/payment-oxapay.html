@@ -709,8 +709,14 @@
 
     function renderMethods(){
       const grid = document.getElementById("methodGrid");
+      if(!grid) {
+        console.error("❌ methodGrid element not found! Retrying...");
+        setTimeout(renderMethods, 100);
+        return;
+      }
       grid.innerHTML = "";
       
+      console.log("✅ Rendering", PAYMENT_METHODS.length, "payment methods");
       PAYMENT_METHODS.forEach(method => {
         const card = document.createElement("div");
         card.className = "method-card";
