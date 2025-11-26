@@ -620,14 +620,31 @@
     const planName = urlParams.get("plan") || localStorage.getItem("selectedPlanName") || "Pro pack";
     const planPrice = parseFloat(urlParams.get("price") || localStorage.getItem("selectedPlanPrice") || "50");
     const planCredits = parseInt(urlParams.get("credits") || localStorage.getItem("selectedPlanCredits") || "10");
+    const methodFromUrl = urlParams.get("method") || localStorage.getItem("selectedPaymentMethod");
 
     selectedPlan = {name:planName, price:planPrice, credits:planCredits};
+    
+    // If method is provided in URL, set it
+    if(methodFromUrl) {
+      selectedMethod = methodFromUrl;
+    }
 
     // Initialize
     function init(){
       renderMethods();
       updatePlanInfo();
+      updateSteps(); // Initialize steps on load
       initParticles();
+      
+      // If method was pre-selected, mark it as selected
+      if(selectedMethod) {
+        setTimeout(() => {
+          const methodCard = document.querySelector(`[data-method="${selectedMethod}"]`);
+          if(methodCard) {
+            methodCard.classList.add("selected");
+          }
+        }, 100);
+      }
     }
 
     function renderMethods(){
@@ -711,24 +728,31 @@
       }
     }
 
-    document.getElementById("btnContinue1").addEventListener("click", () => {
-      if(!selectedMethod){
-        alert("Please select a payment method");
-        return;
-      }
-      if(selectedMethod === "OXAPAY"){
-        // Store plan info
-        localStorage.setItem("selectedPlanName", selectedPlan.name);
-        localStorage.setItem("selectedPlanPrice", selectedPlan.price);
-        localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
-        // Open OxaPay in new tab
-        window.open("https://pay.oxapay.com/13369911", "_blank");
-        // Continue to next step for verification
+    const btnContinue1 = document.getElementById("btnContinue1");
+    if(btnContinue1) {
+      btnContinue1.addEventListener("click", () => {
+        if(!selectedMethod){
+          alert("Please select a payment method");
+          return;
+        }
+        if(selectedMethod === "OXAPAY"){
+          // Store plan info
+          localStorage.setItem("selectedPlanName", selectedPlan.name);
+          localStorage.setItem("selectedPlanPrice", selectedPlan.price);
+          localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
+          localStorage.setItem("selectedPaymentMethod", selectedMethod);
+          // Open OxaPay in new tab
+          window.open("https://pay.oxapay.com/13369911", "_blank");
+          window.oxapayOpened = true;
+          // Continue to next step for verification
+          nextStep();
+          return;
+        }
+        // Store selected method
+        localStorage.setItem("selectedPaymentMethod", selectedMethod);
         nextStep();
-        return;
-      }
-      nextStep();
-    });
+      });
+    }
 
     document.getElementById("btnContinue2").addEventListener("click", () => {
       const wallet = document.getElementById("walletAddress").value.trim();
