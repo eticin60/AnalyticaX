@@ -26,6 +26,14 @@ body{
   overflow-x:hidden;
 }
 
+/* Hide admin content until verified */
+.admin-content{
+  display:none;
+}
+.admin-content.verified{
+  display:block;
+}
+
 /* BACKGROUND */
 canvas#particles{position:fixed;inset:0;z-index:-3;}
 .bg-grid{
@@ -136,7 +144,7 @@ tr:hover td{background:rgba(255,255,255,.04);}
 <div class="bg-glow c2"></div>
 
 <!-- NAVBAR -->
-<header class="navbar">
+<header class="navbar admin-content">
   <div class="nav-title">Analytica<span>X</span> Admin</div>
 
   <nav class="nav-links">
@@ -151,7 +159,7 @@ tr:hover td{background:rgba(255,255,255,.04);}
 </header>
 
 <!-- PAGE -->
-<div class="page">
+<div class="page admin-content">
   <h1 class="page-title">Admin Panel</h1>
 
   <!-- Tabs -->
@@ -289,6 +297,9 @@ async function verifyAdminToken(token) {
   }
 }
 
+// Hide admin content immediately (before any checks)
+document.querySelectorAll('.admin-content').forEach(el => el.style.display = 'none');
+
 // Check if logged in
 if(!adminToken) {
   // Show login form
@@ -336,10 +347,16 @@ if(!adminToken) {
     if(!isValid) {
       localStorage.removeItem("ax_admin_token");
       location.reload();
+    } else {
+      // Token is valid, show admin content
+      document.querySelectorAll('.admin-content').forEach(el => {
+        el.style.display = '';
+        el.classList.add('verified');
+      });
     }
   });
   
-  // Already logged in, continue with normal admin panel
+  // Already logged in, continue with normal admin panel (will be shown after verification)
 
 /* ADMIN TOKEN */
 const token = adminToken;
