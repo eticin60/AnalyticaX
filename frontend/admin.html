@@ -622,10 +622,28 @@ function showTab(name) {
   document.getElementById("tab-"+name).classList.remove("hidden");
   
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  event.target.classList.add("active");
+  if(event && event.target) {
+    event.target.classList.add("active");
+  } else {
+    // Fallback if event is not available
+    document.querySelectorAll(".tab").forEach(t => {
+      if(t.textContent.trim().toLowerCase() === name.toLowerCase()) {
+        t.classList.add("active");
+      }
+    });
+  }
   
-  document.querySelectorAll(".nav-links a").forEach(a=>a.classList.remove("active"));
-  event.target.closest(".nav-links")?.querySelector(`a[onclick*="${name}"]`)?.classList.add("active");
+  // Show/hide stats and filters based on tab
+  const statsEl = document.getElementById("paymentStats");
+  const filtersEl = document.getElementById("paymentFilters");
+  
+  if(name === "payments") {
+    if(statsEl) statsEl.classList.remove("hidden");
+    if(filtersEl) filtersEl.classList.remove("hidden");
+  } else {
+    if(statsEl) statsEl.classList.add("hidden");
+    if(filtersEl) filtersEl.classList.add("hidden");
+  }
 }
 
 // LOAD DATA
