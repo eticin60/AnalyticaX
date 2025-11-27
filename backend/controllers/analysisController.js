@@ -1,18 +1,35 @@
-require("dotenv").config();
+// Load .env only in development
+if (process.env.NODE_ENV !== 'production') {
+  require("dotenv").config();
+}
+
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const User = require("../models/User");
 const crypto = require("crypto");
 
-// Check if GEMINI_API_KEY is set
-if (!process.env.GEMINI_API_KEY) {
+// Initialize Gemini AI
+let genAI = null;
+let model = null;
+
+if (process.env.GEMINI_API_KEY) {
+  try {
+    const apiKey = process.env.GEMINI_API_KEY.trim();
+    if (apiKey && apiKey.startsWith("AIza")) {
+      genAI = new GoogleGenerativeAI(apiKey);
+      model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      console.log("✅ Gemini AI model initialized successfully");
+      console.log("   API Key (first 10 chars):", apiKey.substring(0, 10) + "...");
+    } else {
+      console.error("❌ GEMINI_API_KEY format is invalid! Should start with 'AIza'");
+      console.error("   Current key (first 10 chars):", apiKey.substring(0, 10) + "...");
+    }
+  } catch (err) {
+    console.error("❌ Failed to initialize Gemini AI:", err.message);
+  }
+} else {
   console.error("❌ GEMINI_API_KEY is not set in environment variables!");
   console.error("Please set GEMINI_API_KEY in Railway environment variables.");
 }
-
-const genAI = process.env.GEMINI_API_KEY 
-  ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-  : null;
-const model = genAI ? genAI.getGenerativeModel({ model: "gemini-2.0-flash" }) : null;
 
 function generateAXID() {
   return "AX-" + crypto.randomBytes(6).toString("hex").toUpperCase();
@@ -446,19 +463,39 @@ RETURN RAW JSON ONLY:
 
   } catch (err) {
     console.error("❌ GEMINI ERROR:", err);
+    console.error("   Error type:", err.constructor.name);
+    console.error("   Error message:", err.message);
+    console.error("   Error status:", err.status || err.statusCode);
+    if (err.error) {
+      console.error("   Error details:", JSON.stringify(err.error, null, 2));
+    }
     
     // Check for specific API key errors
-    if (err.message && (err.message.includes("API key") || err.message.includes("API_KEY") || err.message.includes("API key not valid"))) {
+    const errorMessage = err.message || "";
+    const errorDetails = err.error || {};
+    const hasApiKeyError = 
+      errorMessage.includes("API key") || 
+      errorMessage.includes("API_KEY") || 
+      errorMessage.includes("API key not valid") ||
+      errorMessage.includes("API_KEY_INVALID") ||
+      errorDetails.reason === "API_KEY_INVALID" ||
+      (err.status === 400 && errorMessage.includes("API"));
+    
+    if (hasApiKeyError) {
       console.error("🔑 API Key Error Detected!");
+      console.error("   API Key exists:", !!process.env.GEMINI_API_KEY);
+      console.error("   API Key (first 10 chars):", process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.substring(0, 10) + "..." : "NOT SET");
+      console.error("   API Key length:", process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.length : 0);
+      
       return res.status(500).json({ 
         ok: false, 
-        error: "AI service configuration error. Please contact support@AnalyticaX.com.tr",
-        details: "GEMINI_API_KEY is invalid or not configured properly"
+        error: "AI service configuration error. The GEMINI_API_KEY may be invalid, expired, or not activated in Google AI Studio.",
+        details: "Please verify the API key in Railway environment variables and ensure it's active in Google AI Studio (https://aistudio.google.com/apikey). Contact support@AnalyticaX.com.tr for assistance."
       });
     }
     
     // Check for network/connection errors
-    if (err.message && (err.message.includes("fetch") || err.message.includes("network") || err.message.includes("ECONNREFUSED"))) {
+    if (err.message && (err.message.includes("fetch") || err.message.includes("network") || err.message.includes("ECONNREFUSED") || err.message.includes("ENOTFOUND"))) {
       return res.status(500).json({ 
         ok: false, 
         error: "AI service connection error. Please try again later.",
