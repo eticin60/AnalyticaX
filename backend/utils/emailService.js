@@ -26,17 +26,31 @@ const createTransporter = () => {
 
 async function sendOTPEmail(email, otp) {
   try {
+    // Debug: SMTP ayarlarını kontrol et (şifreyi gösterme)
+    const hasHost = !!process.env.SMTP_HOST;
+    const hasUser = !!process.env.SMTP_USER;
+    const hasPass = !!process.env.SMTP_PASS;
+    const smtpPort = process.env.SMTP_PORT || 587;
+    const smtpSecure = process.env.SMTP_SECURE === "true";
+    
+    console.log(`📧 SMTP Config Check:`);
+    console.log(`   - SMTP_HOST: ${hasHost ? process.env.SMTP_HOST : '❌ NOT SET'}`);
+    console.log(`   - SMTP_PORT: ${smtpPort}`);
+    console.log(`   - SMTP_SECURE: ${smtpSecure}`);
+    console.log(`   - SMTP_USER: ${hasUser ? process.env.SMTP_USER : '❌ NOT SET'}`);
+    console.log(`   - SMTP_PASS: ${hasPass ? '✅ SET' : '❌ NOT SET'}`);
+    
     const transporter = createTransporter();
 
     // SMTP ayarları yoksa sadece console'a yaz
     if (!transporter) {
-      console.log(`📧 OTP Email (not sent - no SMTP configured): ${email} - Code: ${otp}`);
+      console.log(`\n❌ OTP Email (not sent - no SMTP configured): ${email} - Code: ${otp}`);
       console.log(`💡 SMTP ayarlarını eklemek için Railway'a şu variables'ları ekle:`);
-      console.log(`   - SMTP_HOST (örn: mail.analyticax.com.tr veya smtp.gmail.com)`);
-      console.log(`   - SMTP_PORT (örn: 587 veya 465)`);
-      console.log(`   - SMTP_USER (örn: support@analyticax.com.tr)`);
-      console.log(`   - SMTP_PASS (email şifresi)`);
-      console.log(`   - SMTP_SECURE (true veya false, 465 için true)`);
+      console.log(`   - SMTP_HOST=mail.kurumsaleposta.com (veya mail.analyticax.com.tr)`);
+      console.log(`   - SMTP_PORT=587 (veya 465)`);
+      console.log(`   - SMTP_USER=support@analyticax.com.tr (tam email adresi)`);
+      console.log(`   - SMTP_PASS=email_sifresi (email hesabının şifresi)`);
+      console.log(`   - SMTP_SECURE=false (587 için) veya true (465 için)`);
       console.log(`\n🔑 OTP CODE FOR ${email}: ${otp}\n`);
       return { success: false, message: "OTP logged (no SMTP service configured)", otp: otp };
     }
@@ -141,14 +155,27 @@ async function sendOTPEmail(email, otp) {
       `,
     };
 
+    // Test connection first
+    console.log(`🔍 Testing SMTP connection...`);
+    await transporter.verify();
+    console.log(`✅ SMTP connection verified`);
+    
+    console.log(`📤 Sending OTP email to ${email}...`);
     const info = await transporter.sendMail(mailOptions);
-    console.log(`✅ OTP email sent to ${email}`, info.messageId);
+    console.log(`✅ OTP email sent successfully!`);
+    console.log(`   - Message ID: ${info.messageId}`);
+    console.log(`   - Response: ${info.response || 'N/A'}`);
     return { success: true, messageId: info.messageId };
   } catch (err) {
     console.error("❌ Email send error:", err);
+    console.error("   - Error code:", err.code);
+    console.error("   - Error command:", err.command);
+    console.error("   - Error response:", err.response);
+    console.error("   - Full error:", JSON.stringify(err, null, 2));
+    
     // Hata olsa bile OTP'yi console'a yaz (fallback)
-    console.log(`📧 OTP (fallback): ${email} - Code: ${otp}`);
-    return { success: false, error: err.message };
+    console.log(`\n🔑 OTP CODE FOR ${email} (fallback - email failed): ${otp}\n`);
+    return { success: false, error: err.message, details: err.code || err.response };
   }
 }
 

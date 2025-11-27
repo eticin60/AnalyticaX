@@ -13,6 +13,7 @@ const authRoutes = require("./routes/auth");
 const analysisRoutes = require("./routes/analysis");
 const paymentRoutes = require("./routes/paymentRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const testRoutes = require("./routes/testRoutes");
 
 const app = express();
 
@@ -136,6 +137,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/analysis", analysisRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/test", testRoutes);
 
 // Maintenance status endpoint
 app.get("/api/maintenance/status", (req, res) => {
