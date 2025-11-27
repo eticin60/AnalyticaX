@@ -1371,6 +1371,10 @@ button:active {
 
   <!-- Right Actions -->
   <div class="nav-actions" style="position:static;flex:0 0 auto;pointer-events:auto;">
+    <div id="navLoggedOut" style="display:none;gap:24px;align-items:center;">
+      <a href="login.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:400;transition:all 0.3s ease;position:relative;">Log in</a>
+      <a href="register.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:400;transition:all 0.3s ease;position:relative;">Start free</a>
+    </div>
     <div id="navLoggedIn" style="display:flex;gap:24px;align-items:center;flex-direction:row;flex-wrap:nowrap;">
       <div id="navCredits" style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:400;">Credits: --</div>
       <a href="dashboard.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:400;transition:all 0.3s ease;white-space:nowrap;position:relative;">Dashboard</a>
@@ -1944,6 +1948,9 @@ async function analyze() {
               localStorage.setItem("last_analysis_data", JSON.stringify(json.data));
             }
             
+            // Refresh credits after successful analysis (credits may have been deducted)
+            await refreshCredits();
+            
             updateRightPanelFromAI(json.data, tf);
             fillResult(json.data, file, tf);
 
@@ -2414,13 +2421,74 @@ async function storeFingerprint(){
     }
 }
 
-async function loadUserCredits(){
+// ==== CHECK LOGIN STATUS AND LOAD USER DATA ====
+async function checkLoginStatus() {
     const token = localStorage.getItem("ax_token");
-    if(!token) {
-        const creditsEl = document.getElementById("navCredits");
-        if(creditsEl) creditsEl.textContent = "Credits: --";
-        return;
+    const navOut = document.getElementById("navLoggedOut");
+    const navIn = document.getElementById("navLoggedIn");
+    
+    if (!token) {
+        // Not logged in - show login buttons
+        if (navOut) navOut.style.display = "flex";
+        if (navIn) navIn.style.display = "none";
+        return false;
     }
+    
+    // Verify token and load user data
+    try {
+        const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/auth/me`, {
+            headers: {
+                "Authorization": "Bearer " + token,
+                "x-device-id": localStorage.getItem("ax_device_id"),
+                "x-device-fingerprint": localStorage.getItem("ax_fingerprint")
+            }
+        });
+        
+        const data = await res.json();
+        
+        if (data.otpRequired) {
+            // OTP required - redirect to OTP page
+            window.location.href = "otp.html?email=" + encodeURIComponent(data.email || "");
+            return false;
+        }
+        
+        if (data.ok) {
+            // User is logged in - show user info
+            if (navOut) navOut.style.display = "none";
+            if (navIn) navIn.style.display = "flex";
+            
+            // Update credits
+            const creditsEl = document.getElementById("navCredits");
+            if (creditsEl) {
+                creditsEl.textContent = `Credits: ${data.credits ?? 0}`;
+            }
+            
+            // Store credits in localStorage for quick access
+            localStorage.setItem("ax_user_credits", data.credits || 0);
+            
+            return true;
+        } else {
+            // Token invalid - clear it and show login
+            localStorage.removeItem("ax_token");
+            localStorage.removeItem("ax_device_id");
+            localStorage.removeItem("ax_fingerprint");
+            if (navOut) navOut.style.display = "flex";
+            if (navIn) navIn.style.display = "none";
+            return false;
+        }
+    } catch (err) {
+        console.error("Auth check error:", err);
+        // On error, assume not logged in (don't redirect if backend is down)
+        if (navOut) navOut.style.display = "flex";
+        if (navIn) navIn.style.display = "none";
+        return false;
+    }
+}
+
+// ==== PERIODIC CREDIT REFRESH ====
+async function refreshCredits() {
+    const token = localStorage.getItem("ax_token");
+    if (!token) return;
     
     try {
         const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/auth/me`, {
@@ -2431,24 +2499,35 @@ async function loadUserCredits(){
             }
         });
         
-        if(res.ok) {
+        if (res.ok) {
             const data = await res.json();
-            const creditsEl = document.getElementById("navCredits");
-            if(creditsEl) {
-                creditsEl.textContent = `Credits: ${data.credits || 0}`;
+            if (data.ok) {
+                const creditsEl = document.getElementById("navCredits");
+                if (creditsEl) {
+                    creditsEl.textContent = `Credits: ${data.credits ?? 0}`;
+                }
+                localStorage.setItem("ax_user_credits", data.credits || 0);
             }
         }
-    } catch(err) {
-        console.error("Credits load error:", err);
+    } catch (err) {
+        console.error("Credits refresh error:", err);
     }
 }
 
 async function initAnalyzePage(){
     await storeFingerprint();
-    await loadUserCredits();
+    await checkLoginStatus();
+    
+    // Refresh credits every 30 seconds
+    setInterval(refreshCredits, 30000);
 }
 
-initAnalyzePage();
+// Initialize on page load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAnalyzePage);
+} else {
+    initAnalyzePage();
+}
 
 // ==== SCROLL HIDE NAVBAR ====
 let lastScrollTop = 0;
