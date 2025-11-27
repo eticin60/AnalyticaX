@@ -70,8 +70,8 @@ function calculateATR(highs, lows, closes, period = 14) {
 }
 
 async function extractChartMetadata(imageBase64) {
-  if (!model) {
-    throw new Error("GEMINI_API_KEY is not configured");
+  if (!model || !genAI || !process.env.GEMINI_API_KEY) {
+    throw new Error("AI service is temporarily unavailable. GEMINI_API_KEY is not configured. Please contact support@AnalyticaX.com.tr");
   }
   const prompt = `
 You are an advanced OCR and image recognition engine specialized in cryptocurrency trading charts and assets.
@@ -112,8 +112,12 @@ If you cannot detect, return empty strings but try to identify the assetType.
 
 
 async function askGemini(prompt, imageBase64) {
-  if (!model) {
-    throw new Error("GEMINI_API_KEY is not configured");
+  if (!model || !genAI) {
+    throw new Error("AI service is temporarily unavailable. GEMINI_API_KEY is not configured. Please contact support@AnalyticaX.com.tr");
+  }
+  
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error("AI service is temporarily unavailable. GEMINI_API_KEY is not set. Please contact support@AnalyticaX.com.tr");
   }
   const result = await model.generateContent([
     prompt,
@@ -397,8 +401,33 @@ RETURN RAW JSON ONLY:
     });
 
   } catch (err) {
-    console.error("GEMINI ERROR:", err);
-    return res.json({ ok: false, error: err.message });
+    console.error("❌ GEMINI ERROR:", err);
+    
+    // Check for specific API key errors
+    if (err.message && (err.message.includes("API key") || err.message.includes("API_KEY") || err.message.includes("API key not valid"))) {
+      console.error("🔑 API Key Error Detected!");
+      return res.status(500).json({ 
+        ok: false, 
+        error: "AI service configuration error. Please contact support@AnalyticaX.com.tr",
+        details: "GEMINI_API_KEY is invalid or not configured properly"
+      });
+    }
+    
+    // Check for network/connection errors
+    if (err.message && (err.message.includes("fetch") || err.message.includes("network") || err.message.includes("ECONNREFUSED"))) {
+      return res.status(500).json({ 
+        ok: false, 
+        error: "AI service connection error. Please try again later.",
+        details: err.message
+      });
+    }
+    
+    // Generic error
+    return res.status(500).json({ 
+      ok: false, 
+      error: err.message || "Analysis failed. Please try again or contact support@AnalyticaX.com.tr",
+      details: process.env.NODE_ENV !== 'production' ? err.stack : undefined
+    });
   }
 };
 

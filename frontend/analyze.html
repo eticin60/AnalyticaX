@@ -1881,11 +1881,27 @@ async function analyze() {
                 body: JSON.stringify({ imageBase64: base64 })
             });
 
-            const json = await aiRes.json();
+            let json;
+            try {
+                json = await aiRes.json();
+            } catch (parseError) {
+                overlay.style.display = "none";
+                console.error("JSON Parse Error:", parseError);
+                return alert("❌ Server Error: Invalid response from server. Please try again or contact support@AnalyticaX.com.tr");
+            }
 
             if (!aiRes.ok || !json.ok) {
                 overlay.style.display = "none";
-                return alert("Frontend Error: " + (json.error || aiRes.statusText));
+                const errorMsg = json.error || json.message || aiRes.statusText || "Unknown error";
+                const details = json.details ? `\n\nDetails: ${json.details}` : "";
+                
+                // Check for API key errors
+                if (errorMsg.includes("API key") || errorMsg.includes("GEMINI_API_KEY") || errorMsg.includes("configuration")) {
+                    alert(`❌ AI Service Error\n\n${errorMsg}${details}\n\nPlease contact support@AnalyticaX.com.tr for assistance.`);
+                } else {
+                    alert(`❌ Analysis Error\n\n${errorMsg}${details}`);
+                }
+                return;
             }
 
             let rawCoin =
@@ -1933,7 +1949,14 @@ async function analyze() {
 
         } catch (err) {
             overlay.style.display = "none";
-            alert("Frontend Error: " + err.message);
+            console.error("Analysis Error:", err);
+            
+            // Network errors
+            if (err.message && (err.message.includes("fetch") || err.message.includes("network") || err.message.includes("Failed to fetch"))) {
+                alert("❌ Network Error\n\nCannot connect to server. Please check your internet connection and try again.\n\nIf this persists, contact support@AnalyticaX.com.tr");
+            } else {
+                alert("❌ Error\n\n" + (err.message || "An unexpected error occurred. Please try again or contact support@AnalyticaX.com.tr"));
+            }
         }
     };
 
