@@ -191,10 +191,25 @@ async function resendOTP() {
         return;
     }
 
-    // OTP'yi yeniden göndermek için login endpoint'ini tekrar çağır
-    // Bu, backend'de OTP'yi yeniden generate edip email gönderecek
-    alert("Please try logging in again to receive a new OTP code.");
-    window.location.href = "login.html";
+    try {
+        const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/auth/resend-otp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email })
+        });
+
+        const data = await res.json();
+        
+        if (data.ok) {
+            alert("✅ OTP has been re-sent to your email. Please check your inbox.\n\n" + 
+                  (data.debug ? `Debug: OTP = ${data.debug.otp}` : ""));
+        } else {
+            alert("❌ Failed to resend OTP: " + (data.message || "Please check Railway logs for the OTP code."));
+        }
+    } catch (error) {
+        console.error("Resend OTP error:", error);
+        alert("❌ Error: " + error.message + "\n\nPlease check Railway logs for the OTP code.");
+    }
 }
 
 /* PARTICLE BACKGROUND (same as dashboard) */
