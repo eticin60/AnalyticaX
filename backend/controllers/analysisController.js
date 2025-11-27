@@ -73,7 +73,9 @@ async function extractChartMetadata(imageBase64) {
   if (!model || !genAI || !process.env.GEMINI_API_KEY) {
     throw new Error("AI service is temporarily unavailable. GEMINI_API_KEY is not configured. Please contact support@AnalyticaX.com.tr");
   }
-  const prompt = `
+  
+  try {
+    const prompt = `
 You are an advanced OCR and image recognition engine specialized in cryptocurrency trading charts and assets.
 
 Analyze the image and detect:
@@ -95,19 +97,39 @@ RETURN JSON ONLY:
 If you cannot detect, return empty strings but try to identify the assetType.
 `;
 
-  const result = await model.generateContent([
-    prompt,
-    {
-      inlineData: {
-        data: imageBase64.split(",")[1],
-        mimeType: "image/png"
+    const result = await model.generateContent([
+      prompt,
+      {
+        inlineData: {
+          data: imageBase64.split(",")[1],
+          mimeType: "image/png"
+        }
       }
-    }
-  ]);
+    ]);
 
-  let txt = result.response.text();
-  txt = txt.replace(/```json/gi, "").replace(/```/g, "").trim();
-  return JSON.parse(txt);
+    let txt = result.response.text();
+    txt = txt.replace(/```json/gi, "").replace(/```/g, "").trim();
+    return JSON.parse(txt);
+  } catch (geminiError) {
+    console.error("❌ Gemini Metadata Extraction Error:", geminiError);
+    
+    // Check for API key specific errors
+    if (geminiError.message && (
+      geminiError.message.includes("API key") || 
+      geminiError.message.includes("API_KEY") || 
+      geminiError.message.includes("API key not valid") ||
+      geminiError.message.includes("API_KEY_INVALID") ||
+      geminiError.status === 400 ||
+      (geminiError.error && geminiError.error.message && geminiError.error.message.includes("API key"))
+    )) {
+      console.error("🔑 API Key Validation Error in extractChartMetadata!");
+      console.error("   API Key (first 10 chars):", process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.substring(0, 10) + "..." : "NOT SET");
+      throw new Error("GEMINI_API_KEY is invalid or expired. Please check the API key in Railway environment variables and ensure it's active in Google AI Studio.");
+    }
+    
+    // Re-throw other errors
+    throw geminiError;
+  }
 }
 
 
@@ -119,19 +141,41 @@ async function askGemini(prompt, imageBase64) {
   if (!process.env.GEMINI_API_KEY) {
     throw new Error("AI service is temporarily unavailable. GEMINI_API_KEY is not set. Please contact support@AnalyticaX.com.tr");
   }
-  const result = await model.generateContent([
-    prompt,
-    {
-      inlineData: {
-        data: imageBase64.split(",")[1],
-        mimeType: "image/png",
+  
+  try {
+    const result = await model.generateContent([
+      prompt,
+      {
+        inlineData: {
+          data: imageBase64.split(",")[1],
+          mimeType: "image/png",
+        },
       },
-    },
-  ]);
+    ]);
 
-  let raw = result.response.text();
-  raw = raw.replace(/```json/gi, "").replace(/```/g, "").trim();
-  return raw;
+    let raw = result.response.text();
+    raw = raw.replace(/```json/gi, "").replace(/```/g, "").trim();
+    return raw;
+  } catch (geminiError) {
+    console.error("❌ Gemini API Error:", geminiError);
+    
+    // Check for API key specific errors
+    if (geminiError.message && (
+      geminiError.message.includes("API key") || 
+      geminiError.message.includes("API_KEY") || 
+      geminiError.message.includes("API key not valid") ||
+      geminiError.message.includes("API_KEY_INVALID") ||
+      geminiError.status === 400 ||
+      (geminiError.error && geminiError.error.message && geminiError.error.message.includes("API key"))
+    )) {
+      console.error("🔑 API Key Validation Error!");
+      console.error("   API Key (first 10 chars):", process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.substring(0, 10) + "..." : "NOT SET");
+      throw new Error("GEMINI_API_KEY is invalid or expired. Please check the API key in Railway environment variables and ensure it's active in Google AI Studio.");
+    }
+    
+    // Re-throw other errors
+    throw geminiError;
+  }
 }
 
 exports.analyzeChart = async (req, res) => {
