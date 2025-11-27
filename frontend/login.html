@@ -427,6 +427,34 @@ function drawParticles(){
 }
 drawParticles();
 
+// Check backend health before login
+async function checkBackendHealth() {
+    const API_BASE = window.API_BASE || 'https://analyticax-production.up.railway.app';
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+        
+        const res = await fetch(`${API_BASE}/api/health`, {
+            method: "GET",
+            signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (res.ok) {
+            const data = await res.json();
+            return { ok: true, data };
+        }
+        return { ok: false, status: res.status };
+    } catch (error) {
+        console.error("Backend health check failed:", error);
+        if (error.name === 'AbortError') {
+            return { ok: false, error: 'Backend health check timeout (5s)' };
+        }
+        return { ok: false, error: error.message };
+    }
+}
+
 async function loginUser() {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
@@ -438,8 +466,22 @@ async function loginUser() {
 
     const btn = document.querySelector(".login-card button");
     const originalText = btn.textContent;
-    btn.textContent = "Logging in...";
+    btn.textContent = "Checking connection...";
     btn.disabled = true;
+
+    // First check if backend is reachable
+    const healthCheck = await checkBackendHealth();
+    if (!healthCheck.ok) {
+        btn.textContent = originalText;
+        btn.disabled = false;
+        const errorMsg = healthCheck.error 
+            ? `Backend server is not reachable.\n\nError: ${healthCheck.error}\n\nPlease check:\n1. Railway deployment status\n2. Backend service is running\n3. Network connection\n\nBackend URL: ${window.API_BASE || 'https://analyticax-production.up.railway.app'}`
+            : `Backend server returned error status: ${healthCheck.status}\n\nPlease check Railway deployment logs.`;
+        alert(errorMsg);
+        return;
+    }
+
+    btn.textContent = "Logging in...";
 
     try {
         let deviceId = localStorage.getItem("ax_device_id");
