@@ -95,9 +95,9 @@ canvas#fx{position:fixed;inset:0;z-index:-3;}
     See you soon!
   </div>
 
-  <div class="counter">Redirecting in <span id="sec">3</span> seconds...</div>
+  <div class="counter">Redirecting to homepage in <span id="sec">3</span> seconds...</div>
 
-  <button class="btn" onclick="goLogin()">Go to Login</button>
+  <button class="btn" onclick="goHome()">Go to Homepage</button>
 </div>
 
 <script>
@@ -131,12 +131,12 @@ let timer=setInterval(()=>{
   document.getElementById("sec").textContent=s;
   if(s<=0){
     clearInterval(timer);
-    goLogin();
+    goHome();
   }
 },1000);
 
-function goLogin(){
-  window.location.href="login.html";
+function goHome(){
+  window.location.href="index.html";
 }
 </script>
 
