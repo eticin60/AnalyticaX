@@ -5,12 +5,15 @@
   <title>Verify Payment — AnalyticaX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="js/api-config.js"></script>
+  <script src="js/maintenance-check.js"></script>
   
   <style>
     :root{
       --neon:#00E5FF;
       --magenta:#FF4DFF;
-      --accent-green:#14F195;
+      --cyan:#00f0ff;
+      --vio:#5b2cff;
       --bg:#020617;
       --panel:#0b1020;
       --text-soft:#A0AEC0;
@@ -24,34 +27,36 @@
       color:#fff;
       min-height:100vh;
       padding:20px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
     }
 
-    .verify-card{
+    .wrap{max-width:1200px;margin:0 auto;padding-top:40px;}
+
+    /* Input Form */
+    .verify-form-card{
       background:rgba(15,23,42,.96);
       border-radius:24px;
       padding:32px;
       border:1px solid var(--border-soft);
       box-shadow:0 26px 60px rgba(15,23,42,.95);
-      max-width:500px;
-      width:100%;
+      max-width:600px;
+      margin:0 auto 40px;
     }
 
     .verify-title{
-      font-size:24px;
+      font-size:28px;
       font-weight:600;
       background:linear-gradient(90deg,var(--neon),var(--magenta));
       -webkit-background-clip:text;
       -webkit-text-fill-color:transparent;
       margin-bottom:8px;
+      text-align:center;
     }
 
     .verify-subtitle{
-      font-size:13px;
+      font-size:14px;
       color:var(--text-soft);
       margin-bottom:24px;
+      text-align:center;
     }
 
     .form-group{
@@ -59,20 +64,21 @@
     }
 
     .form-label{
-      font-size:12px;
+      font-size:13px;
       color:var(--text-soft);
       margin-bottom:8px;
       display:block;
+      font-weight:600;
     }
 
     .form-input{
       width:100%;
-      padding:12px;
+      padding:14px;
       border-radius:12px;
       border:1px solid rgba(148,163,184,.5);
       background:rgba(0,0,0,.4);
       color:#fff;
-      font-size:13px;
+      font-size:14px;
       font-family:monospace;
     }
 
@@ -85,7 +91,7 @@
     .btn-verify{
       width:100%;
       padding:14px;
-      border-radius:999px;
+      border-radius:12px;
       border:none;
       background:linear-gradient(90deg,var(--neon),var(--magenta));
       color:#020617;
@@ -107,14 +113,220 @@
       cursor:not-allowed;
     }
 
-    .info-box{
-      background:rgba(15,23,42,.7);
-      border-radius:12px;
-      padding:12px;
+    /* Step 6 Result Display (from payment.html) */
+    .result-container{
+      display:none;
+      margin-top:40px;
+    }
+
+    .result-container.active{
+      display:block;
+    }
+
+    .productDetails{
+      background:rgba(15,23,42,.96);
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:14px;
+      padding:20px;
+      margin-bottom:28px;
+    }
+
+    .productDetails h3{
+      margin-top:0;
+      margin-bottom:12px;
+      font-size:18px;
+      color:#fff;
+    }
+
+    .tx-summary.enhanced{
+      background:linear-gradient(180deg, rgba(10,15,40,.9), rgba(5,10,20,.85));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      box-shadow:0 0 25px rgba(0,240,255,.15), inset 0 0 0 1px rgba(255,255,255,.03);
+      padding:22px 26px;
+      position:relative;
+      overflow:hidden;
+      animation:fadeIn .6s ease;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(10px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+
+    .tx-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
       margin-bottom:16px;
+    }
+
+    .tx-info{
+      flex:1;
+    }
+
+    .tx-title{
+      margin:0;
+      font-size:18px;
+      font-weight:800;
+      color:#9ee7ff;
+      text-shadow:0 0 10px rgba(0,240,255,.25);
+    }
+
+    .tx-sub{
+      font-size:12.5px;
+      color:#9aa7c8;
+    }
+
+    .tx-status-badge{
+      font-size:13px;
+      font-weight:800;
+      padding:6px 10px;
+      border-radius:10px;
+      text-transform:uppercase;
+      background:rgba(255,204,77,.1);
+      color:#ffcc4d;
+      border:1px solid rgba(255,204,77,.25);
+    }
+
+    .tx-status-badge.approved{
+      background:rgba(22,209,138,.1);
+      color:#16d18a;
+      border-color:rgba(22,209,138,.25);
+    }
+
+    .tx-status-badge.processing{
+      background:rgba(0,240,255,.1);
+      color:#00f0ff;
+      border-color:rgba(0,240,255,.25);
+    }
+
+    .tx-status-badge.rejected{
+      background:rgba(255,75,159,.1);
+      color:#ff4b9f;
+      border-color:rgba(255,75,159,.25);
+    }
+
+    .tx-status-badge.delivered{
+      background:rgba(22,209,138,.15);
+      color:#93ffb0;
+      border-color:rgba(22,209,138,.45);
+    }
+
+    .tx-body{
+      border-top:1px dashed rgba(255,255,255,.08);
+      padding-top:12px;
+    }
+
+    .tx-body .kv{
+      display:flex;
+      justify-content:space-between;
+      padding:8px 0;
+      font-size:14px;
+      border-bottom:1px dashed rgba(255,255,255,.05);
+      color:#cfe0ff;
+    }
+
+    .tx-body .k{
+      color:#00f0ff;
+      font-weight:600;
+    }
+
+    .tx-footer{
+      margin-top:16px;
+    }
+
+    .tx-progress{
+      height:6px;
+      background:rgba(255,255,255,.05);
+      border-radius:10px;
+      overflow:hidden;
+    }
+
+    .tx-progress .tx-bar{
+      height:100%;
+      width:40%;
+      background:linear-gradient(90deg,#00f0ff,#5b2cff);
+      border-radius:10px;
+      transition:width 0.5s ease;
+    }
+
+    .tx-timestamp{
+      margin-top:8px;
       font-size:12px;
-      color:var(--text-soft);
-      border:1px solid rgba(148,163,184,.3);
+      color:#aab2d8;
+      text-align:right;
+    }
+
+    /* Timeline */
+    .timeline{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      margin-top:24px;
+    }
+
+    .tstep{
+      display:flex;
+      gap:12px;
+    }
+
+    .tbadge{
+      min-width:72px;
+      text-align:center;
+      padding:6px 10px;
+      border-radius:10px;
+      font-weight:800;
+      font-size:11px;
+      background:rgba(0,240,255,.12);
+      color:#8fe7ff;
+      border:1px solid rgba(0,240,255,.25);
+    }
+
+    .tbadge.dim{
+      background:rgba(255,255,255,.05);
+      color:#bcd0ff;
+      border-color:rgba(255,255,255,.12);
+    }
+
+    .tcontent{
+      flex:1;
+    }
+
+    .tname{
+      font-weight:700;
+      margin-bottom:4px;
+      color:#fff;
+    }
+
+    .tdesc{
+      font-size:13px;
+      color:#cfe0ff;
+    }
+
+    .tstep.active .tname{
+      color:#ff9b6a;
+    }
+
+    .tstep.done .tbadge{
+      background:rgba(22,209,138,.12);
+      color:#16d18a;
+      border-color:rgba(22,209,138,.25);
+    }
+
+    .tstep.done .tname{
+      color:#16d18a;
+    }
+
+    .tstep.error .tbadge{
+      background:rgba(255,75,159,.1);
+      color:#ff4b9f;
+      border-color:rgba(255,75,159,.25);
+    }
+
+    .tstep.error .tname{
+      color:#ff4b9f;
     }
 
     .loading-overlay{
@@ -158,36 +370,108 @@
       margin-top:16px;
       color:var(--neon);
       text-decoration:none;
-      font-size:12px;
+      font-size:13px;
+      text-align:center;
+      width:100%;
     }
 
     .back-link:hover{
       text-decoration:underline;
     }
+
+    .error-message{
+      background:rgba(255,75,159,.1);
+      border:1px solid rgba(255,75,159,.3);
+      border-radius:12px;
+      padding:12px;
+      margin-bottom:16px;
+      color:#ff9bbf;
+      font-size:13px;
+      text-align:center;
+      display:none;
+    }
+
+    .error-message.show{
+      display:block;
+    }
   </style>
-  <script src="js/api-config.js"></script>
 </head>
 <body>
-  <div class="verify-card">
-    <h1 class="verify-title">Verify Payment</h1>
-    <p class="verify-subtitle">Enter your transaction ID (TXID) to verify your payment and add credits to your account.</p>
+  <div class="wrap">
+    <!-- Input Form -->
+    <div class="verify-form-card" id="inputForm">
+      <h1 class="verify-title">Verify Payment</h1>
+      <p class="verify-subtitle">Enter your transaction ID (TXID) to verify your payment and view detailed transaction information.</p>
 
-    <div class="info-box">
-      <strong>Plan:</strong> <span id="planName">—</span><br>
-      <strong>Amount:</strong> <span id="planAmount">—</span><br>
-      <strong>Credits:</strong> <span id="planCredits">—</span>
+      <div class="error-message" id="errorMessage"></div>
+
+      <form id="verifyForm">
+        <div class="form-group">
+          <label class="form-label" for="txid">Transaction ID (TXID)</label>
+          <input type="text" id="txid" class="form-input" placeholder="Enter your transaction ID" required>
+        </div>
+
+        <button type="submit" class="btn-verify" id="btnVerify">🔗 Verify Transaction</button>
+      </form>
+
+      <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
     </div>
 
-    <form id="verifyForm">
-      <div class="form-group">
-        <label class="form-label" for="txid">Transaction ID (TXID)</label>
-        <input type="text" id="txid" class="form-input" placeholder="Enter your transaction ID" required>
+    <!-- Result Display (Step 6 Style) -->
+    <div class="result-container" id="resultContainer">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start;">
+        <div class="productDetails">
+          <h3>📦 Product Details</h3>
+          <p id="productDetailsText">Transaction details will appear here.</p>
+        </div>
+        <div class="tx-summary enhanced">
+          <div class="tx-head">
+            <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,rgba(0,229,255,.2),rgba(255,77,255,.2));display:flex;align-items:center;justify-content:center;font-size:20px;">💎</div>
+            <div class="tx-info">
+              <h3 class="tx-title">Transaction Details</h3>
+              <div class="tx-sub">AES-256 Encrypted • Chain Verified</div>
+            </div>
+            <div class="tx-status-badge" id="tx-status-badge">PENDING</div>
+          </div>
+          <div class="tx-body">
+            <div class="kv"><span class="k">🪙 Product</span><span id="detProduct">—</span></div>
+            <div class="kv"><span class="k">💰 Amount</span><span id="detAmount">—</span></div>
+            <div class="kv"><span class="k">💵 Price</span><span id="detPrice">—</span></div>
+            <div class="kv"><span class="k">🌐 Network</span><span id="detNetwork">—</span></div>
+            <div class="kv"><span class="k">👛 Your Wallet</span><span id="detWallet">—</span></div>
+            <div class="kv"><span class="k">🏦 Deposit Address</span><span id="detDeposit">—</span></div>
+            <div class="kv"><span class="k">📊 Status</span><span id="detStatus">PENDING</span></div>
+          </div>
+          <div class="tx-footer">
+            <div class="tx-progress"><div class="tx-bar" id="progressBar"></div></div>
+            <div class="tx-timestamp"><span id="tx-time">Updated: —</span></div>
+          </div>
+        </div>
       </div>
-
-      <button type="submit" class="btn-verify" id="btnVerify">Verify Payment</button>
-    </form>
-
-    <a href="premium.html" class="back-link">← Back to Premium Plans</a>
+      <div class="timeline">
+        <div class="tstep" id="tl1">
+          <div class="tbadge">STEP 1</div>
+          <div class="tcontent">
+            <div class="tname">Transaction Verification</div>
+            <div class="tdesc">Awaiting blockchain confirmation.</div>
+          </div>
+        </div>
+        <div class="tstep" id="tl2">
+          <div class="tbadge dim">STEP 2</div>
+          <div class="tcontent">
+            <div class="tname">Processing</div>
+            <div class="tdesc">Preparing secure transfer.</div>
+          </div>
+        </div>
+        <div class="tstep" id="tl3">
+          <div class="tbadge dim">STEP 3</div>
+          <div class="tcontent">
+            <div class="tname">Wallet Transfer</div>
+            <div class="tdesc">Credits delivered to your account.</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="loading-overlay" id="loadingOverlay">
@@ -196,7 +480,7 @@
   </div>
 
   <script>
-    const API_BASE = window.API_BASE || 'https://analyticax.com.tr';
+    const API_BASE = window.API_BASE || 'https://analyticax-production.up.railway.app';
     const token = localStorage.getItem("ax_token");
     
     if(!token) {
@@ -204,81 +488,132 @@
       window.location.href = "login.html";
     }
 
-    // Get plan info from URL or localStorage
-    const urlParams = new URLSearchParams(window.location.search);
-    const planName = urlParams.get("plan") || localStorage.getItem("selectedPlanName") || "Pro pack";
-    const planPrice = parseFloat(urlParams.get("price") || localStorage.getItem("selectedPlanPrice") || "50");
-    const planCredits = parseInt(urlParams.get("credits") || localStorage.getItem("selectedPlanCredits") || "10");
-    const paymentMethod = urlParams.get("method") || localStorage.getItem("selectedPaymentMethod") || "OXAPAY";
+    const PAYMENT_METHODS = [
+      {id:"TRC20-USDT", name:"TRC20 (TRON)"},
+      {id:"ERC20-USDT", name:"ERC20 (Ethereum)"},
+      {id:"BEP20-USDT", name:"BEP20 (BSC)"},
+      {id:"USDC-ERC20", name:"USDC (BEP20-ERC20)"},
+      {id:"BTC", name:"BTC (Bitcoin)"},
+      {id:"OXAPAY", name:"Oxapay Gateway"},
+      {id:"SHOPIER", name:"Shopier (Secure Payment)"},
+      {id:"BINANCE-PAY", name:"Binance Pay"},
+      {id:"OKX-PAY", name:"OKX Pay"}
+    ];
 
-    document.getElementById("planName").textContent = planName;
-    document.getElementById("planAmount").textContent = "$" + planPrice;
-    document.getElementById("planCredits").textContent = planCredits;
+    function updateResultDisplay(payment) {
+      const status = payment.status || "pending";
+      const statusColor = status === "approved" ? "#16d18a" : 
+                         status === "processing" ? "#00f0ff" : 
+                         status === "rejected" ? "#ff4b9f" : 
+                         status === "delivered" ? "#93ffb0" : "#ffcc4d";
+      const statusText = status.toUpperCase();
+
+      // Update status badge
+      const badge = document.getElementById("tx-status-badge");
+      badge.textContent = statusText;
+      badge.className = "tx-status-badge " + status;
+      
+      // Update details
+      document.getElementById("detProduct").textContent = payment.product || payment.plan || "—";
+      document.getElementById("detAmount").textContent = `${payment.credits || 0} Credits`;
+      document.getElementById("detPrice").textContent = `$${payment.amount || 0}`;
+      document.getElementById("detNetwork").textContent = PAYMENT_METHODS.find(m => m.id === payment.method)?.name || payment.network || "—";
+      document.getElementById("detWallet").textContent = payment.wallet || payment.user_address || "—";
+      document.getElementById("detDeposit").textContent = payment.deposit_address || "—";
+      document.getElementById("detStatus").innerHTML = `<span style="color:${statusColor};font-weight:700;">${statusText}</span>`;
+
+      // Update timestamp
+      const updatedAt = payment.updatedAt || payment.createdAt || payment.date;
+      if(updatedAt) {
+        const date = new Date(updatedAt);
+        document.getElementById("tx-time").textContent = `Updated: ${date.toLocaleString()}`;
+      }
+
+      // Update progress bar
+      const progressBar = document.getElementById("progressBar");
+      if(status === "pending") progressBar.style.width = "33%";
+      else if(status === "processing") progressBar.style.width = "66%";
+      else if(status === "approved" || status === "delivered") progressBar.style.width = "100%";
+      else if(status === "rejected") progressBar.style.width = "0%";
+
+      // Update timeline
+      document.querySelectorAll(".tstep").forEach((s, idx) => {
+        s.classList.remove("active", "done", "error");
+        if(status === "rejected") {
+          if(idx === 0) s.classList.add("error");
+        } else if(status === "approved" || status === "delivered") {
+          if(idx < 3) {
+            s.classList.add("done");
+            s.querySelector(".tbadge").classList.remove("dim");
+          }
+        } else if(status === "processing") {
+          if(idx === 0) s.classList.add("done");
+          if(idx === 1) s.classList.add("active");
+        } else if(status === "pending") {
+          if(idx === 0) s.classList.add("active");
+        }
+      });
+
+      // Update product details
+      document.getElementById("productDetailsText").innerHTML = `
+        <p><b>Plan:</b> ${payment.plan || "—"}</p>
+        <p><b>Product:</b> ${payment.product || payment.plan || "—"}</p>
+        <p><b>Method:</b> ${PAYMENT_METHODS.find(m => m.id === payment.method)?.name || payment.method || "—"}</p>
+        <p><b>TXID:</b> <code style="font-size:11px;color:#9ee7ff;">${payment.txid || "—"}</code></p>
+        <p><b>Status:</b> <span style="color:${statusColor};">${statusText}</span></p>
+      `;
+
+      // Show result container
+      document.getElementById("resultContainer").classList.add("active");
+      document.getElementById("inputForm").style.display = "none";
+    }
 
     document.getElementById("verifyForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       
       const txid = document.getElementById("txid").value.trim();
       if(!txid) {
-        alert("Please enter transaction ID");
+        document.getElementById("errorMessage").textContent = "Please enter transaction ID";
+        document.getElementById("errorMessage").classList.add("show");
         return;
       }
 
       const overlay = document.getElementById("loadingOverlay");
       const btn = document.getElementById("btnVerify");
+      const errorMsg = document.getElementById("errorMessage");
       overlay.classList.add("active");
       btn.disabled = true;
+      errorMsg.classList.remove("show");
       document.getElementById("loadingText").textContent = "Verifying Payment...";
 
       try {
-        const res = await fetch(`${API_BASE}/api/payments/verify`, {
-          method: "POST",
+        const res = await fetch(`${API_BASE}/api/payments/txid/${encodeURIComponent(txid)}`, {
+          method: "GET",
           headers: {
-            "Content-Type": "application/json",
             "Authorization": "Bearer " + token,
             "x-device-id": localStorage.getItem("ax_device_id"),
             "x-device-fingerprint": localStorage.getItem("ax_fingerprint")
-          },
-          body: JSON.stringify({
-            txid,
-            planName,
-            amount: planPrice,
-            credits: planCredits,
-            method: paymentMethod
-          })
+          }
         });
 
         const data = await res.json();
         overlay.classList.remove("active");
         btn.disabled = false;
 
-        if(data.ok) {
-          if(data.status === "pending") {
-            alert("✅ Payment submitted successfully! Your transaction is pending admin approval. You will receive credits once approved.");
-          } else {
-            alert("✅ Payment verified successfully! " + (data.credits || planCredits) + " credits added to your account.");
-          }
-          // Clear stored plan info
-          localStorage.removeItem("selectedPlanName");
-          localStorage.removeItem("selectedPlanPrice");
-          localStorage.removeItem("selectedPlanCredits");
-          localStorage.removeItem("selectedPaymentMethod");
-          // Redirect to premium page
-          window.location.href = "premium.html?verified=1";
+        if(data.ok && data.payment) {
+          updateResultDisplay(data.payment);
         } else {
-          alert("❌ Verification failed: " + (data.error || data.message || "Please check your TXID"));
+          errorMsg.textContent = data.error || data.message || "Payment not found. Please check your TXID.";
+          errorMsg.classList.add("show");
         }
       } catch(err) {
         overlay.classList.remove("active");
         btn.disabled = false;
         console.error("Verify error:", err);
-        alert("Error: " + err.message);
+        errorMsg.textContent = "Error: " + err.message;
+        errorMsg.classList.add("show");
       }
     });
   </script>
 </body>
 </html>
-
-
-
-

@@ -144,3 +144,49 @@ exports.verifyPayment = async (req, res) => {
     return res.json({ ok: false, error: "Verification failed." });
   }
 };
+
+// Get payment by TXID
+exports.getPaymentByTxid = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { txid } = req.params;
+
+    if (!txid) {
+      return res.json({ ok: false, error: "TXID is required." });
+    }
+
+    const payment = await Payment.findOne({ 
+      txid: txid.toLowerCase().trim(), 
+      userId 
+    }).populate("userId", "email");
+
+    if (!payment) {
+      return res.json({ ok: false, error: "Payment not found." });
+    }
+
+    return res.json({
+      ok: true,
+      payment: {
+        _id: payment._id,
+        plan: payment.plan,
+        product: payment.product || payment.plan,
+        amount: payment.amount,
+        credits: payment.credits || 0,
+        method: payment.method || "manual",
+        network: payment.network || "TRC20",
+        txid: payment.txid,
+        wallet: payment.wallet || payment.user_address || "—",
+        user_address: payment.user_address || payment.wallet || "—",
+        deposit_address: payment.deposit_address || "—",
+        status: payment.status,
+        meta: payment.meta || {},
+        createdAt: payment.createdAt || payment.date,
+        updatedAt: payment.updatedAt || payment.createdAt || payment.date,
+        date: payment.date || payment.createdAt
+      }
+    });
+  } catch (err) {
+    console.error("Get payment by TXID error:", err);
+    return res.json({ ok: false, error: "Failed to get payment." });
+  }
+};
