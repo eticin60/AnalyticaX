@@ -305,8 +305,13 @@ if(!token) {
 }
 
 document.getElementById("btnLogout").onclick=()=>{
+  // Clear all auth data
   localStorage.removeItem("ax_token");
-  location.href="login.html";
+  localStorage.removeItem("ax_device_id");
+  localStorage.removeItem("ax_fingerprint");
+  localStorage.removeItem("pending_email");
+  // Redirect to logout page
+  location.href="logout.html";
 };
 
 async function loadProfile(){

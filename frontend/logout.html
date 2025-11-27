@@ -113,8 +113,16 @@ function draw(){x.clearRect(0,0,c.width,c.height);
 }
 draw();
 
-// CLEAR SESSION
+// CLEAR ALL SESSION DATA
 localStorage.removeItem("ax_token");
+localStorage.removeItem("ax_device_id");
+localStorage.removeItem("ax_fingerprint");
+localStorage.removeItem("pending_email");
+localStorage.removeItem("ax_user_credits");
+localStorage.removeItem("selectedPlanName");
+localStorage.removeItem("selectedPlanPrice");
+localStorage.removeItem("selectedPlanCredits");
+localStorage.removeItem("selectedPaymentMethod");
 
 // REDIRECT
 let s=3;

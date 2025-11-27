@@ -1160,8 +1160,13 @@
     }
 
     document.getElementById("btnLogout").addEventListener("click", ()=>{
+      // Clear all auth data
       localStorage.removeItem("ax_token");
-      window.location.href = "login.html";
+      localStorage.removeItem("ax_device_id");
+      localStorage.removeItem("ax_fingerprint");
+      localStorage.removeItem("pending_email");
+      // Redirect to logout page
+      window.location.href = "logout.html";
     });
 
     function formatDate(dateStr){

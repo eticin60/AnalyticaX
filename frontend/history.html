@@ -620,10 +620,14 @@ async function loadUser() {
 loadUser();
 
 function logoutUser() {
+  // Clear all auth data
   localStorage.removeItem("ax_token");
   localStorage.removeItem("ax_device_id");
   localStorage.removeItem("ax_fingerprint");
-  window.location.href = "login.html";
+  localStorage.removeItem("pending_email");
+  localStorage.removeItem("ax_user_credits");
+  // Redirect to logout page
+  window.location.href = "logout.html";
 }
 
 document.getElementById("btnLogout").onclick = (e) => {

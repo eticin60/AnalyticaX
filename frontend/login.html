@@ -463,33 +463,74 @@ async function loginUser() {
         const loginUrl = `${API_BASE}/api/auth/login`;
         console.log("🔗 Login URL:", loginUrl);
         
-        let res = await fetch(loginUrl, {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                email,
-                password,
-                deviceId,
-                deviceFingerprint
-            })
-        });
+        // Add timeout to fetch request
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+        
+        let res;
+        try {
+            res = await fetch(loginUrl, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                    deviceId,
+                    deviceFingerprint
+                }),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+        } catch (fetchError) {
+            clearTimeout(timeoutId);
+            if (fetchError.name === 'AbortError') {
+                console.error("Request timeout");
+                alert("Request timeout: Backend is not responding. Please check if the server is running.\n\nIf this persists, check Railway logs.");
+            } else if (fetchError.message.includes('Failed to fetch') || fetchError.message.includes('NetworkError')) {
+                console.error("Network error:", fetchError);
+                alert("Network error: Cannot connect to backend server.\n\nPossible causes:\n- Backend is not running\n- CORS issue\n- Network connectivity problem\n\nCheck Railway deployment status.");
+            } else {
+                console.error("Fetch error:", fetchError);
+                alert("Connection error: " + fetchError.message);
+            }
+            btn.textContent = originalText;
+            btn.disabled = false;
+            return;
+        }
 
         console.log("Response status:", res.status);
-        console.log("Response headers:", res.headers);
+        console.log("Response statusText:", res.statusText);
         console.log("Response URL:", res.url);
+        console.log("Response headers:", Object.fromEntries(res.headers.entries()));
 
         // Check if response is ok before parsing
         if (!res.ok) {
             let errorText = "";
+            let errorDetails = "";
             try {
                 const errorData = await res.json();
                 errorText = errorData.message || errorData.error || `HTTP ${res.status}: ${res.statusText}`;
+                errorDetails = errorData.error || "";
+                console.error("Login error response:", errorData);
             } catch (e) {
+                const responseText = await res.text();
                 errorText = `HTTP ${res.status}: ${res.statusText}`;
+                errorDetails = responseText.substring(0, 200);
+                console.error("Error response text:", responseText);
             }
-            alert(`Login failed: ${errorText}\n\nPlease check your credentials or try again later.`);
+            
+            let alertMessage = `Login failed: ${errorText}`;
+            if (res.status === 0 || res.status === 404) {
+                alertMessage += "\n\n⚠️ Backend server not found. Check if Railway deployment is running.";
+            } else if (res.status === 500) {
+                alertMessage += "\n\n⚠️ Server error. Check Railway logs for details.";
+            } else if (res.status === 401 || res.status === 403) {
+                alertMessage += "\n\n⚠️ Invalid credentials or unauthorized access.";
+            }
+            
+            alert(alertMessage);
             btn.textContent = originalText;
             btn.disabled = false;
             return;
@@ -512,26 +553,34 @@ async function loginUser() {
 
         if (data.otpRequired) {
             localStorage.setItem("pending_email", email);
+            btn.textContent = originalText;
+            btn.disabled = false;
             window.location.href = "otp.html";
             return;
         }
 
         if (!data.ok) {
-            alert(data.message || data.error || "Login failed. Please check your credentials.");
+            const errorMsg = data.message || data.error || "Login failed. Please check your credentials.";
+            console.error("Login failed:", errorMsg);
+            alert(errorMsg);
             btn.textContent = originalText;
             btn.disabled = false;
             return;
         }
 
         if (!data.token) {
-            alert("Login failed: No token received.");
+            console.error("Login failed: No token received");
+            alert("Login failed: No token received from server.");
             btn.textContent = originalText;
             btn.disabled = false;
             return;
         }
 
+        // Save token and device info
         localStorage.setItem("ax_token", data.token);
-        alert("Login successful! Redirecting...");
+        console.log("✅ Login successful! Token saved.");
+        
+        // Don't show alert, just redirect
         window.location.href = "dashboard.html";
     } catch (error) {
         console.error("Login error:", error);

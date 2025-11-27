@@ -835,9 +835,25 @@ const API_BASE = window.API_BASE || 'https://analyticax.com.tr';
 const token = localStorage.getItem("ax_token");
 if (!token) window.location.href = "login.html";
 
-document.getElementById("btnLogout").onclick = function(){
+function logoutUser() {
+  // Clear all auth data
   localStorage.removeItem("ax_token");
-  window.location.href = "login.html";
+  localStorage.removeItem("ax_device_id");
+  localStorage.removeItem("ax_fingerprint");
+  localStorage.removeItem("pending_email");
+  localStorage.removeItem("ax_user_credits");
+  localStorage.removeItem("selectedPlanName");
+  localStorage.removeItem("selectedPlanPrice");
+  localStorage.removeItem("selectedPlanCredits");
+  localStorage.removeItem("selectedPaymentMethod");
+  // Redirect to logout page
+  window.location.href = "logout.html";
+}
+
+document.getElementById("btnLogout").onclick = function(e){
+  e.preventDefault();
+  e.stopPropagation();
+  logoutUser();
 };
 
 async function loadMe(){
