@@ -18,7 +18,10 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-// Admin login
+// In-memory store for step 1 sessions (expires after 5 minutes)
+const adminStep1Sessions = {};
+
+// Admin login - Two-step authentication
 exports.adminLogin = async (req, res) => {
   try {
     // Check if admin credentials are configured
@@ -27,25 +30,85 @@ exports.adminLogin = async (req, res) => {
       return res.json({ ok: false, message: "Admin panel is not configured. Please contact the administrator." });
     }
     
-    const { username, password } = req.body;
+    const { username, password, step1Token, jwtSecret } = req.body;
     
-    if (!username || !password) {
-      return res.json({ ok: false, message: "Username and password are required" });
+    // STEP 1: Username & Password verification
+    if (username && password && !step1Token) {
+      // Use constant-time comparison to prevent timing attacks
+      const usernameMatch = username === ADMIN_USERNAME;
+      const passwordMatch = password === ADMIN_PASSWORD;
+      
+      if (usernameMatch && passwordMatch) {
+        // Generate temporary step1Token (expires in 5 minutes)
+        const step1TokenValue = jwt.sign(
+          { step1: true, username, timestamp: Date.now() },
+          ADMIN_JWT_SECRET + "_step1",
+          { expiresIn: "5m" }
+        );
+        
+        // Store session
+        adminStep1Sessions[step1TokenValue] = {
+          username,
+          expires: Date.now() + 5 * 60 * 1000 // 5 minutes
+        };
+        
+        console.log(`✅ Admin step 1 successful: ${username}`);
+        return res.json({ 
+          ok: true, 
+          step1Token: step1TokenValue,
+          message: "Step 1 successful. Please enter JWT Secret." 
+        });
+      }
+      
+      // Always return same error message to prevent username enumeration
+      console.log(`❌ Admin step 1 failed: ${username}`);
+      return res.json({ ok: false, message: "Invalid username or password" });
     }
     
-    // Use constant-time comparison to prevent timing attacks
-    const usernameMatch = username === ADMIN_USERNAME;
-    const passwordMatch = password === ADMIN_PASSWORD;
-    
-    if (usernameMatch && passwordMatch) {
-      const token = jwt.sign({ admin: true, username }, ADMIN_JWT_SECRET, { expiresIn: "7d" });
-      console.log(`✅ Admin login successful: ${username}`);
-      return res.json({ ok: true, token, message: "Admin login successful" });
+    // STEP 2: JWT Secret verification
+    if (step1Token && jwtSecret) {
+      // Verify step1Token
+      let decoded;
+      try {
+        decoded = jwt.verify(step1Token, ADMIN_JWT_SECRET + "_step1");
+      } catch (err) {
+        // Clean up expired sessions
+        delete adminStep1Sessions[step1Token];
+        return res.json({ ok: false, message: "Step 1 token expired. Please login again." });
+      }
+      
+      // Check session exists
+      const session = adminStep1Sessions[step1Token];
+      if (!session || session.expires < Date.now()) {
+        delete adminStep1Sessions[step1Token];
+        return res.json({ ok: false, message: "Step 1 session expired. Please login again." });
+      }
+      
+      // Verify JWT Secret
+      if (jwtSecret !== ADMIN_JWT_SECRET) {
+        console.log(`❌ Admin step 2 failed: Invalid JWT Secret`);
+        return res.json({ ok: false, message: "Invalid JWT Secret" });
+      }
+      
+      // Generate final admin token
+      const finalToken = jwt.sign(
+        { admin: true, username: session.username },
+        ADMIN_JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+      
+      // Clean up step1 session
+      delete adminStep1Sessions[step1Token];
+      
+      console.log(`✅ Admin login successful (step 2): ${session.username}`);
+      return res.json({ 
+        ok: true, 
+        token: finalToken,
+        message: "Admin login successful" 
+      });
     }
     
-    // Always return same error message to prevent username enumeration
-    console.log(`❌ Admin login failed: ${username}`);
-    return res.json({ ok: false, message: "Invalid username or password" });
+    return res.json({ ok: false, message: "Invalid request. Please provide username/password or step1Token/jwtSecret." });
   } catch (err) {
     console.error("Admin login error:", err);
     return res.json({ ok: false, error: err.message });
