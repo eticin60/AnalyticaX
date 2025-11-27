@@ -494,15 +494,15 @@
   <script>
     // Payment methods configuration
     const PAYMENT_METHODS = [
-      {id:"TRC20-USDT", name:"TRC20 (TRON)", desc:"USDT • Fast & low fee", icon:"🟢", status:"live", img:"assets/trc20.png"},
-      {id:"ERC20-USDT", name:"ERC20 (Ethereum)", desc:"USDT • High security", icon:"🔷", status:"live", img:"assets/erc20.png"},
-      {id:"BEP20-USDT", name:"BEP20 (BSC)", desc:"USDT • Low gas on BSC", icon:"🟡", status:"live", img:"assets/bep20.png"},
-      {id:"USDC-ERC20", name:"USDC (BEP20-ERC20)", desc:"Same address for both", icon:"💵", status:"new", img:"assets/usdc.png"},
-      {id:"BTC", name:"BTC (Bitcoin)", desc:"Native Bitcoin network", icon:"₿", status:"new", img:"assets/btc.png"},
-      {id:"OXAPAY", name:"Oxapay Gateway", desc:"Multi-coin crypto gateway", icon:"🔵", status:"live", img:"assets/oxapay.png", url:"https://pay.oxapay.com/13369911"},
-      {id:"SHOPIER", name:"Shopier (Secure Payment)", desc:"Credit / debit card", icon:"💳", status:"closed", img:"assets/shopier.png", url:"https://www.shopier.com/creditusd"},
-      {id:"BINANCE-PAY", name:"Binance Pay", desc:"Pay directly from Binance", icon:"🔶", status:"closed", img:"assets/binance.png"},
-      {id:"OKX-PAY", name:"OKX Pay", desc:"OKX payment gateway", icon:"⚫", status:"closed", img:"assets/okx.png"}
+      {id:"TRC20-USDT", name:"TRC20 (TRON)", desc:"USDT • Fast & low fee", icon:"🟢", status:"live", img:null},
+      {id:"ERC20-USDT", name:"ERC20 (Ethereum)", desc:"USDT • High security", icon:"🔷", status:"live", img:null},
+      {id:"BEP20-USDT", name:"BEP20 (BSC)", desc:"USDT • Low gas on BSC", icon:"🟡", status:"live", img:null},
+      {id:"USDC-ERC20", name:"USDC (BEP20-ERC20)", desc:"Same address for both", icon:"💵", status:"new", img:null},
+      {id:"BTC", name:"BTC (Bitcoin)", desc:"Native Bitcoin network", icon:"₿", status:"new", img:null},
+      {id:"OXAPAY", name:"Oxapay Gateway", desc:"Multi-coin crypto gateway", icon:"🔵", status:"live", img:null, url:"https://pay.oxapay.com/13369911"},
+      {id:"SHOPIER", name:"Shopier (Secure Payment)", desc:"Credit / debit card", icon:"💳", status:"closed", img:null, url:"https://www.shopier.com/creditusd"},
+      {id:"BINANCE-PAY", name:"Binance Pay", desc:"Pay directly from Binance", icon:"🔶", status:"closed", img:null},
+      {id:"OKX-PAY", name:"OKX Pay", desc:"OKX payment gateway", icon:"⚫", status:"closed", img:null}
     ];
 
     const PAYMENT_ADDRESSES = {
@@ -572,7 +572,7 @@
         
         card.innerHTML = `
           ${badge}
-          <img src="${method.img || 'assets/default.png'}" alt="${method.name}" onerror="this.style.display='none';">
+          ${method.img ? `<img src="${method.img}" alt="${method.name}" onerror="this.style.display='none';">` : `<div style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:18px;background:rgba(0,229,255,.1);border-radius:6px;">${method.icon || '💳'}</div>`}
           <div>
             <div style="font-weight:600;font-size:14px;">${method.name}</div>
             <div style="font-size:11px;color:var(--muted);">${method.desc}</div>

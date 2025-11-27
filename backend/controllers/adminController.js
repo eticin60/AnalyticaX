@@ -84,14 +84,20 @@ exports.getPayments = async (req, res) => {
       userEmail: p.userId?.email || "Unknown",
       userId: p.userId?._id || p.userId,
       plan: p.plan,
+      product: p.product || p.plan,
       amount: p.amount,
       credits: p.credits || 0,
       method: p.method || "manual",
+      network: p.network || "TRC20",
       txid: p.txid || "—",
-      wallet: p.wallet || "—",
+      wallet: p.wallet || p.user_address || "—",
+      user_address: p.user_address || p.wallet || "—",
+      deposit_address: p.deposit_address || "—",
       status: p.status,
-      createdAt: p.createdAt,
-      updatedAt: p.updatedAt || p.createdAt
+      meta: p.meta || {},
+      createdAt: p.createdAt || p.date,
+      updatedAt: p.updatedAt || p.createdAt || p.date,
+      date: p.date || p.createdAt
     }));
     
     return res.json({ ok: true, payments: formatted });

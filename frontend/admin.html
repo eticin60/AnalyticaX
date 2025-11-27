@@ -276,6 +276,19 @@ function showTab(name){
 /* ADMIN LOGIN CHECK */
 let adminToken = localStorage.getItem("ax_admin_token");
 
+// Verify token is valid by checking with backend
+async function verifyAdminToken(token) {
+  try {
+    const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/payments`, {
+      headers: { Authorization: "Bearer " + token }
+    });
+    const data = await res.json();
+    return data.ok === true;
+  } catch(err) {
+    return false;
+  }
+}
+
 // Check if logged in
 if(!adminToken) {
   // Show login form
@@ -318,6 +331,14 @@ if(!adminToken) {
     }
   };
 } else {
+  // Verify token is still valid
+  verifyAdminToken(adminToken).then(isValid => {
+    if(!isValid) {
+      localStorage.removeItem("ax_admin_token");
+      location.reload();
+    }
+  });
+  
   // Already logged in, continue with normal admin panel
 
 /* ADMIN TOKEN */
