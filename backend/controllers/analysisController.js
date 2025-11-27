@@ -197,6 +197,17 @@ async function askGemini(prompt, imageBase64) {
 
 exports.analyzeChart = async (req, res) => {
   try {
+    // Check if analyze page is under maintenance
+    const analyzeMaintenance = process.env.ANALYZE_MAINTENANCE === "true";
+    if (analyzeMaintenance) {
+      return res.status(503).json({
+        ok: false,
+        error: "Analyze page is currently under maintenance",
+        message: "We're working on improving the analyze feature. Please check back soon!",
+        maintenance: true
+      });
+    }
+    
     // Check if GEMINI_API_KEY is configured
     if (!process.env.GEMINI_API_KEY || !genAI || !model) {
       console.error("❌ GEMINI_API_KEY is not configured!");
