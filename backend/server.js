@@ -137,6 +137,12 @@ app.use("/api/analysis", analysisRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/admin", adminRoutes);
 
+// Maintenance status endpoint
+app.get("/api/maintenance/status", (req, res) => {
+  const maintenance = process.env.MAINTENANCE_MODE === "true";
+  res.json({ maintenance });
+});
+
 // In production (Railway), frontend is served by GitHub Pages
 // Backend only serves API endpoints
 if (process.env.NODE_ENV !== 'production') {
