@@ -155,17 +155,39 @@ async function sendOTPEmail(email, otp) {
       `,
     };
 
-    // Test connection first
+    // Test connection first with timeout
     console.log(`🔍 Testing SMTP connection...`);
-    await transporter.verify();
-    console.log(`✅ SMTP connection verified`);
+    try {
+      // Verify connection with 10 second timeout
+      const verifyPromise = transporter.verify();
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('SMTP verification timeout (10s)')), 10000)
+      );
+      
+      await Promise.race([verifyPromise, timeoutPromise]);
+      console.log(`✅ SMTP connection verified`);
+    } catch (verifyError) {
+      console.error(`⚠️ SMTP verification failed: ${verifyError.message}`);
+      console.log(`📤 Attempting to send email anyway (some SMTP servers don't support verify)...`);
+      // Continue anyway - some SMTP servers don't support verify()
+    }
     
+    // Send email with timeout
     console.log(`📤 Sending OTP email to ${email}...`);
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`✅ OTP email sent successfully!`);
-    console.log(`   - Message ID: ${info.messageId}`);
-    console.log(`   - Response: ${info.response || 'N/A'}`);
-    return { success: true, messageId: info.messageId };
+    try {
+      const sendPromise = transporter.sendMail(mailOptions);
+      const sendTimeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('SMTP send timeout (15s)')), 15000)
+      );
+      
+      const info = await Promise.race([sendPromise, sendTimeoutPromise]);
+      console.log(`✅ OTP email sent successfully!`);
+      console.log(`   - Message ID: ${info.messageId}`);
+      console.log(`   - Response: ${info.response || 'N/A'}`);
+      return { success: true, messageId: info.messageId };
+    } catch (sendError) {
+      throw sendError; // Re-throw to be caught by outer catch
+    }
   } catch (err) {
     console.error("❌ Email send error:", err);
     console.error("   - Error code:", err.code);

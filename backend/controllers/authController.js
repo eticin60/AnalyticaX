@@ -139,7 +139,11 @@ exports.login = async (req, res) => {
         };
         console.log("OTP for", user.email, "=", otp);
         // Email ile OTP gönder
-        await sendOTPEmail(user.email, otp);
+        // Send OTP email (non-blocking - don't crash if email fails)
+        sendOTPEmail(user.email, otp).catch(err => {
+          console.error("⚠️ OTP email send failed (non-critical):", err.message);
+          // OTP is already logged in emailService, so user can still login
+        });
         return res.json({
           ok: false,
           otpRequired: true,
@@ -164,7 +168,11 @@ exports.login = async (req, res) => {
         };
         console.log("OTP for", user.email, "=", otp);
         // Email ile OTP gönder
-        await sendOTPEmail(user.email, otp);
+        // Send OTP email (non-blocking - don't crash if email fails)
+        sendOTPEmail(user.email, otp).catch(err => {
+          console.error("⚠️ OTP email send failed (non-critical):", err.message);
+          // OTP is already logged in emailService, so user can still login
+        });
         return res.json({
           ok: false,
           otpRequired: true,
@@ -184,8 +192,10 @@ exports.login = async (req, res) => {
       };
 
       console.log("OTP for", user.email, "=", otp);
-      // Email ile OTP gönder
-      await sendOTPEmail(user.email, otp);
+      // Email ile OTP gönder (non-blocking)
+      sendOTPEmail(user.email, otp).catch(err => {
+        console.error("⚠️ OTP email send failed (non-critical):", err.message);
+      });
 
       return res.json({
         ok: false,
@@ -274,23 +284,17 @@ exports.resendOtp = async (req, res) => {
 
     console.log("🔄 Resending OTP for", user.email, "=", otp);
     
-    // Email ile OTP gönder
-    const emailResult = await sendOTPEmail(user.email, otp);
+    // Email ile OTP gönder (non-blocking - don't wait for email)
+    sendOTPEmail(user.email, otp).catch(err => {
+      console.error("⚠️ OTP email send failed (non-critical):", err.message);
+    });
     
-    if (emailResult.success) {
-      return res.json({ 
-        ok: true, 
-        message: "OTP has been re-sent to your email.",
-        debug: process.env.NODE_ENV !== 'production' ? { otp, emailResult } : undefined
-      });
-    } else {
-      // SMTP hatası olsa bile OTP console'da görünüyor
-      return res.json({ 
-        ok: true, 
-        message: "OTP re-sent. Please check your email. If you don't receive it, check Railway logs for the OTP code.",
-        debug: process.env.NODE_ENV !== 'production' ? { otp, error: emailResult.error } : undefined
-      });
-    }
+    // Always return success - OTP is logged in console anyway
+    return res.json({ 
+      ok: true, 
+      message: "OTP has been re-sent. Please check your email. If you don't receive it, check Railway logs for the OTP code.",
+      debug: process.env.NODE_ENV !== 'production' ? { otp } : undefined
+    });
   } catch (err) {
     console.error("❌ Resend OTP error:", err);
     return res.json({ ok: false, error: err.message });
