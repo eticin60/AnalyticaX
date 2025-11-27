@@ -193,11 +193,28 @@ async function sendOTPEmail(email, otp) {
     console.error("   - Error code:", err.code);
     console.error("   - Error command:", err.command);
     console.error("   - Error response:", err.response);
+    console.error("   - Error message:", err.message);
     console.error("   - Full error:", JSON.stringify(err, null, 2));
+    
+    // Common error solutions
+    if (err.code === 'EAUTH') {
+      console.error("💡 AUTH ERROR: Check SMTP_USER and SMTP_PASS in Railway variables");
+      console.error("   - Make sure email and password are correct");
+      console.error("   - Some email providers require app-specific passwords");
+    } else if (err.code === 'ECONNECTION' || err.code === 'ETIMEDOUT') {
+      console.error("💡 CONNECTION ERROR: Check SMTP_HOST and SMTP_PORT");
+      console.error("   - Verify the SMTP server address is correct");
+      console.error("   - Check if port 587 or 465 is open");
+      console.error("   - Some networks block SMTP ports");
+    } else if (err.code === 'EENVELOPE') {
+      console.error("💡 ENVELOPE ERROR: Check email addresses");
+      console.error("   - Verify 'to' email address is valid");
+      console.error("   - Check 'from' email matches SMTP_USER");
+    }
     
     // Hata olsa bile OTP'yi console'a yaz (fallback)
     console.log(`\n🔑 OTP CODE FOR ${email} (fallback - email failed): ${otp}\n`);
-    return { success: false, error: err.message, details: err.code || err.response };
+    return { success: false, error: err.message, code: err.code, details: err.response || err.command };
   }
 }
 
