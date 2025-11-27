@@ -971,7 +971,7 @@ async function startPayment(method) {
     localStorage.setItem("selectedPlanName", selectedPlan.name);
     localStorage.setItem("selectedPlanPrice", selectedPlan.price);
     localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
-    window.location.href = `payment-oxapay.html?plan=${encodeURIComponent(selectedPlan.name)}&price=${selectedPlan.price}&credits=${selectedPlan.credits}`;
+    window.location.href = `payment.html?plan=${encodeURIComponent(selectedPlan.name)}&price=${selectedPlan.price}&credits=${selectedPlan.credits}`;
     return;
   } else if (method === "BINANCE-PAY") {
     // Binance Pay - redirect to payment page
@@ -979,7 +979,7 @@ async function startPayment(method) {
     localStorage.setItem("selectedPlanPrice", selectedPlan.price);
     localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
     localStorage.setItem("selectedPaymentMethod", method);
-    window.location.href = `payment-oxapay.html?plan=${encodeURIComponent(selectedPlan.name)}&price=${selectedPlan.price}&credits=${selectedPlan.credits}&method=${method}`;
+    window.location.href = `payment.html?plan=${encodeURIComponent(selectedPlan.name)}&price=${selectedPlan.price}&credits=${selectedPlan.credits}&method=${method}`;
     return;
   } else if (method === "SHOPIER") {
     // Shopier - redirect to payment page
@@ -987,7 +987,7 @@ async function startPayment(method) {
     localStorage.setItem("selectedPlanPrice", selectedPlan.price);
     localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
     localStorage.setItem("selectedPaymentMethod", method);
-    window.location.href = `payment-oxapay.html?plan=${encodeURIComponent(selectedPlan.name)}&price=${selectedPlan.price}&credits=${selectedPlan.credits}&method=${method}`;
+    window.location.href = `payment.html?plan=${encodeURIComponent(selectedPlan.name)}&price=${selectedPlan.price}&credits=${selectedPlan.credits}&method=${method}`;
     return;
   }
 
@@ -1011,7 +1011,7 @@ async function startPayment(method) {
   localStorage.setItem("selectedPlanName", selectedPlan.name);
   localStorage.setItem("selectedPlanPrice", selectedPlan.price);
   localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
-  window.location.href = `payment-oxapay.html?plan=${encodeURIComponent(selectedPlan.name)}&price=${selectedPlan.price}&credits=${selectedPlan.credits}&method=${method}`;
+  window.location.href = `payment.html?plan=${encodeURIComponent(selectedPlan.name)}&price=${selectedPlan.price}&credits=${selectedPlan.credits}&method=${method}`;
 }
 
 /* ====================================================

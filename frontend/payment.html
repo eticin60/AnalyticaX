@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AnalyticaX — Complete Payment</title>
+  <meta name="viewport" content="width=1200, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#020617" media="(prefers-color-scheme: dark)" />
+  <meta name="msapplication-navbutton-color" content="#020617" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="js/api-config.js"></script>
+
+  <style>
+    :root{
+      --bg1:#030615; --bg2:#0b1130; --bg3:#0f153d;
+      --text:#eef3ff; --muted:#9aa0c2;
+      --cyan:#00f0ff; --vio:#5b2cff; --rose:#ff4b9f; --lime:#16d18a; --amber:#ffcc4d;
+      --border:rgba(255,255,255,.12); --glass:rgba(255,255,255,.06);
+    }
+    *{box-sizing:border-box; margin:0; padding:0;}
+    html,body{margin:0;height:100%; overflow-x:hidden;}
+    body{
+      font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 10% -10%, rgba(0,240,255,.14), transparent 55%),
+        radial-gradient(900px 500px at 90% 0, rgba(91,44,255,.20), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2) 50%, var(--bg3));
+      overflow-x:hidden;
+      display:flex; flex-direction:column;
+    }
+
+    .aes-bg{position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.08;
+      background:
+        repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 1px, transparent 1px 80px),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 1px, transparent 1px 80px);
+      mask: radial-gradient(ellipse at 50% 10%, #000 35%, transparent 70%);
+    }
+
+    canvas#bgParticles{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+    }
+
+    /* Layout */
+    main{position:relative;z-index:1; flex:1; padding:20px;}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+    .stage{display:grid; gap:22px; grid-template-columns: minmax(0,1.55fr) 0.95fr; align-items:start}
+    .stage.single{grid-template-columns:1fr;}
+
+    /* Cards */
+    .card,.panel,.summary{position:relative;border-radius:20px;overflow:visible;
+      background:rgba(255,255,255,.045);border:1px solid var(--border);backdrop-filter:blur(14px);
+      box-shadow:0 10px 30px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.02)}
+    .pad{padding:24px}
+    .title{margin:0 0 8px;font-size:clamp(22px,3vw,26px);text-align:center}
+    .sub{color:var(--muted);margin:4px 0 16px;text-align:center}
+
+    /* Step Indicator */
+    .step-indicator{display:flex;gap:12px;margin:20px 0 30px;justify-content:center;flex-wrap:wrap;}
+    .step{flex:0 1 auto;text-align:center;position:relative;min-width:80px;}
+    .step-number{width:40px;height:40px;border-radius:50%;background:rgba(15,23,42,.9);border:2px solid rgba(148,163,184,.5);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-weight:600;transition:all 0.3s ease;}
+    .step.active .step-number{border-color:var(--cyan);background:rgba(0,240,255,.15);box-shadow:0 0 20px rgba(0,240,255,.5);}
+    .step.completed .step-number{border-color:var(--lime);background:rgba(22,209,138,.15);}
+    .step-label{font-size:11px;color:var(--muted);}
+    .step.active .step-label{color:#fff;}
+
+    /* Step Panels */
+    .step-panel{display:none;}
+    .step-panel.active{display:block;animation:fadeIn 0.4s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+    /* Methods Grid */
+    .methods{display:grid; gap:14px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));max-width:920px; margin:10px auto 0}
+    .method{cursor:pointer; user-select:none; position:relative;display:flex; align-items:center; gap:12px;padding:16px; border-radius:14px; border:1px solid var(--border);background:rgba(255,255,255,.03); transition:.2s}
+    .method img{width:26px;height:26px;object-fit:contain}
+    .method.active{outline:2px solid rgba(0,240,255,.6);background:rgba(0,240,255,.05)}
+    .method.closed{opacity:.6; filter:saturate(.85) grayscale(.1)}
+    .method .badge-closed{position:absolute; top:6px; right:8px;background:#ff4b4b; color:#fff; font-weight:800;padding:2px 6px; font-size:10px; border-radius:6px; letter-spacing:.3px}
+    .badge-live{position:absolute; top:6px; right:8px;background:linear-gradient(90deg, #16d18a, #0be7a3);color:#fff;font-weight:800;padding:2px 7px;font-size:10px;border-radius:6px;letter-spacing:.4px;box-shadow:0 0 10px rgba(22,209,138,.4);animation:livePulse 1.8s ease-in-out infinite;}
+    @keyframes livePulse{0%,100%{box-shadow:0 0 6px rgba(22,209,138,.4), 0 0 12px rgba(22,209,138,.2);opacity:.9;}50%{box-shadow:0 0 14px rgba(22,209,138,.7), 0 0 20px rgba(22,209,138,.4);opacity:1;}}
+    .badge-new{position:absolute; top:6px; right:8px;background:linear-gradient(90deg, #00f0ff, #5b2cff);color:#fff;font-weight:800;padding:2px 7px;font-size:10px;border-radius:6px;letter-spacing:.4px;box-shadow:0 0 10px rgba(0,240,255,.4);}
+
+    /* Oxapay Special Styling */
+    .method[data-method="OXAPAY"]{border:1px solid rgba(0,255,160,.25);background:linear-gradient(180deg, rgba(0,255,160,.05), rgba(0,255,160,.02));box-shadow:0 0 25px rgba(0,255,160,.05);transition:all .25s ease;}
+    .method[data-method="OXAPAY"]:hover{transform:translateY(-3px);box-shadow:0 0 35px rgba(0,255,160,.15);border-color:rgba(0,255,160,.5);}
+    .method[data-method="OXAPAY"] img{width:30px;height:30px;object-fit:contain;}
+
+    /* Wallet Grid */
+    .wallet-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:flex-start}
+    @media(max-width:1100px){.stage{grid-template-columns:1fr} .wallet-grid{grid-template-columns:1fr}}
+
+    /* Order Summary */
+    .order-summary .kv{display:flex;justify-content:space-between;border-bottom:1px dashed rgba(255,255,255,.08);padding:8px 0;font-size:14px;color:#cfe0ff}
+    .order-summary .k{color:#93a7ff;min-width:96px}
+    .mini-feature{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 10px;font-size:13px;color:#cfe0ff;text-align:center}
+
+    /* Secure Transaction Badge */
+    .secure-transaction{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg, rgba(16,255,160,0.05), rgba(0,255,160,0.02));border:1px solid rgba(16,255,160,0.15);border-radius:14px;padding:14px 18px;color:#8affd6;font-size:15px;font-weight:600;box-shadow:0 0 25px rgba(16,255,160,0.05);margin-top:14px;}
+    .secure-transaction svg{width:20px;height:20px;fill:#16d18a;flex-shrink:0;}
+
+    /* Payment Address Box */
+    .pay-address-box{position:relative;display:flex;align-items:center;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:8px;font-family:ui-monospace,monospace;font-size:14px;word-break:break-all}
+    .addr-text{flex:1;color:#9ee7ff;font-weight:600}
+    .copy{background:transparent;border:none;color:#cfe0ff;cursor:pointer;font-size:16px;margin-left:8px}
+    .copy:hover{color:#00f0ff}
+    .verified-tag{background:rgba(22,209,138,.15);color:#4efca8;font-weight:700;font-size:11px;border-radius:9px;padding:3px 8px;margin-left:8px;box-shadow:0 0 10px rgba(22,209,138,.35), inset 0 0 0 1px rgba(22,209,138,.4);animation:glowPulse 2.8s ease-in-out infinite}
+    @keyframes glowPulse{0%,100%{box-shadow:0 0 6px rgba(22,209,138,.5), inset 0 0 0 1px rgba(22,209,138,.3);opacity:.9}50%{box-shadow:0 0 14px rgba(22,209,138,.7), inset 0 0 0 1px rgba(22,209,138,.5);opacity:1}}
+
+    /* Warning & Info Boxes */
+    .warning-box{margin-top:14px;background:rgba(255,204,77,.08);border:1px solid rgba(255,204,77,.25);border-radius:12px;padding:12px 14px;color:#ffcc4d;font-size:14px;line-height:1.6}
+    .time-box{margin-top:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 14px;font-size:14px;color:#bcd0ff}
+    .pi-features{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px}
+    .pi-feature{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.035); font-size:14px; color:#dfe6ff}
+    .pi-feature .tick{width:10px;height:10px;border-radius:50%; background:#ff6b6b; box-shadow:0 0 8px rgba(255,107,107,.5)}
+
+    /* Payment Steps List */
+    .pay-steps{margin:0 0 10px;padding-left:22px;color:#d5ddff;font-size:15px;line-height:1.8}
+    .pay-steps li::marker{color:#5b8aff;font-weight:700}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:14px;font-weight:700;background:linear-gradient(90deg,#3aa8ff,#7c5cff);color:#fff;text-decoration:none;box-shadow:0 10px 22px rgba(0,0,0,.25);transition:.2s;border:none;cursor:pointer;width:100%;margin-top:12px;}
+    .btn:hover{transform:translateY(-2px);opacity:.95}
+    .btn-secondary{background:transparent;border:1px solid var(--border);color:#d5dcff}
+    .btn-secondary:hover{border-color:#7aa2ff}
+    .actions{display:flex;justify-content:center;gap:10px;margin-top:16px;flex-wrap:wrap}
+
+    /* TXID Input */
+    .txid-input{width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:rgba(0,0,0,.4);color:#fff;font-size:13px;font-family:monospace;margin-bottom:16px;}
+    .txid-input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 15px rgba(0,240,255,.3);}
+
+    /* Loading Overlay */
+    .loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:9999;flex-direction:column;}
+    .loading-overlay.active{display:flex;}
+    .loader{width:64px;height:64px;border:5px solid rgba(255,255,255,.15);border-top:5px solid var(--cyan);border-right:5px solid var(--vio);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .loading-text{font-size:16px;color:#fff;}
+
+    /* Step 6 Result Display */
+    .tx-summary.enhanced{background:linear-gradient(180deg, rgba(10,15,40,.9), rgba(5,10,20,.85));border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:0 0 25px rgba(0,240,255,.15), inset 0 0 0 1px rgba(255,255,255,.03);padding:22px 26px;position:relative;overflow:hidden;animation:fadeIn .6s ease;}
+    .tx-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;}
+    .tx-icon{width:42px;height:42px;border-radius:10px;box-shadow:0 0 15px rgba(0,240,255,.25);}
+    .tx-info{flex:1;}
+    .tx-title{margin:0;font-size:18px;font-weight:800;color:#9ee7ff;text-shadow:0 0 10px rgba(0,240,255,.25);}
+    .tx-sub{font-size:12.5px;color:#9aa7c8;}
+    .tx-status-badge{font-size:13px;font-weight:800;padding:6px 10px;border-radius:10px;text-transform:uppercase;background:rgba(255,204,77,.1);color:#ffcc4d;border:1px solid rgba(255,204,77,.25);animation:pulsePending 1.6s infinite;}
+    @keyframes pulsePending{0%{box-shadow:0 0 0 0 rgba(255,204,77,.6);}70%{box-shadow:0 0 0 10px rgba(255,204,77,0);}100%{box-shadow:0 0 0 0 rgba(255,204,77,0);}}
+    .tx-body{border-top:1px dashed rgba(255,255,255,.08);padding-top:12px;}
+    .tx-body .kv{display:flex;justify-content:space-between;padding:6px 0;font-size:14px;border-bottom:1px dashed rgba(255,255,255,.05);color:#cfe0ff;}
+    .tx-body .k{color:#00f0ff;font-weight:600;}
+    .tx-footer{margin-top:16px;}
+    .tx-progress{height:6px;background:rgba(255,255,255,.05);border-radius:10px;overflow:hidden;}
+    .tx-progress .tx-bar{height:100%;width:40%;background:linear-gradient(90deg,#00f0ff,#5b2cff);border-radius:10px;animation:progressPulse 4s ease-in-out infinite;}
+    @keyframes progressPulse{0%,100%{width:40%;opacity:.6;}50%{width:90%;opacity:1;}}
+    .tx-timestamp{margin-top:8px;font-size:12px;color:#aab2d8;text-align:right;}
+
+    /* Timeline */
+    .timeline{display:flex;flex-direction:column;gap:14px;margin-top:24px;}
+    .tstep{display:flex;gap:12px;}
+    .tbadge{min-width:72px;text-align:center;padding:6px 10px;border-radius:10px;font-weight:800;font-size:11px;background:rgba(0,240,255,.12);color:#8fe7ff;border:1px solid rgba(0,240,255,.25);}
+    .tbadge.dim{background:rgba(255,255,255,.05);color:#bcd0ff;border-color:rgba(255,255,255,.12);}
+    .tcontent{flex:1;}
+    .tname{font-weight:700;margin-bottom:4px;}
+    .tdesc{font-size:13px;color:#cfe0ff;}
+    .tstep.active .tname{color:#ff9b6a;}
+    .tstep.done .tbadge{background:rgba(22,209,138,.12);color:#16d18a;border-color:rgba(22,209,138,.25);}
+    .tstep.done .tname{color:#16d18a;}
+    .tstep.error .tbadge{background:rgba(255,75,159,.1);color:#ff4b9f;border-color:rgba(255,75,159,.25);}
+    .tstep.error .tname{color:#ff4b9f;}
+
+    /* Mobile Responsive */
+    @media(max-width:768px){
+      .methods{grid-template-columns:1fr;}
+      .pi-features{grid-template-columns:1fr;}
+      .pay-address-box{padding:10px 12px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="aes-bg"></div>
+  <canvas id="bgParticles"></canvas>
+
+  <main class="wrap">
+    <div class="card pad">
+      <h1 class="title">Complete Payment</h1>
+      <p class="sub">Follow the steps to complete your payment securely</p>
+
+      <!-- Step Indicator -->
+      <div class="step-indicator">
+        <div class="step active" id="step1">
+          <div class="step-number">1</div>
+          <div class="step-label">Order Summary</div>
+        </div>
+        <div class="step" id="step2">
+          <div class="step-number">2</div>
+          <div class="step-label">Wallet</div>
+        </div>
+        <div class="step" id="step3">
+          <div class="step-number">3</div>
+          <div class="step-label">Method</div>
+        </div>
+        <div class="step" id="step4">
+          <div class="step-number">4</div>
+          <div class="step-label">Payment</div>
+        </div>
+        <div class="step" id="step5">
+          <div class="step-number">5</div>
+          <div class="step-label">Verify</div>
+        </div>
+        <div class="step" id="step6">
+          <div class="step-number">6</div>
+          <div class="step-label">Result</div>
+        </div>
+      </div>
+
+      <!-- STEP 1: ORDER SUMMARY -->
+      <div class="step-panel active" id="panel1">
+        <h3 style="margin-bottom:16px;font-size:18px;text-align:center;">Order Summary</h3>
+        <div class="order-summary pad" style="max-width:600px;margin:0 auto;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px dashed rgba(255,255,255,.08);">
+            <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,rgba(0,229,255,.2),rgba(255,77,255,.2));display:flex;align-items:center;justify-content:center;font-size:24px;">💎</div>
+            <div>
+              <div style="font-weight:800;font-size:18px;color:#fff;" id="sum-name">—</div>
+              <div style="font-size:12px;color:#9bb0bf;">AnalyticaX Credits</div>
+            </div>
+          </div>
+          <div class="order-summary">
+            <div class="kv"><span class="k">Product:</span><span id="sum-prod">—</span></div>
+            <div class="kv"><span class="k">Price:</span><span id="sum-price" style="color:#00f0ff;font-weight:800;">—</span></div>
+            <div class="kv"><span class="k">Credits:</span><span id="sum-credits">—</span></div>
+          </div>
+          <div class="secure-transaction">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M12 2L4 5v6c0 5 3.4 9.74 8 11 4.6-1.26 8-6 8-11V5l-8-3zm0 2.18l6 2.25v5.44c0 4.11-2.72 8.08-6 9.34-3.28-1.26-6-5.23-6-9.34V6.43l6-2.25zm-1 11.32l5.3-5.3-1.42-1.42L11 12.66l-1.88-1.88-1.42 1.42L11 15.5z"/>
+            </svg>
+            <div>
+              <div style="font-weight:700;">Secure Transaction</div>
+              <div style="font-size:13.5px;color:#aefbe4;">Your transaction is protected with enterprise-grade encryption.</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;display:grid;grid-template-columns:repeat(2,minmax(130px,1fr));gap:10px;">
+            <div class="mini-feature">⚡ Instant Delivery</div>
+            <div class="mini-feature">🔒 Secure Transfer</div>
+            <div class="mini-feature">🕓 24/7 Support</div>
+            <div class="mini-feature">🔗 Blockchain Confirmed</div>
+          </div>
+        </div>
+        <button class="btn" id="btnContinue1">Continue to Wallet →</button>
+      </div>
+
+      <!-- STEP 2: WALLET ENTRY -->
+      <div class="step-panel" id="panel2">
+        <h3 style="margin-bottom:16px;font-size:18px;text-align:center;">Wallet Details</h3>
+        <p class="sub">Please provide your wallet address to receive your credits.</p>
+        <div class="wallet-grid">
+          <div class="order-summary pad">
+            <h3 style="margin:0 0 12px;font-size:18px;font-weight:700;color:#9ee7ff;">Order Summary</h3>
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px dashed rgba(255,255,255,.08);">
+              <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,rgba(0,229,255,.2),rgba(255,77,255,.2));display:flex;align-items:center;justify-content:center;font-size:24px;">💎</div>
+              <div>
+                <div style="font-weight:800;font-size:18px;color:#fff;" id="infoPackage">—</div>
+                <div style="font-size:12px;color:#9bb0bf;">AnalyticaX Credits</div>
+              </div>
+            </div>
+            <div class="order-summary">
+              <div class="kv"><span class="k">Product:</span><span id="infoPackageDetail">—</span></div>
+              <div class="kv"><span class="k">Price:</span><span id="infoAmount" style="color:#00f0ff;font-weight:800;">—</span></div>
+            </div>
+          </div>
+          <div class="wallet-entry pad">
+            <h3 style="margin:0 0 12px;font-size:18px;font-weight:700;color:#9ee7ff;">Enter Wallet Address</h3>
+            <p style="color:#aab2d8;margin-bottom:16px;font-size:13px;line-height:1.6;">Please enter your wallet address where you'd like to receive your credits.</p>
+            <input type="text" class="txid-input" id="walletAddress" placeholder="Enter your wallet address (starts with T, 0x, or bc1...)" style="margin-bottom:12px;">
+            <div style="font-size:12px;color:#9aa7c8;opacity:0.85;">
+              ⚠️ Double-check your address. Transactions sent to incorrect addresses cannot be recovered.
+            </div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn-secondary" onclick="goToStep(1)">Back</button>
+          <button class="btn" id="btnContinue2">Continue to Payment Method →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: PAYMENT METHOD SELECTION -->
+      <div class="step-panel" id="panel3">
+        <h3 style="margin-bottom:16px;font-size:18px;text-align:center;">Select Payment Method</h3>
+        <p class="sub">Choose a network or provider. Closed methods stay visible for clarity.</p>
+        <div class="methods" id="methodGrid"></div>
+        <div class="actions">
+          <button class="btn-secondary" onclick="goToStep(2)">Back</button>
+          <button class="btn" id="btnContinue3">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: PAYMENT INSTRUCTIONS -->
+      <div class="step-panel" id="panel4">
+        <h3 style="margin-bottom:16px;font-size:18px;text-align:center;">Payment Instructions</h3>
+        <p class="sub">Please follow the steps below to complete your payment securely.</p>
+        <div class="panel pad" style="max-width:800px;margin:0 auto;">
+          <div style="display:flex;align-items:center;gap:14px;padding-bottom:12px;margin-bottom:16px;border-bottom:1px dashed rgba(255,255,255,.08);">
+            <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,rgba(0,229,255,.2),rgba(255,77,255,.2));display:flex;align-items:center;justify-content:center;font-size:24px;">💎</div>
+            <div>
+              <div style="font-weight:800;font-size:18px;color:#fff;" id="pd-name">—</div>
+              <div style="font-size:12px;color:#9bb0bf;" id="pd-network-display">Network</div>
+            </div>
+          </div>
+          <div class="order-summary" style="margin-bottom:20px;">
+            <div class="kv"><span class="k">Product:</span><span id="pd-prod">—</span></div>
+            <div class="kv"><span class="k">Network:</span><span id="pd-net">—</span></div>
+            <div class="kv"><span class="k">Price:</span><span id="pd-price" style="color:#00f0ff;font-weight:800;">—</span></div>
+          </div>
+          <ol class="pay-steps">
+            <li>Send exactly <b id="sum-amount-text" style="color:#00f0ff;">—</b> worth of <b id="net-inline">USDT</b></li>
+            <li>Use the payment address below</li>
+            <li>Click <b>"I've Made the Payment"</b> after sending</li>
+          </ol>
+          <div style="margin-top:20px;">
+            <div style="font-weight:800;color:#cfe0ff;margin-bottom:8px;font-size:14px;" id="pay-label">Payment Address:</div>
+            <div class="pay-address-box">
+              <span id="payAddress" class="addr-text">—</span>
+              <span class="verified-tag">Verified</span>
+              <button class="copy" id="copyAddr" title="Copy Address">📋</button>
+            </div>
+          </div>
+          <div style="margin-top:16px;border-radius:12px;padding:12px 14px;background:rgba(22,209,138,.06);border:1px solid rgba(22,209,138,.2);color:#9ef7cb;font-size:14px;">
+            ✅ Your transaction is secured with advanced encryption.
+          </div>
+          <div class="warning-box">
+            ⚠️ <b>Important</b><br>Only send <b id="net-inline-2">USDT</b> to this address. Sending any other cryptocurrency may result in permanent loss of funds.
+          </div>
+          <div class="time-box">
+            ⏱️ Processing time: <b>1 minute or maximum 48 hours</b> after payment confirmation.
+          </div>
+          <div class="pi-features">
+            <div class="pi-feature"><span class="tick"></span> Instant Delivery</div>
+            <div class="pi-feature"><span class="tick"></span> 24/7 Support</div>
+            <div class="pi-feature"><span class="tick"></span> Secure Transactions</div>
+            <div class="pi-feature"><span class="tick"></span> Multi-Network Compatible</div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn-secondary" onclick="goToStep(3)">Back</button>
+          <button class="btn" id="btnMadePayment">I've Made the Payment</button>
+        </div>
+      </div>
+
+      <!-- STEP 5: VERIFY TRANSACTION -->
+      <div class="step-panel" id="panel5">
+        <h3 style="margin-bottom:16px;font-size:18px;text-align:center;">Verify Your Transaction</h3>
+        <p class="sub">Please enter your transaction ID (TXID) to verify your payment.</p>
+        <div class="panel pad" style="max-width:600px;margin:0 auto;">
+          <div style="margin-bottom:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px 14px;color:#bcd0ff;font-size:13px;">
+            🔗 <b>Transaction Verification</b> — Your transaction details are securely processed and verified on the blockchain.
+          </div>
+          <label style="font-weight:800;color:#cfe0ff;font-size:14px;display:block;margin-bottom:8px;">Transaction ID (TXID)</label>
+          <input type="text" class="txid-input" id="txidInput" placeholder="Enter your transaction ID (TXID)">
+          <div class="actions">
+            <button class="btn-secondary" onclick="goToStep(4)">Back</button>
+            <button class="btn" id="btnVerify">🔗 Verify Transaction</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 6: VERIFY RESULT -->
+      <div class="step-panel" id="panel6">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start;">
+          <div class="productDetails pad" style="border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);border-radius:14px;">
+            <h3 style="margin-top:0;">📦 Product Details</h3>
+            <p id="productDetailsText">Enter TXID and verify to see details.</p>
+          </div>
+          <div class="tx-summary enhanced">
+            <div class="tx-head">
+              <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,rgba(0,229,255,.2),rgba(255,77,255,.2));display:flex;align-items:center;justify-content:center;font-size:20px;">💎</div>
+              <div class="tx-info">
+                <h3 class="tx-title">Transaction Details</h3>
+                <div class="tx-sub">AES-256 Encrypted • Chain Verified</div>
+              </div>
+              <div class="tx-status-badge" id="tx-status-badge">PENDING</div>
+            </div>
+            <div class="tx-body">
+              <div class="kv"><span class="k">🪙 Product</span><span id="detProduct">—</span></div>
+              <div class="kv"><span class="k">💰 Amount</span><span id="detAmount">—</span></div>
+              <div class="kv"><span class="k">💵 Price</span><span id="detPrice">—</span></div>
+              <div class="kv"><span class="k">🌐 Network</span><span id="detNetwork">—</span></div>
+              <div class="kv"><span class="k">👛 Your Wallet</span><span id="detWallet">—</span></div>
+              <div class="kv"><span class="k">🏦 Deposit Address</span><span id="detDeposit">—</span></div>
+              <div class="kv"><span class="k">📊 Status</span><span id="detStatus">PENDING</span></div>
+            </div>
+            <div class="tx-footer">
+              <div class="tx-progress"><div class="tx-bar"></div></div>
+              <div class="tx-timestamp"><span id="tx-time">Updated: —</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="timeline">
+          <div class="tstep" id="tl1">
+            <div class="tbadge">STEP 1</div>
+            <div class="tcontent">
+              <div class="tname">Transaction Verification</div>
+              <div class="tdesc">Awaiting blockchain confirmation.</div>
+            </div>
+          </div>
+          <div class="tstep" id="tl2">
+            <div class="tbadge dim">STEP 2</div>
+            <div class="tcontent">
+              <div class="tname">Processing</div>
+              <div class="tdesc">Preparing secure transfer.</div>
+            </div>
+          </div>
+          <div class="tstep" id="tl3">
+            <div class="tbadge dim">STEP 3</div>
+            <div class="tcontent">
+              <div class="tname">Wallet Transfer</div>
+              <div class="tdesc">Credits delivered to your account.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loader"></div>
+    <div class="loading-text" id="loadingText">Verifying Transaction...</div>
+  </div>
+
+  <script>
+    // Payment methods configuration
+    const PAYMENT_METHODS = [
+      {id:"TRC20-USDT", name:"TRC20 (TRON)", desc:"USDT • Fast & low fee", icon:"🟢", status:"live", img:"assets/trc20.png"},
+      {id:"ERC20-USDT", name:"ERC20 (Ethereum)", desc:"USDT • High security", icon:"🔷", status:"live", img:"assets/erc20.png"},
+      {id:"BEP20-USDT", name:"BEP20 (BSC)", desc:"USDT • Low gas on BSC", icon:"🟡", status:"live", img:"assets/bep20.png"},
+      {id:"USDC-ERC20", name:"USDC (BEP20-ERC20)", desc:"Same address for both", icon:"💵", status:"new", img:"assets/usdc.png"},
+      {id:"BTC", name:"BTC (Bitcoin)", desc:"Native Bitcoin network", icon:"₿", status:"new", img:"assets/btc.png"},
+      {id:"OXAPAY", name:"Oxapay Gateway", desc:"Multi-coin crypto gateway", icon:"🔵", status:"live", img:"assets/oxapay.svg", url:"https://pay.oxapay.com/13369911"},
+      {id:"SHOPIER", name:"Shopier (Secure Payment)", desc:"Credit / debit card", icon:"💳", status:"live", img:"assets/shopier.png", url:"https://www.shopier.com/creditusd"},
+      {id:"BINANCE-PAY", name:"Binance Pay", desc:"Pay directly from Binance", icon:"🔶", status:"live", img:"assets/binance.png"},
+      {id:"OKX-PAY", name:"OKX Pay", desc:"OKX payment gateway", icon:"⚫", status:"closed", img:"assets/okx.png"}
+    ];
+
+    const PAYMENT_ADDRESSES = {
+      "TRC20-USDT": "TQDwWFmC2fMCDzLmrndc2bsiB7vK78DE33",
+      "ERC20-USDT": "0xb5f5090D4f032059844c464C7A273D29063311c1",
+      "BEP20-USDT": "0xb5f5090D4f032059844c464C7A273D29063311c1",
+      "USDC-ERC20": "0xb5f5090D4f032059844c464C7A273D29063311c1",
+      "BTC": "bc1qwwqwkkw7aqvg5j58peskg0hw4xuyeeucahg7gl"
+    };
+
+    const PAYMENT_CURRENCY = {
+      "TRC20-USDT": "USDT",
+      "ERC20-USDT": "USDT",
+      "BEP20-USDT": "USDT",
+      "USDC-ERC20": "USDC",
+      "BTC": "BTC"
+    };
+
+    let currentStep = 1;
+    let selectedMethod = null;
+    let selectedPlan = null;
+
+    // Get plan from URL or localStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    const planName = urlParams.get("plan") || localStorage.getItem("selectedPlanName") || "Pro pack";
+    const planPrice = parseFloat(urlParams.get("price") || localStorage.getItem("selectedPlanPrice") || "50");
+    const planCredits = parseInt(urlParams.get("credits") || localStorage.getItem("selectedPlanCredits") || "10");
+    const methodFromUrl = urlParams.get("method") || localStorage.getItem("selectedPaymentMethod");
+
+    selectedPlan = {name:planName, price:planPrice, credits:planCredits};
+    
+    if(methodFromUrl) {
+      selectedMethod = methodFromUrl;
+    }
+
+    function init(){
+      renderMethods();
+      updatePlanInfo();
+      updateSteps();
+      initParticles();
+      
+      if(selectedMethod) {
+        setTimeout(() => {
+          const methodCard = document.querySelector(`[data-method="${selectedMethod}"]`);
+          if(methodCard) {
+            methodCard.classList.add("active");
+            if(currentStep === 1) {
+              nextStep();
+            }
+          }
+        }, 200);
+      }
+    }
+
+    function renderMethods(){
+      const grid = document.getElementById("methodGrid");
+      if(!grid) {
+        setTimeout(renderMethods, 100);
+        return;
+      }
+      grid.innerHTML = "";
+      
+      PAYMENT_METHODS.forEach(method => {
+        const card = document.createElement("div");
+        card.className = "method";
+        if(method.status === "closed") card.classList.add("closed");
+        card.dataset.method = method.id;
+        
+        let badge = "";
+        if(method.status === "live") badge = '<span class="badge-live">LIVE</span>';
+        else if(method.status === "new") badge = '<span class="badge-new">NEW</span>';
+        else if(method.status === "closed") badge = '<span class="badge-closed">CLOSED</span>';
+        
+        card.innerHTML = `
+          ${badge}
+          <img src="${method.img || 'assets/default.png'}" alt="${method.name}" onerror="this.style.display='none';">
+          <div>
+            <div style="font-weight:600;font-size:14px;">${method.name}</div>
+            <div style="font-size:11px;color:var(--muted);">${method.desc}</div>
+          </div>
+        `;
+        
+        card.addEventListener("click", () => {
+          if(method.status === "closed") return;
+          document.querySelectorAll(".method").forEach(c => c.classList.remove("active"));
+          card.classList.add("active");
+          selectedMethod = method.id;
+          
+          // Open gateway URLs in new tab
+          if(method.url && (method.id === "OXAPAY" || method.id === "SHOPIER")) {
+            if(!window[method.id.toLowerCase() + "Opened"]) {
+              window.open(method.url, "_blank");
+              window[method.id.toLowerCase() + "Opened"] = true;
+            }
+          }
+        });
+        
+        grid.appendChild(card);
+      });
+    }
+
+    function updatePlanInfo(){
+      document.getElementById("sum-name").textContent = selectedPlan.name;
+      document.getElementById("sum-prod").textContent = selectedPlan.name;
+      document.getElementById("sum-price").textContent = `$${selectedPlan.price}`;
+      document.getElementById("sum-credits").textContent = `${selectedPlan.credits} Credits`;
+      
+      document.getElementById("infoPackage").textContent = selectedPlan.name;
+      document.getElementById("infoPackageDetail").textContent = selectedPlan.name;
+      document.getElementById("infoAmount").textContent = `$${selectedPlan.price}`;
+      
+      document.getElementById("pd-name").textContent = selectedPlan.name;
+      document.getElementById("pd-prod").textContent = `${selectedPlan.credits} Credits`;
+      document.getElementById("pd-price").textContent = `$${selectedPlan.price}`;
+      document.getElementById("sum-amount-text").textContent = `$${selectedPlan.price}`;
+    }
+
+    function goToStep(step){
+      currentStep = step;
+      updateSteps();
+    }
+
+    function nextStep(){
+      if(currentStep < 6) currentStep++;
+      updateSteps();
+    }
+
+    function updateSteps(){
+      for(let i=1; i<=6; i++){
+        const stepEl = document.getElementById(`step${i}`);
+        const panelEl = document.getElementById(`panel${i}`);
+        
+        if(!stepEl || !panelEl) continue;
+        
+        stepEl.classList.remove("active", "completed");
+        panelEl.classList.remove("active");
+        
+        if(i < currentStep){
+          stepEl.classList.add("completed");
+        } else if(i === currentStep){
+          stepEl.classList.add("active");
+          panelEl.classList.add("active");
+        }
+      }
+
+      // Update content based on step
+      if(currentStep === 2){
+        // Hide wallet section for gateway methods
+        const walletSection = document.querySelector("#panel2 .wallet-entry");
+        if(walletSection && (selectedMethod === "OXAPAY" || selectedMethod === "SHOPIER" || selectedMethod === "BINANCE-PAY")) {
+          walletSection.style.display = "none";
+          document.querySelector("#panel2 .wallet-grid").style.gridTemplateColumns = "1fr";
+        } else if(walletSection) {
+          walletSection.style.display = "block";
+          document.querySelector("#panel2 .wallet-grid").style.gridTemplateColumns = "1fr 1fr";
+        }
+      } else if(currentStep === 4){
+        if(selectedMethod === "OXAPAY" || selectedMethod === "SHOPIER" || selectedMethod === "BINANCE-PAY"){
+          const gatewayName = selectedMethod === "OXAPAY" ? "OxaPay" : selectedMethod === "SHOPIER" ? "Shopier" : "Binance Pay";
+          document.getElementById("payAddress").textContent = `${gatewayName} Gateway - Payment completed in new tab`;
+          document.getElementById("pay-label").textContent = `${gatewayName} Payment Gateway:`;
+          document.getElementById("pd-net").textContent = gatewayName;
+          document.getElementById("pd-network-display").textContent = gatewayName;
+          document.getElementById("net-inline").textContent = gatewayName;
+          document.getElementById("net-inline-2").textContent = gatewayName;
+        } else if(selectedMethod && PAYMENT_ADDRESSES[selectedMethod]){
+          const networkName = PAYMENT_METHODS.find(m => m.id === selectedMethod)?.name || selectedMethod;
+          const currency = PAYMENT_CURRENCY[selectedMethod] || "USDT";
+          document.getElementById("payAddress").textContent = PAYMENT_ADDRESSES[selectedMethod];
+          document.getElementById("pay-label").textContent = `${networkName} Payment Address:`;
+          document.getElementById("pd-net").textContent = networkName;
+          document.getElementById("pd-network-display").textContent = networkName;
+          document.getElementById("net-inline").textContent = currency;
+          document.getElementById("net-inline-2").textContent = currency;
+        }
+      }
+    }
+
+    document.getElementById("btnContinue1")?.addEventListener("click", () => {
+      nextStep();
+    });
+
+    document.getElementById("btnContinue2")?.addEventListener("click", () => {
+      if(selectedMethod === "OXAPAY" || selectedMethod === "SHOPIER" || selectedMethod === "BINANCE-PAY") {
+        nextStep();
+        return;
+      }
+      const wallet = document.getElementById("walletAddress").value.trim();
+      if(!wallet){
+        alert("Please enter your wallet address.");
+        return;
+      }
+      nextStep();
+    });
+
+    document.getElementById("btnContinue3")?.addEventListener("click", () => {
+      if(!selectedMethod){
+        alert("Please select a payment method");
+        return;
+      }
+      if(selectedMethod === "OXAPAY" || selectedMethod === "SHOPIER" || selectedMethod === "BINANCE-PAY"){
+        localStorage.setItem("selectedPlanName", selectedPlan.name);
+        localStorage.setItem("selectedPlanPrice", selectedPlan.price);
+        localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
+        localStorage.setItem("selectedPaymentMethod", selectedMethod);
+      }
+      nextStep();
+    });
+
+    document.getElementById("btnMadePayment")?.addEventListener("click", () => {
+      nextStep();
+    });
+
+    document.getElementById("btnVerify")?.addEventListener("click", async () => {
+      const txid = document.getElementById("txidInput").value.trim();
+      if(!txid){
+        alert("Please enter transaction ID");
+        return;
+      }
+
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.add("active");
+      document.getElementById("loadingText").textContent = "Verifying Transaction...";
+
+      const token = localStorage.getItem("ax_token");
+      if(!token){
+        overlay.classList.remove("active");
+        alert("Please login first");
+        window.location.href = "login.html";
+        return;
+      }
+
+      try{
+        const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/payments/verify`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token,
+            "x-device-id": localStorage.getItem("ax_device_id"),
+            "x-device-fingerprint": localStorage.getItem("ax_fingerprint")
+          },
+          body: JSON.stringify({
+            txid,
+            planName: selectedPlan.name,
+            amount: selectedPlan.price,
+            credits: selectedPlan.credits,
+            method: selectedMethod || "TRC20-USDT"
+          })
+        });
+
+        const data = await res.json();
+        overlay.classList.remove("active");
+        
+        if(data.ok){
+          // Update Step 6 with transaction details
+          document.getElementById("detProduct").textContent = selectedPlan.name;
+          document.getElementById("detAmount").textContent = `${selectedPlan.credits} Credits`;
+          document.getElementById("detPrice").textContent = `$${selectedPlan.price}`;
+          document.getElementById("detNetwork").textContent = PAYMENT_METHODS.find(m => m.id === selectedMethod)?.name || selectedMethod || "—";
+          document.getElementById("detWallet").textContent = document.getElementById("walletAddress")?.value || "—";
+          document.getElementById("detDeposit").textContent = PAYMENT_ADDRESSES[selectedMethod] || "—";
+          document.getElementById("detStatus").innerHTML = '<span style="color:#16d18a;font-weight:700;">APPROVED</span>';
+          document.getElementById("tx-status-badge").textContent = "APPROVED";
+          document.getElementById("tx-status-badge").style.background = "rgba(22,209,138,.1)";
+          document.getElementById("tx-status-badge").style.color = "#16d18a";
+          document.getElementById("tx-status-badge").style.borderColor = "rgba(22,209,138,.25)";
+          document.getElementById("tx-time").textContent = "Updated: " + new Date().toLocaleString();
+          
+          document.getElementById("productDetailsText").innerHTML = `
+            <p><b>Product:</b> ${selectedPlan.name}</p>
+            <p><b>Amount:</b> ${selectedPlan.credits} Credits</p>
+            <p><b>Price:</b> $${selectedPlan.price}</p>
+            <p><b>Network:</b> ${PAYMENT_METHODS.find(m => m.id === selectedMethod)?.name || selectedMethod}</p>
+            <p><b>Status:</b> <span style="color:#16d18a;">APPROVED</span></p>
+          `;
+          
+          // Update timeline
+          document.querySelectorAll(".tstep").forEach(s => {
+            s.classList.remove("active", "done", "error");
+            s.classList.add("done");
+            s.querySelector(".tbadge").classList.remove("dim");
+          });
+          
+          nextStep();
+          
+          // Update credits
+          if(data.credits) {
+            const meRes = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/me`, {
+              headers: {
+                "Authorization": "Bearer " + token,
+                "x-device-id": localStorage.getItem("ax_device_id"),
+                "x-device-fingerprint": localStorage.getItem("ax_fingerprint")
+              }
+            });
+            const meData = await meRes.json();
+            if(meData.ok) {
+              localStorage.setItem("ax_user_credits", meData.credits || 0);
+            }
+          }
+        } else {
+          alert("❌ Verification failed: " + (data.error || data.message || "Please check your TXID"));
+        }
+      } catch(err){
+        overlay.classList.remove("active");
+        console.error("Verify error:", err);
+        alert("Error: " + err.message);
+      }
+    });
+
+    document.getElementById("copyAddr")?.addEventListener("click", () => {
+      const addr = document.getElementById("payAddress")?.textContent?.trim();
+      if(!addr || addr === "—") {
+        alert("No address to copy.");
+        return;
+      }
+      navigator.clipboard.writeText(addr).then(() => {
+        const btn = document.getElementById("copyAddr");
+        const original = btn.textContent;
+        btn.textContent = "✓ Copied";
+        btn.style.color = "#16d18a";
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.style.color = "";
+        }, 2000);
+      }).catch(() => {
+        alert("Failed to copy. Please copy manually.");
+      });
+    });
+
+    function initParticles(){
+      const canvas = document.getElementById("bgParticles");
+      if(!canvas) return;
+      const ctx = canvas.getContext("2d");
+      
+      function resize(){
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener("resize", resize);
+
+      let particles = [];
+      for(let i=0; i<80; i++){
+        particles.push({
+          x: Math.random()*canvas.width,
+          y: Math.random()*canvas.height,
+          r: Math.random()*2+0.5,
+          vx: (Math.random()-0.5)*0.2,
+          vy: (Math.random()-0.5)*0.2,
+          alpha: Math.random()*0.6+0.2
+        });
+      }
+
+      function draw(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if(p.x<0) p.x=canvas.width;
+          if(p.x>canvas.width) p.x=0;
+          if(p.y<0) p.y=canvas.height;
+          if(p.y>canvas.height) p.y=0;
+
+          const grad = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*6);
+          grad.addColorStop(0, `rgba(0,229,255,${p.alpha})`);
+          grad.addColorStop(1, "transparent");
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,p.r*6,0,Math.PI*2);
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>
