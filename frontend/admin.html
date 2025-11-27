@@ -4,14 +4,15 @@
   <meta charset="UTF-8">
   <title>AnalyticaX — Admin Panel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="js/api-config.js"></script>
 
 <style>
 :root {
   --neon:#00E5FF;
   --magenta:#FF4DFF;
   --green:#14F195;
+  --yellow:#FFDD55;
   --bg:#020617;
   --panel:#0b1020;
   --text-soft:#98A0B3;
@@ -20,18 +21,11 @@
 
 *{margin:0;padding:0;box-sizing:border-box;}
 body{
-  font-family:Poppins, sans-serif;
-  background:radial-gradient(circle at top,#071526 0,var(--bg) 50%,#000 100%);
+  font-family:"Poppins",sans-serif;
+  background:radial-gradient(circle at top,#071526 0,var(--bg) 45%,#000 100%);
   color:#fff;
   overflow-x:hidden;
-}
-
-/* Hide admin content until verified */
-.admin-content{
-  display:none;
-}
-.admin-content.verified{
-  display:block;
+  min-height:100vh;
 }
 
 /* BACKGROUND */
@@ -51,88 +45,233 @@ canvas#particles{position:fixed;inset:0;z-index:-3;}
 }
 .bg-glow.c1{background:radial-gradient(circle,rgba(0,229,255,.9),transparent 60%);top:-120px;left:-100px;}
 .bg-glow.c2{background:radial-gradient(circle,rgba(255,77,255,.85),transparent 60%);bottom:-120px;right:-100px;animation-delay:8s;}
-
 @keyframes float{0%{transform:translate(0,0);}100%{transform:translate(50px,-35px);}}
 
-/* NAVBAR */
+/* NAVBAR (index.html style) */
 .navbar{
-  position:sticky;top:0;z-index:50;width:100%;
-  background:rgba(5,10,25,.85);backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(148,163,184,.3);
-  padding:12px 5%;display:flex;justify-content:space-between;align-items:center;
+  position:fixed;top:20px;left:50%;transform:translateX(-50%);
+  width:calc(100% - 80px);max-width:1400px;
+  padding:14px 32px;display:flex;align-items:center;justify-content:space-between;
+  backdrop-filter:blur(20px) saturate(180%);
+  background:rgba(15,10,25,0.7);
+  border:none;box-shadow:0 4px 20px rgba(0,0,0,0.3);
+  z-index:50;border-radius:16px;margin:0;
 }
-.nav-title{font-size:20px;font-weight:600;}
-.nav-title span{color:var(--neon);}
-.nav-links{display:flex;gap:20px;font-size:13px;}
-.nav-links a{text-decoration:none;color:var(--text-soft);cursor:pointer;}
-.nav-links a.active{color:#fff;font-weight:600;}
+.nav-brand{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.3s ease;
+  padding:24px 24px 20px;
+  background:linear-gradient(135deg, rgba(15,23,42,0.9), rgba(30,41,59,0.7));
+  border:1px solid rgba(0,229,255,0.4);border-radius:20px;
+  box-shadow:0 8px 32px rgba(0,229,255,0.3), 0 0 60px rgba(255,77,255,0.2);
+  backdrop-filter:blur(30px) saturate(180%);
+}
+.logo-main{font-size:28px;font-weight:700;color:#fff;text-align:center;}
+.logo-sub{font-size:11px;color:rgba(255,255,255,0.75);font-weight:400;letter-spacing:0.08em;}
 
-.nav-admin{
-  padding:6px 14px;border-radius:999px;
-  background:rgba(15,23,42,.8);border:1px solid var(--border);
-  font-size:12px;color:var(--neon);
+.nav-links{
+  display:flex;gap:24px;align-items:center;font-size:14px;
+  padding:12px 20px;
+  background:linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));
+  border:1px solid rgba(0,229,255,0.3);border-radius:16px;
+  backdrop-filter:blur(20px) saturate(180%);
+  box-shadow:0 4px 20px rgba(0,229,255,0.2);
 }
+.nav-links a{color:rgba(255,255,255,0.9);text-decoration:none;transition:all 0.3s ease;}
+.nav-links a:hover{color:var(--neon);}
+.nav-links a.active{color:var(--neon);font-weight:600;}
 
-/* PAGE */
-.page{
-  width:92%;max-width:1400px;margin:30px auto;
+.nav-actions{
+  display:flex;gap:12px;align-items:center;
+  padding:12px 20px;
+  background:linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));
+  border:1px solid rgba(0,229,255,0.3);border-radius:16px;
+  backdrop-filter:blur(20px) saturate(180%);
 }
-.page-title{
-  font-size:26px;font-weight:600;
+.nav-actions button{
+  padding:8px 16px;border-radius:8px;border:none;
+  background:linear-gradient(135deg,var(--neon),var(--magenta));
+  color:#020617;font-weight:600;cursor:pointer;font-size:13px;
+  transition:all 0.3s ease;
+}
+.nav-actions button:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(0,229,255,0.4);}
+
+/* LOGIN FORMS */
+.login-container{
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;padding:120px 20px 40px;
+}
+.login-box{
+  background:rgba(15,23,42,0.96);
+  border:1px solid rgba(148,163,184,.35);
+  border-radius:24px;padding:40px;
+  max-width:450px;width:100%;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  backdrop-filter:blur(20px);
+}
+.login-title{
+  font-size:26px;font-weight:600;margin-bottom:8px;
   background:linear-gradient(90deg,var(--neon),var(--magenta));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  margin-bottom:16px;
+  text-align:center;
+}
+.login-subtitle{
+  text-align:center;color:var(--text-soft);margin-bottom:30px;font-size:13px;
+}
+.login-step{
+  font-size:11px;text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--neon);margin-bottom:20px;text-align:center;
+  padding:6px 12px;background:rgba(0,229,255,0.1);
+  border-radius:8px;display:inline-block;width:100%;
+}
+.form-group{margin-bottom:20px;}
+.form-label{
+  display:block;font-size:13px;color:var(--text-soft);
+  margin-bottom:8px;font-weight:500;
+}
+.form-input{
+  width:100%;padding:14px;border-radius:12px;
+  border:1px solid rgba(148,163,184,.5);
+  background:rgba(0,0,0,.4);color:#fff;
+  font-size:14px;outline:none;transition:all 0.3s ease;
+  font-family:"Poppins",sans-serif;
+}
+.form-input:focus{
+  border-color:var(--neon);
+  box-shadow:0 0 0 3px rgba(0,229,255,0.1);
+}
+.btn-login{
+  width:100%;padding:14px;border-radius:999px;
+  border:none;background:linear-gradient(90deg,var(--neon),var(--magenta));
+  color:#020617;font-weight:600;cursor:pointer;
+  font-size:14px;transition:all 0.3s ease;
+  margin-top:10px;
+}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,229,255,0.4);}
+.btn-login:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.error-message{
+  color:#ff4b9f;margin-top:12px;text-align:center;
+  font-size:12px;display:none;padding:10px;
+  background:rgba(255,75,159,0.1);border-radius:8px;
+  border:1px solid rgba(255,75,159,0.3);
+}
+.error-message.show{display:block;}
+
+/* ADMIN CONTENT (hidden until verified) */
+.admin-content{display:none;}
+.admin-content.verified{display:block;}
+
+/* PAGE */
+.page{width:92%;max-width:1400px;margin:30px auto;padding-top:120px;}
+.page-title{
+  font-size:26px;font-weight:600;margin-bottom:16px;
+  background:linear-gradient(90deg,var(--neon),var(--magenta));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
 }
 
-/* TABS */
-.tabs{display:flex;gap:10px;margin-bottom:18px;}
-.tab{
-  padding:7px 16px;border-radius:999px;
-  background:rgba(15,23,42,.6);
-  border:1px solid var(--border);
-  cursor:pointer;font-size:13px;
+/* STATS CARDS */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:16px;margin-bottom:24px;
 }
+.stat-card{
+  background:rgba(15,23,42,.93);
+  border:1px solid var(--border);border-radius:18px;
+  padding:20px;text-align:center;
+}
+.stat-label{font-size:11px;text-transform:uppercase;color:var(--text-soft);margin-bottom:8px;}
+.stat-value{font-size:28px;font-weight:600;color:#fff;}
+
+/* TABS */
+.tabs{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.tab{
+  padding:10px 20px;border-radius:999px;
+  background:rgba(15,23,42,.6);
+  border:1px solid var(--border);cursor:pointer;
+  font-size:13px;transition:all 0.3s ease;
+}
+.tab:hover{background:rgba(15,23,42,.8);}
 .tab.active{
   background:linear-gradient(90deg,var(--neon),var(--magenta));
-  color:#000;font-weight:600;
+  color:#000;font-weight:600;border:none;
 }
 
 /* TABLE */
 .table-box{
   background:rgba(15,23,42,.93);
-  border:1px solid var(--border);
-  border-radius:18px;overflow:hidden;
+  border:1px solid var(--border);border-radius:18px;
+  overflow:hidden;overflow-x:auto;
 }
-table{width:100%;border-collapse:collapse;}
+table{width:100%;border-collapse:collapse;min-width:800px;}
 th{
   background:rgba(255,255,255,.06);
-  padding:10px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-soft);
+  padding:14px;font-size:11px;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--text-soft);
+  text-align:left;font-weight:600;
 }
 td{
-  padding:10px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);
+  padding:14px;font-size:13px;
+  border-bottom:1px solid rgba(255,255,255,.05);
 }
 tr:hover td{background:rgba(255,255,255,.04);}
+tr:last-child td{border-bottom:none;}
+
+/* STATUS BADGES */
+.status-badge{
+  display:inline-block;padding:4px 12px;border-radius:999px;
+  font-size:11px;font-weight:600;text-transform:uppercase;
+}
+.status-pending{background:rgba(255,221,85,.2);color:#FFDD55;border:1px solid rgba(255,221,85,.4);}
+.status-processing{background:rgba(0,229,255,.2);color:var(--neon);border:1px solid rgba(0,229,255,.4);}
+.status-approved{background:rgba(20,241,149,.2);color:var(--green);border:1px solid rgba(20,241,149,.4);}
+.status-rejected{background:rgba(255,77,107,.2);color:#ff4d6b;border:1px solid rgba(255,77,107,.4);}
+.status-delivered{background:rgba(20,241,149,.2);color:var(--green);border:1px solid rgba(20,241,149,.4);}
 
 /* ACTION BUTTONS */
 .action-btn{
-  padding:4px 8px;font-size:11px;border-radius:6px;
+  padding:6px 12px;font-size:11px;border-radius:8px;
   border:1px solid var(--neon);color:var(--neon);
   cursor:pointer;background:rgba(0,229,255,.15);
+  transition:all 0.3s ease;
 }
-.action-btn.red{
-  border-color:#ff4d6b;color:#ff4d6b;background:rgba(255,77,107,.15);
+.action-btn:hover{background:rgba(0,229,255,.25);}
+.action-btn.green{
+  border-color:var(--green);color:var(--green);
+  background:rgba(20,241,149,.15);
 }
+.action-btn.green:hover{background:rgba(20,241,149,.25);}
 
-/* SEARCH BOX */
-.search{
-  margin-bottom:12px;padding:10px;border-radius:12px;
-  width:290px;background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.15);color:#fff;
+/* SEARCH & FILTER */
+.search-filter{
+  display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;
+  align-items:center;
 }
+.search-input{
+  flex:1;min-width:200px;padding:10px 16px;
+  border-radius:12px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.15);color:#fff;
+  font-size:13px;outline:none;
+}
+.search-input:focus{border-color:var(--neon);}
+.filter-select{
+  padding:10px 16px;border-radius:12px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.15);color:#fff;
+  font-size:13px;cursor:pointer;outline:none;
+}
+.btn-apply{
+  padding:10px 24px;border-radius:12px;
+  background:linear-gradient(90deg,var(--neon),var(--magenta));
+  color:#020617;font-weight:600;border:none;
+  cursor:pointer;font-size:13px;transition:all 0.3s ease;
+}
+.btn-apply:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(0,229,255,0.4);}
 
 .hidden{display:none;}
+
+/* LOADING */
+.loading{text-align:center;padding:40px;color:var(--text-soft);}
 </style>
-  <script src="js/api-config.js"></script>
 </head>
 
 <body>
@@ -143,406 +282,491 @@ tr:hover td{background:rgba(255,255,255,.04);}
 <div class="bg-glow c1"></div>
 <div class="bg-glow c2"></div>
 
-<!-- NAVBAR -->
+<!-- NAVBAR (index.html style) -->
 <header class="navbar admin-content">
-  <div class="nav-title">Analytica<span>X</span> Admin</div>
+  <div class="nav-brand" onclick="window.location.href='index.html'">
+    <div class="logo-main">Analytica<span style="color:var(--neon);">X</span></div>
+    <div class="logo-sub">Admin Panel</div>
+  </div>
 
   <nav class="nav-links">
-    <a class="active" onclick="showTab('users')">Dashboard</a>
-    <a onclick="showTab('users')">Users</a>
-    <a onclick="showTab('payments')">Payments</a>
-    <a onclick="showTab('logs')">AX-ID Logs</a>
+    <a href="#" class="active" onclick="showTab('users');return false;">Users</a>
+    <a href="#" onclick="showTab('payments');return false;">Payments</a>
+    <a href="#" onclick="showTab('logs');return false;">Logs</a>
   </nav>
 
-  <div class="nav-admin" id="adminName">Admin</div>
-  <a href="#" onclick="localStorage.removeItem('ax_admin_token');location.reload();" style="color:#ff9bbf;text-decoration:none;font-size:12px;padding:6px 14px;border-radius:999px;background:rgba(255,155,191,.1);border:1px solid rgba(255,155,191,.3);">Logout</a>
+  <div class="nav-actions">
+    <button onclick="logoutAdmin()">Logout</button>
+  </div>
 </header>
 
-<!-- PAGE -->
-<div class="page admin-content">
-  <h1 class="page-title">Admin Panel</h1>
-
-  <!-- Tabs -->
-  <div class="tabs">
-    <div class="tab active" onclick="showTab('users')">Users</div>
-    <div class="tab" onclick="showTab('payments')">Payments</div>
-    <div class="tab" onclick="showTab('logs')">AX-ID Logs</div>
+<!-- LOGIN FORMS -->
+<div class="login-container" id="loginContainer">
+  <!-- STEP 1: Username & Password -->
+  <div class="login-box" id="step1Form">
+    <div class="login-title">Admin Login</div>
+    <div class="login-subtitle">Secure • Two-Step Authentication</div>
+    <div class="login-step">Step 1 of 2: Credentials</div>
+    
+    <form onsubmit="handleStep1(event)">
+      <div class="form-group">
+        <label class="form-label" for="adminUsername">Username</label>
+        <input type="text" id="adminUsername" class="form-input" placeholder="Enter username" required autofocus>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="adminPassword">Password</label>
+        <input type="password" id="adminPassword" class="form-input" placeholder="Enter password" required>
+      </div>
+      <button type="submit" class="btn-login" id="btnStep1">Continue →</button>
+    </form>
+    
+    <div class="error-message" id="errorStep1"></div>
   </div>
 
-  <!-- SEARCH -->
-  <input type="text" class="search" id="searchBox" placeholder="Search users, email, ID..." oninput="filterTable()">
+  <!-- STEP 2: JWT Secret -->
+  <div class="login-box hidden" id="step2Form">
+    <div class="login-title">Admin Login</div>
+    <div class="login-subtitle">Secure • Two-Step Authentication</div>
+    <div class="login-step">Step 2 of 2: JWT Secret</div>
+    
+    <form onsubmit="handleStep2(event)">
+      <div class="form-group">
+        <label class="form-label" for="jwtSecret">JWT Secret</label>
+        <input type="password" id="jwtSecret" class="form-input" placeholder="Enter ADMIN_JWT_SECRET" required autofocus>
+      </div>
+      <button type="submit" class="btn-login" id="btnStep2">Login →</button>
+    </form>
+    
+    <div class="error-message" id="errorStep2"></div>
+    <button onclick="backToStep1()" style="width:100%;margin-top:12px;padding:10px;background:transparent;border:1px solid var(--border);color:var(--text-soft);border-radius:8px;cursor:pointer;font-size:13px;">← Back</button>
+  </div>
+</div>
 
-  <!-- USERS -->
-  <div id="tab-users">
-    <div class="table-box">
-      <table>
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Credits</th>
-            <th>Premium</th>
-            <th>Analyses</th>
-            <th>IP</th>
-            <th>Joined</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="userList"></tbody>
-      </table>
+<!-- ADMIN CONTENT -->
+<div class="admin-content" id="adminContent">
+  <div class="page">
+    <h1 class="page-title">Admin Panel</h1>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total</div>
+        <div class="stat-value" id="statTotal">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pending</div>
+        <div class="stat-value" id="statPending">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Processing</div>
+        <div class="stat-value" id="statProcessing">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Approved</div>
+        <div class="stat-value" id="statApproved">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Rejected</div>
+        <div class="stat-value" id="statRejected">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Delivered</div>
+        <div class="stat-value" id="statDelivered">0</div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab active" onclick="showTab('users')">Users</div>
+      <div class="tab" onclick="showTab('payments')">Payments</div>
+      <div class="tab" onclick="showTab('logs')">Logs</div>
+    </div>
+
+    <!-- SEARCH & FILTER -->
+    <div class="search-filter">
+      <select class="filter-select" id="statusFilter" onchange="filterPayments()">
+        <option value="all">All Status</option>
+        <option value="pending">Pending</option>
+        <option value="processing">Processing</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+        <option value="delivered">Delivered</option>
+      </select>
+      <input type="text" class="search-input" id="searchBox" placeholder="Search TXID, wallet, product..." oninput="filterPayments()">
+      <button class="btn-apply" onclick="filterPayments()">Apply</button>
+    </div>
+
+    <!-- USERS TAB -->
+    <div id="tab-users">
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Credits</th>
+              <th>Premium</th>
+              <th>Analyses</th>
+              <th>IP</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userList">
+            <tr><td colspan="7" class="loading">Loading users...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PAYMENTS TAB -->
+    <div id="tab-payments" class="hidden">
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>TXID</th>
+              <th>Product</th>
+              <th>Amount</th>
+              <th>Price</th>
+              <th>Network</th>
+              <th>Wallet</th>
+              <th>Status</th>
+              <th>Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="payList">
+            <tr><td colspan="9" class="loading">Loading payments...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LOGS TAB -->
+    <div id="tab-logs" class="hidden">
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>AX-ID</th>
+              <th>User</th>
+              <th>Symbol</th>
+              <th>Timeframe</th>
+              <th>Trend</th>
+              <th>Risk</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="logList">
+            <tr><td colspan="7" class="loading">Loading logs...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-
-  <!-- PAYMENTS -->
-  <div id="tab-payments" class="hidden">
-    <div class="table-box">
-      <table>
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Amount</th>
-            <th>Method</th>
-            <th>TXID</th>
-            <th>Status</th>
-            <th>Date</th>
-            <th>Confirm</th>
-          </tr>
-        </thead>
-        <tbody id="payList"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- LOGS -->
-  <div id="tab-logs" class="hidden">
-    <div class="table-box">
-      <table>
-        <thead>
-          <tr>
-            <th>AX-ID</th>
-            <th>User</th>
-            <th>Symbol</th>
-            <th>Timeframe</th>
-            <th>Trend</th>
-            <th>Risk</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody id="logList"></tbody>
-      </table>
-    </div>
-  </div>
-
 </div>
 
 <script>
-/* PARTICLES */
+// PARTICLES
 const c=document.getElementById("particles");
 const ctx=c.getContext("2d");
 let parts=[];
 function resize(){c.width=innerWidth;c.height=innerHeight;}
 resize();onresize=resize;
-
 for(let i=0;i<70;i++){
   parts.push({
-    x:Math.random()*innerWidth,
-    y:Math.random()*innerHeight,
-    r:Math.random()*2+1,
-    vx:(Math.random()-0.5)*0.4,
-    vy:(Math.random()-0.5)*0.4
+    x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+    r:Math.random()*2+1,vx:(Math.random()-0.5)*0.4,vy:(Math.random()-0.5)*0.4
   });
 }
 function draw(){
   ctx.clearRect(0,0,c.width,c.height);
   parts.forEach(p=>{
     p.x+=p.vx;p.y+=p.vy;
-    if(p.x<0)p.x=c.width;
-    if(p.x>c.width)p.x=0;
-    if(p.y<0)p.y=c.height;
-    if(p.y>c.height)p.y=0;
+    if(p.x<0)p.x=c.width;if(p.x>c.width)p.x=0;
+    if(p.y<0)p.y=c.height;if(p.y>c.height)p.y=0;
     ctx.fillStyle="rgba(0,229,255,.4)";
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,7);
-    ctx.fill();
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill();
   });
   requestAnimationFrame(draw);
 }
 draw();
 
-/* TAB SYSTEM */
-function showTab(name){
+// STATE
+let step1Token = null;
+let adminToken = localStorage.getItem("ax_admin_token");
+
+// STEP 1: Username & Password
+async function handleStep1(e) {
+  e.preventDefault();
+  const username = document.getElementById("adminUsername").value;
+  const password = document.getElementById("adminPassword").value;
+  const errorDiv = document.getElementById("errorStep1");
+  const btn = document.getElementById("btnStep1");
+  
+  errorDiv.classList.remove("show");
+  btn.disabled = true;
+  btn.textContent = "Verifying...";
+  
+  try {
+    const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+    
+    const data = await res.json();
+    if(data.ok && data.step1Token) {
+      step1Token = data.step1Token;
+      document.getElementById("step1Form").classList.add("hidden");
+      document.getElementById("step2Form").classList.remove("hidden");
+      document.getElementById("jwtSecret").focus();
+    } else {
+      errorDiv.textContent = data.message || "Invalid credentials";
+      errorDiv.classList.add("show");
+    }
+  } catch(err) {
+    errorDiv.textContent = "Login error: " + err.message;
+    errorDiv.classList.add("show");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Continue →";
+  }
+}
+
+// STEP 2: JWT Secret
+async function handleStep2(e) {
+  e.preventDefault();
+  const jwtSecret = document.getElementById("jwtSecret").value;
+  const errorDiv = document.getElementById("errorStep2");
+  const btn = document.getElementById("btnStep2");
+  
+  errorDiv.classList.remove("show");
+  btn.disabled = true;
+  btn.textContent = "Verifying...";
+  
+  try {
+    const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ step1Token, jwtSecret })
+    });
+    
+    const data = await res.json();
+    if(data.ok && data.token) {
+      localStorage.setItem("ax_admin_token", data.token);
+      adminToken = data.token;
+      showAdminPanel();
+    } else {
+      errorDiv.textContent = data.message || "Invalid JWT Secret";
+      errorDiv.classList.add("show");
+    }
+  } catch(err) {
+    errorDiv.textContent = "Verification error: " + err.message;
+    errorDiv.classList.add("show");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Login →";
+  }
+}
+
+function backToStep1() {
+  document.getElementById("step2Form").classList.add("hidden");
+  document.getElementById("step1Form").classList.remove("hidden");
+  document.getElementById("jwtSecret").value = "";
+  step1Token = null;
+}
+
+// CHECK IF ALREADY LOGGED IN
+async function checkAdminAuth() {
+  if(!adminToken) {
+    document.getElementById("loginContainer").style.display = "flex";
+    return;
+  }
+  
+  // Verify token
+  try {
+    const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/payments`, {
+      headers: { Authorization: "Bearer " + adminToken }
+    });
+    const data = await res.json();
+    if(data.ok) {
+      showAdminPanel();
+    } else {
+      localStorage.removeItem("ax_admin_token");
+      document.getElementById("loginContainer").style.display = "flex";
+    }
+  } catch(err) {
+    localStorage.removeItem("ax_admin_token");
+    document.getElementById("loginContainer").style.display = "flex";
+  }
+}
+
+function showAdminPanel() {
+  document.getElementById("loginContainer").style.display = "none";
+  document.querySelectorAll(".admin-content").forEach(el => {
+    el.style.display = "";
+    el.classList.add("verified");
+  });
+  loadUsers();
+  loadPayments();
+  loadLogs();
+}
+
+function logoutAdmin() {
+  if(confirm("Are you sure you want to logout?")) {
+    localStorage.removeItem("ax_admin_token");
+    location.reload();
+  }
+}
+
+// TAB SYSTEM
+function showTab(name) {
   document.getElementById("tab-users").classList.add("hidden");
   document.getElementById("tab-payments").classList.add("hidden");
   document.getElementById("tab-logs").classList.add("hidden");
-
   document.getElementById("tab-"+name).classList.remove("hidden");
-
+  
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-
-  document.querySelector(`.tab[onclick="showTab('${name}')"]`).classList.add("active");
+  event.target.classList.add("active");
+  
+  document.querySelectorAll(".nav-links a").forEach(a=>a.classList.remove("active"));
+  event.target.closest(".nav-links")?.querySelector(`a[onclick*="${name}"]`)?.classList.add("active");
 }
 
-/* ADMIN LOGIN CHECK */
-let adminToken = localStorage.getItem("ax_admin_token");
-
-// Verify token is valid by checking with backend
-async function verifyAdminToken(token) {
+// LOAD DATA
+async function loadUsers() {
   try {
-    const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/payments`, {
-      headers: { Authorization: "Bearer " + token }
+    const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/users`, {
+      headers: { Authorization: "Bearer " + adminToken }
     });
     const data = await res.json();
-    return data.ok === true;
+    if(data.ok && data.users) {
+      const tbody = document.getElementById("userList");
+      tbody.innerHTML = data.users.map(u => `
+        <tr>
+          <td>${u.email}</td>
+          <td>${u.credits || 0}</td>
+          <td>${u.premium ? "✅" : "❌"}</td>
+          <td>${u.totalAnalyses || 0}</td>
+          <td>${u.ipAddress || "--"}</td>
+          <td>${new Date(u.createdAt).toLocaleDateString()}</td>
+          <td><button class="action-btn" onclick="viewUser('${u._id}')">View</button></td>
+        </tr>
+      `).join("");
+    }
   } catch(err) {
-    return false;
+    document.getElementById("userList").innerHTML = `<tr><td colspan="7">Error loading users</td></tr>`;
   }
 }
 
-// Hide admin content immediately (before any checks)
-document.querySelectorAll('.admin-content').forEach(el => el.style.display = 'none');
-
-// Check if logged in
-if(!adminToken) {
-  // Show login form
-  document.body.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:radial-gradient(circle at top,#071526 0,#020617 45%,#000 100%);">
-      <div style="background:rgba(15,23,42,.96);padding:32px;border-radius:24px;border:1px solid rgba(148,163,184,.35);max-width:420px;width:90%;">
-        <h1 style="text-align:center;margin-bottom:8px;font-size:22px;">Admin Login</h1>
-        <p style="text-align:center;color:var(--text-soft);margin-bottom:24px;font-size:13px;">Secure • AES-256 • Session Protected</p>
-        <input type="text" id="adminUsername" placeholder="Username" style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(148,163,184,.5);background:rgba(0,0,0,.4);color:#fff;margin-bottom:12px;outline:none;">
-        <input type="password" id="adminPassword" placeholder="Password" style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(148,163,184,.5);background:rgba(0,0,0,.4);color:#fff;margin-bottom:16px;outline:none;">
-        <button onclick="adminLogin()" style="width:100%;padding:14px;border-radius:999px;border:none;background:linear-gradient(90deg,var(--neon),var(--magenta));color:#020617;font-weight:600;cursor:pointer;">Login</button>
-        <div id="adminError" style="color:#ff4b9f;margin-top:12px;text-align:center;font-size:12px;display:none;"></div>
-      </div>
-    </div>
-  `;
-  
-  window.adminLogin = async function() {
-    const username = document.getElementById("adminUsername").value;
-    const password = document.getElementById("adminPassword").value;
-    const errorDiv = document.getElementById("adminError");
-    
-    try {
-      const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-      });
-      
-      const data = await res.json();
-      if(data.ok) {
-        localStorage.setItem("ax_admin_token", data.token);
-        location.reload();
-      } else {
-        errorDiv.textContent = data.message || "Invalid credentials";
-        errorDiv.style.display = "block";
-      }
-    } catch(err) {
-      errorDiv.textContent = "Login error: " + err.message;
-      errorDiv.style.display = "block";
+async function loadPayments() {
+  try {
+    const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/payments`, {
+      headers: { Authorization: "Bearer " + adminToken }
+    });
+    const data = await res.json();
+    if(data.ok && data.payments) {
+      updateStats(data.payments);
+      const tbody = document.getElementById("payList");
+      tbody.innerHTML = data.payments.map(p => {
+        const statusClass = `status-${p.status?.toLowerCase() || 'pending'}`;
+        return `
+          <tr>
+            <td style="font-family:monospace;font-size:11px;">${p.txid?.substring(0,20)}...</td>
+            <td>${p.product || "--"}</td>
+            <td>${p.amount || "--"}</td>
+            <td>${p.price || "--"}</td>
+            <td>${p.network || "--"}</td>
+            <td style="font-family:monospace;font-size:11px;">${p.wallet?.substring(0,15)}...</td>
+            <td>
+              <span class="status-badge ${statusClass}">${p.status || 'pending'}</span>
+              <select onchange="updatePaymentStatus('${p._id}',this.value)" style="margin-left:8px;padding:4px 8px;border-radius:6px;background:rgba(0,0,0,.4);border:1px solid var(--border);color:#fff;font-size:11px;">
+                <option value="pending" ${p.status==='pending'?'selected':''}>Pending</option>
+                <option value="processing" ${p.status==='processing'?'selected':''}>Processing</option>
+                <option value="approved" ${p.status==='approved'?'selected':''}>Approved</option>
+                <option value="rejected" ${p.status==='rejected'?'selected':''}>Rejected</option>
+                <option value="delivered" ${p.status==='delivered'?'selected':''}>Delivered</option>
+              </select>
+            </td>
+            <td>${p.updatedAt ? new Date(p.updatedAt).toLocaleString() : "--"}</td>
+            <td><button class="action-btn green" onclick="viewPayment('${p._id}')">View</button></td>
+          </tr>
+        `;
+      }).join("");
     }
+  } catch(err) {
+    document.getElementById("payList").innerHTML = `<tr><td colspan="9">Error loading payments</td></tr>`;
+  }
+}
+
+function updateStats(payments) {
+  const stats = {
+    total: payments.length,
+    pending: payments.filter(p=>p.status==='pending').length,
+    processing: payments.filter(p=>p.status==='processing').length,
+    approved: payments.filter(p=>p.status==='approved').length,
+    rejected: payments.filter(p=>p.status==='rejected').length,
+    delivered: payments.filter(p=>p.status==='delivered').length
   };
-} else {
-  // Verify token is still valid
-  verifyAdminToken(adminToken).then(isValid => {
-    if(!isValid) {
-      localStorage.removeItem("ax_admin_token");
-      location.reload();
-    } else {
-      // Token is valid, show admin content
-      document.querySelectorAll('.admin-content').forEach(el => {
-        el.style.display = '';
-        el.classList.add('verified');
-      });
-    }
-  });
-  
-  // Already logged in, continue with normal admin panel (will be shown after verification)
+  document.getElementById("statTotal").textContent = stats.total;
+  document.getElementById("statPending").textContent = stats.pending;
+  document.getElementById("statProcessing").textContent = stats.processing;
+  document.getElementById("statApproved").textContent = stats.approved;
+  document.getElementById("statRejected").textContent = stats.rejected;
+  document.getElementById("statDelivered").textContent = stats.delivered;
+}
 
-/* ADMIN TOKEN */
-const token = adminToken;
+async function loadLogs() {
+  // TODO: Implement logs loading
+  document.getElementById("logList").innerHTML = `<tr><td colspan="7">Logs feature coming soon</td></tr>`;
+}
 
-/* LOAD USERS */
-async function loadUsers(){
-  const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/users`,{
-    headers:{Authorization:"Bearer "+token}
-  });
-  const data = await res.json();
-  if(!data.ok) {
-    console.error("Load users error:", data);
-    return;
-  }
-  const list = data.users || [];
-
-  const box=document.getElementById("userList");
-  box.innerHTML="";
-
-  list.forEach(u=>{
-    box.innerHTML+=`
-      <tr>
-        <td>${u.email}</td>
-        <td>${u.credits}</td>
-        <td>${u.premium?"Yes":"No"}</td>
-        <td>${u.totalAnalyses}</td>
-        <td>${u.ipAddress||"-"}</td>
-        <td>${new Date(u.createdAt).toLocaleString()}</td>
-        <td>
-          <button class="action-btn" onclick="addCredit('${u._id}')">+Credit</button>
-          <button class="action-btn" onclick="togglePremium('${u._id}')">Premium</button>
-          <button class="action-btn red" onclick="deleteUser('${u._id}')">Delete</button>
-        </td>
-      </tr>
-    `;
+function filterPayments() {
+  const filter = document.getElementById("statusFilter").value;
+  const search = document.getElementById("searchBox").value.toLowerCase();
+  const rows = document.querySelectorAll("#payList tr");
+  rows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    const statusMatch = filter === "all" || row.textContent.includes(filter);
+    const searchMatch = !search || text.includes(search);
+    row.style.display = statusMatch && searchMatch ? "" : "none";
   });
 }
 
-/* LOAD PAYMENTS */
-async function loadPayments(){
-  const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/payments`,{
-    headers:{Authorization:"Bearer "+token}
-  });
-  const data = await res.json();
-  if(!data.ok) {
-    console.error("Load payments error:", data);
-    return;
-  }
-  const list = data.payments || [];
-
-  const box=document.getElementById("payList");
-  box.innerHTML="";
-
-  if(list.length === 0) {
-    box.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-soft);padding:20px;">No payments found.</td></tr>`;
-    return;
-  }
-
-  list.forEach(p=>{
-    const statusColors = {
-      pending: "#ffcc4d",
-      processing: "#80d0ff",
-      approved: "#16d18a",
-      rejected: "#ff4b9f",
-      delivered: "#93ffb0"
-    };
-    const statusColor = statusColors[p.status] || "#ffcc4d";
-    box.innerHTML+=`
-      <tr>
-        <td>${p.userEmail || "Unknown"}</td>
-        <td>$${p.amount}</td>
-        <td>${p.method || "manual"}</td>
-        <td style="font-family:monospace;font-size:11px;max-width:200px;overflow:hidden;text-overflow:ellipsis;">${p.txid || "—"}</td>
-        <td><span style="color:${statusColor};font-weight:700;">${(p.status || "pending").toUpperCase()}</span></td>
-        <td>${new Date(p.createdAt).toLocaleString()}</td>
-        <td>
-          <select class="statusSel" onchange="updatePaymentStatus('${p._id}', this.value)" style="height:32px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.06);color:#fff;font-size:11px;">
-            <option value="pending" ${p.status === "pending" ? "selected" : ""}>Pending</option>
-            <option value="processing" ${p.status === "processing" ? "selected" : ""}>Processing</option>
-            <option value="approved" ${p.status === "approved" ? "selected" : ""}>Approved</option>
-            <option value="rejected" ${p.status === "rejected" ? "selected" : ""}>Rejected</option>
-            <option value="delivered" ${p.status === "delivered" ? "selected" : ""}>Delivered</option>
-          </select>
-        </td>
-      </tr>
-    `;
-  });
-}
-
-/* LOAD LOGS */
-async function loadLogs(){
-  const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/logs",{
-    headers:{Authorization:"Bearer "+token}
-  });
-  const list = await res.json();
-
-  const box=document.getElementById("logList");
-  box.innerHTML="";
-
-  list.forEach(l=>{
-    box.innerHTML+=`
-      <tr>
-        <td>${l.axid}</td>
-        <td>${l.email}</td>
-        <td>${l.symbol}</td>
-        <td>${l.timeframe}</td>
-        <td>${l.trend}</td>
-        <td>${l.risk}</td>
-        <td>${new Date(l.createdAt).toLocaleString()}</td>
-      </tr>
-    `;
-  });
-}
-
-/* ADMIN ACTIONS */
-async function addCredit(id){
-  const amount = prompt("Kredi miktarı:");
-  if(!amount) return;
-
-  await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/user/update",{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      Authorization:"Bearer "+token},
-    body:JSON.stringify({userId:id,addCredits:Number(amount)})
-  });
-  loadUsers();
-}
-
-async function togglePremium(id){
-  await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/user/update",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json", Authorization:"Bearer "+token },
-    body:JSON.stringify({userId:id,togglePremium:true})
-  });
-  loadUsers();
-}
-
-async function deleteUser(id){
-  if(!confirm("Delete user?")) return;
-  
-  await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/user/delete/${id}`,{
-    method:"DELETE",
-    headers:{Authorization:"Bearer "+token}
-  });
-  loadUsers();
-}
-
-async function updatePaymentStatus(paymentId, status){
+async function updatePaymentStatus(id, status) {
   try {
     const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/payment/update`, {
-      method:"POST",
-      headers:{ 
-        "Content-Type": "application/json", 
-        Authorization:"Bearer "+token 
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + adminToken
       },
-      body:JSON.stringify({paymentId, status})
+      body: JSON.stringify({ paymentId: id, status })
     });
     const data = await res.json();
     if(data.ok) {
       loadPayments();
     } else {
-      alert("Error: " + (data.error || data.message));
+      alert("Error updating payment: " + data.message);
     }
   } catch(err) {
     alert("Error: " + err.message);
   }
 }
 
-/* SEARCH FILTER */
-function filterTable(){
-  const q=document.getElementById("searchBox").value.toLowerCase();
-  document.querySelectorAll("tbody tr").forEach(tr=>{
-    tr.style.display = tr.innerText.toLowerCase().includes(q) ? "" : "none";
-  });
+function viewUser(id) {
+  alert("View user: " + id);
 }
 
-/* INITIAL LOAD */
-if(adminToken) {
-  loadUsers();
-  loadPayments();
-  loadLogs();
-}
+function viewPayment(id) {
+  alert("View payment: " + id);
 }
 
+// INIT
+checkAdminAuth();
 </script>
 
 </body>
 </html>
+
