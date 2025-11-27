@@ -165,6 +165,16 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/test", testRoutes);
 
+// Log API routes on startup (for debugging)
+if (process.env.NODE_ENV === 'production') {
+  console.log("📡 API Routes registered:");
+  console.log("   - /api/auth");
+  console.log("   - /api/analysis");
+  console.log("   - /api/payments");
+  console.log("   - /api/admin");
+  console.log("   - /api/test");
+}
+
 // Maintenance status endpoint
 app.get("/api/maintenance/status", (req, res) => {
   const maintenance = process.env.MAINTENANCE_MODE === "true";
@@ -206,9 +216,15 @@ if (process.env.NODE_ENV !== 'production') {
 } else {
   // In production, only handle API routes
   // All other routes return 404 (frontend is on GitHub Pages)
+  // IMPORTANT: This catch-all must come AFTER all API routes
+  // API routes are already defined above, so this only catches non-API routes
   app.get("*", (req, res) => {
+    // This should never catch /api routes because they're handled above
+    // But just in case, check again
     if (req.path.startsWith("/api")) {
-      return res.status(404).json({ ok: false, error: "API endpoint not found" });
+      console.error("⚠️ API route not found:", req.path);
+      console.error("   Available API routes: /api/auth, /api/analysis, /api/payments, /api/admin, /api/test");
+      return res.status(404).json({ ok: false, error: "API endpoint not found", path: req.path });
     }
     // Frontend is on GitHub Pages, not here
     return res.status(404).json({ ok: false, error: "Not found. Frontend is served by GitHub Pages." });
