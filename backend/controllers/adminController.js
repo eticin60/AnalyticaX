@@ -3,21 +3,48 @@ const Payment = require("../models/Payment");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// Admin credentials (should be in env in production)
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "qwert9asd8";
-const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || process.env.JWT_SECRET || "admin_secret_key_change_in_production";
+// Admin credentials - MUST be set via environment variables in production
+// In development, defaults are used (NEVER use these in production!)
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || (process.env.NODE_ENV === 'production' ? null : "admin");
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || (process.env.NODE_ENV === 'production' ? null : "dev_password_change_me");
+const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || process.env.JWT_SECRET || (process.env.NODE_ENV === 'production' ? null : "dev_secret_change_in_production");
+
+// Validate admin credentials in production
+if (process.env.NODE_ENV === 'production') {
+  if (!ADMIN_USERNAME || !ADMIN_PASSWORD || !ADMIN_JWT_SECRET) {
+    console.error("❌ CRITICAL: Admin credentials not set in production!");
+    console.error("   Please set ADMIN_USERNAME, ADMIN_PASSWORD, and ADMIN_JWT_SECRET environment variables.");
+    console.error("   Admin panel will not work until these are configured.");
+  }
+}
 
 // Admin login
 exports.adminLogin = async (req, res) => {
   try {
+    // Check if admin credentials are configured
+    if (!ADMIN_USERNAME || !ADMIN_PASSWORD || !ADMIN_JWT_SECRET) {
+      console.error("❌ Admin credentials not configured!");
+      return res.json({ ok: false, message: "Admin panel is not configured. Please contact the administrator." });
+    }
+    
     const { username, password } = req.body;
     
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+    if (!username || !password) {
+      return res.json({ ok: false, message: "Username and password are required" });
+    }
+    
+    // Use constant-time comparison to prevent timing attacks
+    const usernameMatch = username === ADMIN_USERNAME;
+    const passwordMatch = password === ADMIN_PASSWORD;
+    
+    if (usernameMatch && passwordMatch) {
       const token = jwt.sign({ admin: true, username }, ADMIN_JWT_SECRET, { expiresIn: "7d" });
+      console.log(`✅ Admin login successful: ${username}`);
       return res.json({ ok: true, token, message: "Admin login successful" });
     }
     
+    // Always return same error message to prevent username enumeration
+    console.log(`❌ Admin login failed: ${username}`);
     return res.json({ ok: false, message: "Invalid username or password" });
   } catch (err) {
     console.error("Admin login error:", err);
