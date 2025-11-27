@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Email - AnalyticaX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="js/api-config.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #020617 0%, #0b1020 100%);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+    h1 {
+      color: #00E5FF;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .subtitle {
+      color: #98A0B3;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      color: #98A0B3;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+    }
+    input:focus {
+      border-color: #00E5FF;
+      box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(90deg, #00E5FF, #FF4DFF);
+      color: #020617;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0, 229, 255, 0.4);
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .result.success {
+      background: rgba(20, 241, 149, 0.1);
+      border: 1px solid rgba(20, 241, 149, 0.3);
+      color: #14F195;
+    }
+    .result.error {
+      background: rgba(255, 77, 107, 0.1);
+      border: 1px solid rgba(255, 77, 107, 0.3);
+      color: #ff4d6b;
+    }
+    .result.info {
+      background: rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: #00E5FF;
+    }
+    .config-info {
+      margin-top: 20px;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      font-size: 12px;
+      color: #98A0B3;
+    }
+    .config-info strong {
+      color: #00E5FF;
+    }
+    pre {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 11px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📧 Test Email Sending</h1>
+    <p class="subtitle">Test OTP email delivery to diagnose SMTP issues</p>
+    
+    <form id="testForm" onsubmit="testEmail(event)">
+      <div class="form-group">
+        <label for="testEmail">Your Email Address</label>
+        <input 
+          type="email" 
+          id="testEmail" 
+          placeholder="your-email@example.com" 
+          required
+          autocomplete="email"
+        >
+      </div>
+      <button type="submit" id="testBtn">Send Test Email</button>
+    </form>
+    
+    <div id="result"></div>
+    <div id="configInfo" class="config-info" style="display: none;">
+      <strong>SMTP Configuration:</strong>
+      <pre id="configDetails"></pre>
+    </div>
+  </div>
+
+  <script>
+    async function testEmail(e) {
+      e.preventDefault();
+      const email = document.getElementById("testEmail").value;
+      const btn = document.getElementById("testBtn");
+      const resultDiv = document.getElementById("result");
+      const configDiv = document.getElementById("configInfo");
+      const configDetails = document.getElementById("configDetails");
+      
+      btn.disabled = true;
+      btn.textContent = "Sending...";
+      resultDiv.innerHTML = "";
+      configDiv.style.display = "none";
+      
+      try {
+        const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/test/test-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+        
+        const data = await res.json();
+        
+        if (data.ok) {
+          resultDiv.className = "result success";
+          resultDiv.innerHTML = `
+            <strong>✅ Success!</strong><br>
+            ${data.message}<br>
+            <small>Check your inbox (and spam folder) for the test email with OTP: 123456</small>
+          `;
+        } else {
+          resultDiv.className = "result error";
+          resultDiv.innerHTML = `
+            <strong>❌ Failed</strong><br>
+            ${data.message || data.error || "Unknown error"}<br>
+            ${data.result?.error ? `<small>Error: ${data.result.error}</small>` : ''}
+            ${data.result?.code ? `<small>Code: ${data.result.code}</small>` : ''}
+          `;
+        }
+        
+        // Show SMTP config
+        if (data.smtpConfig) {
+          configDiv.style.display = "block";
+          configDetails.textContent = JSON.stringify(data.smtpConfig, null, 2);
+        }
+        
+      } catch (err) {
+        resultDiv.className = "result error";
+        resultDiv.innerHTML = `
+          <strong>❌ Network Error</strong><br>
+          ${err.message}<br>
+          <small>Check if the backend is running and accessible.</small>
+        `;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Send Test Email";
+      }
+    }
+  </script>
+</body>
+</html>
+
