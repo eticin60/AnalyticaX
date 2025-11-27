@@ -1920,6 +1920,10 @@
           <span>Analyze</span>
           <span style="font-size:12px;">↗</span>
         </a>
+        <a href="chat.html" onclick="event.preventDefault();window.location.href='maintenance.html';" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:400;transition:all 0.3s ease;white-space:nowrap;position:relative;display:flex;align-items:center;gap:4px;" data-i18n="nav.aiChat">
+          <span>🤖</span>
+          <span>AI Chat</span>
+        </a>
         <!-- User Profile with Credits and Logout -->
         <div style="display:flex;align-items:center;gap:12px;padding-left:12px;border-left:1px solid rgba(255,255,255,0.15);">
           <div id="userProfileAvatar" style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--neon),var(--magenta));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#020617;flex-shrink:0;cursor:pointer;" onclick="window.location.href='settings.html'">U</div>
@@ -2412,7 +2416,7 @@
         <span>AnalyticaX AI</span>
             </div>
       <div class="ai-robot-message-content" id="aiRobotMessageContent">
-        Merhaba! Ben AnalyticaX AI asistanınız. Size yardımcı olmak için buradayım! 🚀
+        Hello! I'm your AnalyticaX AI assistant. I'm here to help you! 🚀
       </div>
       <div class="ai-robot-message-time" id="aiRobotMessageTime"></div>
           </div>
@@ -2429,32 +2433,11 @@
       <div class="ai-chat-messages" id="aiChatMessages">
         <div class="ai-chat-message ai-chat-bot">
           <div class="ai-chat-avatar">🤖</div>
-          <div class="ai-chat-text">Merhaba! Ben AnalyticaX AI asistanınız. Size nasıl yardımcı olabilirim? 😊</div>
+          <div class="ai-chat-text" id="aiChatWelcome">Hello! I'm your AnalyticaX AI assistant. How can I help you? 😊</div>
         </div>
       </div>
       <div class="ai-chat-input-area">
-        <input type="text" id="aiChatInput" class="ai-chat-input" placeholder="Mesajınızı yazın..." onkeypress="if(event.key==='Enter') sendAIChatMessage()">
-        <button class="ai-chat-send" onclick="sendAIChatMessage()">📤</button>
-          </div>
-        </div>
-
-    <!-- Chat Widget -->
-    <div class="ai-chat-widget" id="aiChatWidget">
-      <div class="ai-chat-header">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span style="font-size:20px;">🤖</span>
-          <span style="font-weight:600;">AnalyticaX AI Chat</span>
-        </div>
-        <button class="ai-chat-close" id="aiChatClose" onclick="closeAIChat()">×</button>
-    </div>
-      <div class="ai-chat-messages" id="aiChatMessages">
-        <div class="ai-chat-message ai-chat-bot">
-          <div class="ai-chat-avatar">🤖</div>
-          <div class="ai-chat-text">Merhaba! Ben AnalyticaX AI asistanınız. Size nasıl yardımcı olabilirim? 😊</div>
-        </div>
-      </div>
-      <div class="ai-chat-input-area">
-        <input type="text" id="aiChatInput" class="ai-chat-input" placeholder="Mesajınızı yazın..." onkeypress="if(event.key==='Enter') sendAIChatMessage()">
+        <input type="text" id="aiChatInput" class="ai-chat-input" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendAIChatMessage()">
         <button class="ai-chat-send" onclick="sendAIChatMessage()">📤</button>
       </div>
     </div>
@@ -2836,6 +2819,7 @@
         "nav.logout":"Çıkış yap",
         "nav.dashboard":"Kontrol Paneli",
         "nav.analyze":"Analiz Et",
+        "nav.aiChat":"AI Sohbet",
 
         "hero.titleLine2":"Grafiğini yükle, yapay zekâ senin yerine analiz etsin.",
         "hero.desc":"AnalyticaX grafikleri profesyonel bir trader gibi okur — yapı, likidite, trend ve formasyonları analiz eder, olasılık temelli senaryolar üretir. Her hesap için <strong>günlük 1 ücretsiz analiz, toplamda 3 adet</strong> hak verilir.",
@@ -3254,49 +3238,99 @@
     let currentMarketData = [];
     let aiRobotMoving = false;
 
+    // AI Messages - Multi-language support
     const aiMessages = {
-      greetings: [
-        "Merhaba! Ben AnalyticaX AI asistanınız! 🤖",
-        "Selam! Kripto dünyasına hoş geldiniz! 🚀",
-        "Hey! Ben buradayım, size yardımcı olmak için! 💫"
-      ],
-      cryptoJokes: [
-        "Bitcoin neden hiç yorulmaz? Çünkü blockchain'de çalışıyor! 😄",
-        "Ethereum'a ne demişler? 'Smart contract' yapıyorsun ama akıllı mısın? 😂",
-        "Kripto trader'lar neden hep gece çalışır? Çünkü market 7/24 açık! 🌙",
-        "HODL ne demek? Hold On for Dear Life! Ama benim için: 'Hey, Optimize Data Learning!' 🤓"
-      ],
-      cryptoNews: [
-        "BTC fiyatı yükseliyor! Bull market mi geliyor? 📈",
-        "ETH 2.0 güncellemeleri devam ediyor! ⚡",
-        "DeFi sektörü büyümeye devam ediyor! 💎",
-        "NFT'ler hala popüler! Sanat ve teknoloji birleşiyor! 🎨"
-      ],
-      priceAlerts: [
-        "BTC şu anda güçlü bir trend içinde! 📊",
-        "ETH'de volatilite artıyor, dikkatli olun! ⚠️",
-        "Altcoin sezonu başladı mı? 🤔",
-        "Market cap genel olarak yükselişte! 📈"
-      ],
-      tips: [
-        "Unutmayın: Bu finansal tavsiye değil! Her zaman kendi araştırmanızı yapın! 🔍",
-        "Risk yönetimi çok önemli! Asla kaybetmeyi göze alamayacağınız parayla trade yapmayın! ⚠️",
-        "Chart analizi yaparken birden fazla timeframe'e bakmayı unutmayın! 📊",
-        "HODL stratejisi uzun vadede işe yarayabilir, ama her zaman DYOR! 💪"
-      ],
-      motivational: [
-        "Harika bir analiz yapmak için doğru chart'ı seçmek önemli! 🎯",
-        "Sabırlı olun, piyasa her zaman size fırsat sunar! ⏰",
-        "Her trade bir öğrenme fırsatıdır! 📚",
-        "Başarılı trader'lar sabırlı ve disiplinlidir! 🏆"
-      ]
+      en: {
+        greetings: [
+          "Hello! I'm your AnalyticaX AI assistant! 🤖",
+          "Hey! Welcome to the crypto world! 🚀",
+          "Hi there! I'm here to help you! 💫"
+        ],
+        cryptoJokes: [
+          "Why does Bitcoin never get tired? Because it works on the blockchain! 😄",
+          "What did they say to Ethereum? 'You make smart contracts, but are you smart?' 😂",
+          "Why do crypto traders always work at night? Because the market is open 24/7! 🌙",
+          "What does HODL mean? Hold On for Dear Life! But for me: 'Hey, Optimize Data Learning!' 🤓"
+        ],
+        cryptoNews: [
+          "BTC price is rising! Is a bull market coming? 📈",
+          "ETH 2.0 updates continue! ⚡",
+          "DeFi sector keeps growing! 💎",
+          "NFTs are still popular! Art and technology unite! 🎨"
+        ],
+        priceAlerts: [
+          "BTC is currently in a strong trend! 📊",
+          "Volatility is increasing in ETH, be careful! ⚠️",
+          "Has altcoin season started? 🤔",
+          "Market cap is generally on the rise! 📈"
+        ],
+        tips: [
+          "Remember: This is not financial advice! Always do your own research! 🔍",
+          "Risk management is very important! Never trade with money you can't afford to lose! ⚠️",
+          "Don't forget to look at multiple timeframes when analyzing charts! 📊",
+          "HODL strategy can work in the long term, but always DYOR! 💪"
+        ],
+        motivational: [
+          "Choosing the right chart is important for great analysis! 🎯",
+          "Be patient, the market always offers you opportunities! ⏰",
+          "Every trade is a learning opportunity! 📚",
+          "Successful traders are patient and disciplined! 🏆"
+        ]
+      },
+      tr: {
+        greetings: [
+          "Merhaba! Ben AnalyticaX AI asistanınız! 🤖",
+          "Selam! Kripto dünyasına hoş geldiniz! 🚀",
+          "Hey! Ben buradayım, size yardımcı olmak için! 💫"
+        ],
+        cryptoJokes: [
+          "Bitcoin neden hiç yorulmaz? Çünkü blockchain'de çalışıyor! 😄",
+          "Ethereum'a ne demişler? 'Smart contract' yapıyorsun ama akıllı mısın? 😂",
+          "Kripto trader'lar neden hep gece çalışır? Çünkü market 7/24 açık! 🌙",
+          "HODL ne demek? Hold On for Dear Life! Ama benim için: 'Hey, Optimize Data Learning!' 🤓"
+        ],
+        cryptoNews: [
+          "BTC fiyatı yükseliyor! Bull market mi geliyor? 📈",
+          "ETH 2.0 güncellemeleri devam ediyor! ⚡",
+          "DeFi sektörü büyümeye devam ediyor! 💎",
+          "NFT'ler hala popüler! Sanat ve teknoloji birleşiyor! 🎨"
+        ],
+        priceAlerts: [
+          "BTC şu anda güçlü bir trend içinde! 📊",
+          "ETH'de volatilite artıyor, dikkatli olun! ⚠️",
+          "Altcoin sezonu başladı mı? 🤔",
+          "Market cap genel olarak yükselişte! 📈"
+        ],
+        tips: [
+          "Unutmayın: Bu finansal tavsiye değil! Her zaman kendi araştırmanızı yapın! 🔍",
+          "Risk yönetimi çok önemli! Asla kaybetmeyi göze alamayacağınız parayla trade yapmayın! ⚠️",
+          "Chart analizi yaparken birden fazla timeframe'e bakmayı unutmayın! 📊",
+          "HODL stratejisi uzun vadede işe yarayabilir, ama her zaman DYOR! 💪"
+        ],
+        motivational: [
+          "Harika bir analiz yapmak için doğru chart'ı seçmek önemli! 🎯",
+          "Sabırlı olun, piyasa her zaman size fırsat sunar! ⏰",
+          "Her trade bir öğrenme fırsatıdır! 📚",
+          "Başarılı trader'lar sabırlı ve disiplinlidir! 🏆"
+        ]
+      }
     };
 
+    function getCurrentLanguage() {
+      return document.documentElement.getAttribute("data-lang") || "en";
+    }
+
+    function getAIMessages() {
+      const lang = getCurrentLanguage();
+      return aiMessages[lang] || aiMessages.en;
+    }
+
     function getRandomMessage() {
-      const categories = Object.keys(aiMessages);
+      const messages = getAIMessages();
+      const categories = Object.keys(messages);
       const category = categories[Math.floor(Math.random() * categories.length)];
-      const messages = aiMessages[category];
-      return messages[Math.floor(Math.random() * messages.length)];
+      const categoryMessages = messages[category];
+      return categoryMessages[Math.floor(Math.random() * categoryMessages.length)];
     }
 
     function getPriceMessage() {
@@ -3305,8 +3339,11 @@
       if (!coin) return null;
       const change = coin.price_change_percentage_24h || 0;
       const emoji = change >= 0 ? "📈" : "📉";
-      const trend = change >= 0 ? "yükselişte" : "düşüşte";
-      return `${emoji} ${coin.name} (${coin.symbol.toUpperCase()}) $${coin.current_price.toFixed(2)} - 24s'de %${change.toFixed(2)} ${trend}!`;
+      const lang = getCurrentLanguage();
+      const trend = change >= 0 
+        ? (lang === "tr" ? "yükselişte" : "rising")
+        : (lang === "tr" ? "düşüşte" : "falling");
+      return `${emoji} ${coin.name} (${coin.symbol.toUpperCase()}) $${coin.current_price.toFixed(2)} - ${lang === "tr" ? "24s'de" : "24h"} %${change.toFixed(2)} ${trend}!`;
     }
 
     function showAIMessage(message, showNotification = true) {
@@ -3394,9 +3431,10 @@
       const typing = document.createElement("div");
       typing.className = "ai-chat-message ai-chat-bot";
       typing.id = "aiChatTyping";
+      const lang = getCurrentLanguage();
       typing.innerHTML = `
         <div class="ai-chat-avatar">🤖</div>
-        <div class="ai-chat-text">Yazıyor...</div>
+        <div class="ai-chat-text">${lang === "tr" ? "Yazıyor..." : "Typing..."}</div>
       `;
       messages.appendChild(typing);
       messages.scrollTop = messages.scrollHeight;
