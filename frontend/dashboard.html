@@ -846,11 +846,6 @@
           <button class="btn-ghost" onclick="window.location.href='premium.html'" style="margin-right:8px;">
             Upgrade Plan
           </button>
-          <button class="btn-ghost" onclick="window.location.href='verify-payment.html'" style="background:rgba(0,229,255,.1);border-color:rgba(0,229,255,.3);">
-            Verify Payment
-          </button>
-            Upgrade / Buy credits
-          </button>
           <div class="mini-text" id="miniPlanHint">
             Free plan: 1 analysis / day • total limit set by backend
           </div>
@@ -899,6 +894,35 @@
                 <span class="chip">Backend-validated daily free quota</span>
                 <span class="chip red">0 credits → analysis locked</span>
                 <span class="chip">AI EMA / ATR engine connected to AnalyticaX API</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- VERIFY PAYMENT -->
+          <div class="card" style="margin-bottom:18px;">
+            <div class="card-inner">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">
+                    Verify Payment
+                    <span class="card-tag">Transaction</span>
+                  </div>
+                  <div class="card-sub">
+                    Enter your transaction ID (TXID) to verify your payment and view detailed transaction information.
+                  </div>
+                </div>
+              </div>
+
+              <div style="padding:20px 0;">
+                <button class="btn-primary" onclick="window.location.href='verify-payment.html'" style="width:100%;justify-content:center;display:flex;align-items:center;gap:8px;background:linear-gradient(135deg, rgba(0,229,255,0.2), rgba(255,77,255,0.2));border:1px solid rgba(0,229,255,0.4);">
+                  <span>🔗</span>
+                  <span>Verify Payment</span>
+                </button>
+              </div>
+
+              <div class="chip-row">
+                <span class="chip">Enter TXID to check payment status</span>
+                <span class="chip">View transaction details and timeline</span>
               </div>
             </div>
           </div>
