@@ -289,12 +289,6 @@ tr:last-child td{border-bottom:none;}
     <div class="logo-sub">Admin Panel</div>
   </div>
 
-  <nav class="nav-links">
-    <a href="#" class="active" onclick="showTab('users');return false;">Users</a>
-    <a href="#" onclick="showTab('payments');return false;">Payments</a>
-    <a href="#" onclick="showTab('logs');return false;">Logs</a>
-  </nav>
-
   <div class="nav-actions">
     <button onclick="logoutAdmin()">Logout</button>
   </div>
@@ -347,8 +341,15 @@ tr:last-child td{border-bottom:none;}
   <div class="page">
     <h1 class="page-title">Admin Panel</h1>
 
-    <!-- STATS -->
-    <div class="stats-grid">
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab active" onclick="showTab('users')">Users</div>
+      <div class="tab" onclick="showTab('payments')">Payments</div>
+      <div class="tab" onclick="showTab('logs')">Logs</div>
+    </div>
+
+    <!-- STATS (only for payments) -->
+    <div class="stats-grid hidden" id="paymentStats">
       <div class="stat-card">
         <div class="stat-label">Total</div>
         <div class="stat-value" id="statTotal">0</div>
@@ -375,15 +376,8 @@ tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
-    <!-- TABS -->
-    <div class="tabs">
-      <div class="tab active" onclick="showTab('users')">Users</div>
-      <div class="tab" onclick="showTab('payments')">Payments</div>
-      <div class="tab" onclick="showTab('logs')">Logs</div>
-    </div>
-
-    <!-- SEARCH & FILTER -->
-    <div class="search-filter">
+    <!-- SEARCH & FILTER (only for payments) -->
+    <div class="search-filter hidden" id="paymentFilters">
       <select class="filter-select" id="statusFilter" onchange="filterPayments()">
         <option value="all">All Status</option>
         <option value="pending">Pending</option>
