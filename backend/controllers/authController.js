@@ -249,6 +249,54 @@ exports.verifyOtp = async (req, res) => {
   }
 };
 
+exports.resendOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.json({ ok: false, message: "Email is required." });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.json({ ok: false, message: "User not found." });
+    }
+
+    // Yeni OTP oluştur
+    const otp = generateOTP();
+    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    
+    otpStore[user.email] = {
+      otp,
+      expires: Date.now() + 5 * 60 * 1000, // 5 dakika
+      newIp: ip,
+    };
+
+    console.log("🔄 Resending OTP for", user.email, "=", otp);
+    
+    // Email ile OTP gönder
+    const emailResult = await sendOTPEmail(user.email, otp);
+    
+    if (emailResult.success) {
+      return res.json({ 
+        ok: true, 
+        message: "OTP has been re-sent to your email.",
+        debug: process.env.NODE_ENV !== 'production' ? { otp, emailResult } : undefined
+      });
+    } else {
+      // SMTP hatası olsa bile OTP console'da görünüyor
+      return res.json({ 
+        ok: true, 
+        message: "OTP re-sent. Please check your email. If you don't receive it, check Railway logs for the OTP code.",
+        debug: process.env.NODE_ENV !== 'production' ? { otp, error: emailResult.error } : undefined
+      });
+    }
+  } catch (err) {
+    console.error("❌ Resend OTP error:", err);
+    return res.json({ ok: false, error: err.message });
+  }
+};
+
 
 exports.me = async (req, res) => {
   try {

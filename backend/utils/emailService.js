@@ -37,7 +37,8 @@ async function sendOTPEmail(email, otp) {
       console.log(`   - SMTP_USER (örn: support@analyticax.com.tr)`);
       console.log(`   - SMTP_PASS (email şifresi)`);
       console.log(`   - SMTP_SECURE (true veya false, 465 için true)`);
-      return { success: true, message: "OTP logged (no SMTP service configured)" };
+      console.log(`\n🔑 OTP CODE FOR ${email}: ${otp}\n`);
+      return { success: false, message: "OTP logged (no SMTP service configured)", otp: otp };
     }
 
     const mailOptions = {

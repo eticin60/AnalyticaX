@@ -5,6 +5,7 @@ const {
   register,
   login,
   verifyOtp,
+  resendOtp,
   me,
   changeEmail,
   changePassword,
@@ -22,6 +23,7 @@ router.use((req, res, next) => {
 router.post("/register", register);
 router.post("/login", login);
 router.post("/verify-otp", verifyOtp);
+router.post("/resend-otp", resendOtp);
 
 router.get("/me", protect, me);
 router.post("/change-email", protect, changeEmail);
