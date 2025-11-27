@@ -34,7 +34,7 @@ exports.createPayment = async (req, res) => {
 exports.verifyPayment = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { txid, planName, amount, credits, method } = req.body;
+    const { txid, planName, amount, credits, method, wallet } = req.body;
 
     if (!txid || !planName || !amount || !credits) {
       return res.json({ ok: false, error: "Missing verification fields." });
@@ -46,52 +46,33 @@ exports.verifyPayment = async (req, res) => {
       return res.json({ ok: false, error: "This transaction has already been verified." });
     }
 
-    // Create or update payment
+    // Create or update payment with PENDING status (admin must approve)
     let payment = await Payment.findOne({ txid, userId });
     if (!payment) {
       payment = await Payment.create({
         userId,
         plan: planName,
         amount,
-        status: "approved",
+        credits: Number(credits) || 0,
+        status: "pending", // Changed to pending - admin must approve
         txid,
-        method: method || "manual"
+        method: method || "manual",
+        wallet: wallet || null
       });
     } else {
-      payment.status = "approved";
+      payment.status = "pending"; // Keep as pending until admin approves
+      payment.credits = Number(credits) || 0;
+      if (wallet) payment.wallet = wallet;
       await payment.save();
     }
 
-    // Add credits to user
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.json({ ok: false, error: "User not found" });
-    }
-
-    const numericCredits = Number(credits) || 0;
-    user.credits = (user.credits || 0) + numericCredits;
-
-    if (/VIP|GODMODE/i.test(planName)) {
-      user.premium = true;
-    }
-
-    if (!user.purchases) user.purchases = [];
-    user.purchases.push({
-      amount,
-      method: method || "manual",
-      txid,
-      approved: true,
-      date: new Date()
-    });
-
-    await user.save();
-
+    // DO NOT add credits yet - wait for admin approval
+    // Return success but inform user that payment is pending admin approval
     return res.json({
       ok: true,
       orderId: payment._id,
-      credits: user.credits,
-      premium: user.premium,
-      message: "Payment verified successfully!"
+      status: "pending",
+      message: "Payment submitted successfully! Your transaction is pending admin approval. You will receive credits once approved."
     });
   } catch (err) {
     console.error("VERIFY PAYMENT ERROR:", err);

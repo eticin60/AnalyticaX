@@ -183,7 +183,17 @@
   <div class="aes-bg"></div>
   <canvas id="bgParticles"></canvas>
 
-  <main class="wrap">
+  <!-- NAVBAR -->
+  <header class="navbar" style="position:fixed;top:20px;left:50%;transform:translateX(-50%);width:calc(100% - 80px);max-width:1400px;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:0;backdrop-filter:blur(20px) saturate(180%);background:rgba(15,10,25,0.7);border:none;box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:50;border-radius:16px;margin:0;transition:transform 0.3s ease, opacity 0.3s ease;overflow:visible;">
+    <div class="nav-brand" onclick="window.location.href='index.html'" style="position:absolute;left:50%;transform:translateX(-50%);margin:0;z-index:10;">
+      <div class="logo-main" style="display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;padding:0;">
+        <img src="assets/AnalyticaX.png" alt="AnalyticaX Logo" style="height:100px;width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 0 25px rgba(0,229,255,0.6)) drop-shadow(0 0 50px rgba(255,77,255,0.4));transition:all 0.3s ease;">
+        <div class="logo-sub" style="font-size:10px;color:rgba(255,255,255,0.75);font-weight:400;letter-spacing:0.08em;display:block;margin-top:-4px;text-shadow:0 0 10px rgba(0,229,255,0.3);white-space:nowrap;">AI Powered Crypto Chart Analysis</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" style="padding-top:180px;">
     <div class="card pad">
       <h1 class="title">Complete Payment</h1>
       <p class="sub">Follow the steps to complete your payment securely</p>
@@ -213,43 +223,43 @@
         <div class="step" id="step6">
           <div class="step-number">6</div>
           <div class="step-label">Result</div>
-        </div>
       </div>
+        </div>
 
       <!-- STEP 1: ORDER SUMMARY -->
       <div class="step-panel active" id="panel1">
         <h3 style="margin-bottom:16px;font-size:18px;text-align:center;">Order Summary</h3>
         <div class="order-summary pad" style="max-width:600px;margin:0 auto;">
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px dashed rgba(255,255,255,.08);">
-            <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,rgba(0,229,255,.2),rgba(255,77,255,.2));display:flex;align-items:center;justify-content:center;font-size:24px;">💎</div>
-            <div>
+              <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px dashed rgba(255,255,255,.08);">
+                <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,rgba(0,229,255,.2),rgba(255,77,255,.2));display:flex;align-items:center;justify-content:center;font-size:24px;">💎</div>
+                <div>
               <div style="font-weight:800;font-size:18px;color:#fff;" id="sum-name">—</div>
               <div style="font-size:12px;color:#9bb0bf;">AnalyticaX Credits</div>
-            </div>
-          </div>
+                </div>
+              </div>
           <div class="order-summary">
             <div class="kv"><span class="k">Product:</span><span id="sum-prod">—</span></div>
             <div class="kv"><span class="k">Price:</span><span id="sum-price" style="color:#00f0ff;font-weight:800;">—</span></div>
             <div class="kv"><span class="k">Credits:</span><span id="sum-credits">—</span></div>
-          </div>
+              </div>
           <div class="secure-transaction">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <path d="M12 2L4 5v6c0 5 3.4 9.74 8 11 4.6-1.26 8-6 8-11V5l-8-3zm0 2.18l6 2.25v5.44c0 4.11-2.72 8.08-6 9.34-3.28-1.26-6-5.23-6-9.34V6.43l6-2.25zm-1 11.32l5.3-5.3-1.42-1.42L11 12.66l-1.88-1.88-1.42 1.42L11 15.5z"/>
-            </svg>
-            <div>
+                  <path d="M12 2L4 5v6c0 5 3.4 9.74 8 11 4.6-1.26 8-6 8-11V5l-8-3zm0 2.18l6 2.25v5.44c0 4.11-2.72 8.08-6 9.34-3.28-1.26-6-5.23-6-9.34V6.43l6-2.25zm-1 11.32l5.3-5.3-1.42-1.42L11 12.66l-1.88-1.88-1.42 1.42L11 15.5z"/>
+                </svg>
+                <div>
               <div style="font-weight:700;">Secure Transaction</div>
-              <div style="font-size:13.5px;color:#aefbe4;">Your transaction is protected with enterprise-grade encryption.</div>
-            </div>
-          </div>
-          <div style="margin-top:12px;display:grid;grid-template-columns:repeat(2,minmax(130px,1fr));gap:10px;">
-            <div class="mini-feature">⚡ Instant Delivery</div>
-            <div class="mini-feature">🔒 Secure Transfer</div>
-            <div class="mini-feature">🕓 24/7 Support</div>
-            <div class="mini-feature">🔗 Blockchain Confirmed</div>
-          </div>
+                  <div style="font-size:13.5px;color:#aefbe4;">Your transaction is protected with enterprise-grade encryption.</div>
+                </div>
+              </div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:repeat(2,minmax(130px,1fr));gap:10px;">
+                <div class="mini-feature">⚡ Instant Delivery</div>
+                <div class="mini-feature">🔒 Secure Transfer</div>
+                <div class="mini-feature">🕓 24/7 Support</div>
+                <div class="mini-feature">🔗 Blockchain Confirmed</div>
+              </div>
         </div>
         <button class="btn" id="btnContinue1">Continue to Wallet →</button>
-      </div>
+            </div>
 
       <!-- STEP 2: WALLET ENTRY -->
       <div class="step-panel" id="panel2">
@@ -271,22 +281,22 @@
             </div>
           </div>
           <div class="wallet-entry pad">
-            <h3 style="margin:0 0 12px;font-size:18px;font-weight:700;color:#9ee7ff;">Enter Wallet Address</h3>
-            <p style="color:#aab2d8;margin-bottom:16px;font-size:13px;line-height:1.6;">Please enter your wallet address where you'd like to receive your credits.</p>
+              <h3 style="margin:0 0 12px;font-size:18px;font-weight:700;color:#9ee7ff;">Enter Wallet Address</h3>
+              <p style="color:#aab2d8;margin-bottom:16px;font-size:13px;line-height:1.6;">Please enter your wallet address where you'd like to receive your credits.</p>
             <input type="text" class="txid-input" id="walletAddress" placeholder="Enter your wallet address (starts with T, 0x, or bc1...)" style="margin-bottom:12px;">
             <div style="font-size:12px;color:#9aa7c8;opacity:0.85;">
-              ⚠️ Double-check your address. Transactions sent to incorrect addresses cannot be recovered.
+                ⚠️ Double-check your address. Transactions sent to incorrect addresses cannot be recovered.
+              </div>
             </div>
           </div>
-        </div>
         <div class="actions">
           <button class="btn-secondary" onclick="goToStep(1)">Back</button>
           <button class="btn" id="btnContinue2">Continue to Payment Method →</button>
+          </div>
         </div>
-      </div>
 
       <!-- STEP 3: PAYMENT METHOD SELECTION -->
-      <div class="step-panel" id="panel3">
+        <div class="step-panel" id="panel3">
         <h3 style="margin-bottom:16px;font-size:18px;text-align:center;">Select Payment Method</h3>
         <p class="sub">Choose a network or provider. Closed methods stay visible for clarity.</p>
         <div class="methods" id="methodGrid"></div>
@@ -345,8 +355,8 @@
         <div class="actions">
           <button class="btn-secondary" onclick="goToStep(3)">Back</button>
           <button class="btn" id="btnMadePayment">I've Made the Payment</button>
+          </div>
         </div>
-      </div>
 
       <!-- STEP 5: VERIFY TRANSACTION -->
       <div class="step-panel" id="panel5">
@@ -357,7 +367,7 @@
             🔗 <b>Transaction Verification</b> — Your transaction details are securely processed and verified on the blockchain.
           </div>
           <label style="font-weight:800;color:#cfe0ff;font-size:14px;display:block;margin-bottom:8px;">Transaction ID (TXID)</label>
-          <input type="text" class="txid-input" id="txidInput" placeholder="Enter your transaction ID (TXID)">
+            <input type="text" class="txid-input" id="txidInput" placeholder="Enter your transaction ID (TXID)">
           <div class="actions">
             <button class="btn-secondary" onclick="goToStep(4)">Back</button>
             <button class="btn" id="btnVerify">🔗 Verify Transaction</button>
@@ -378,9 +388,9 @@
               <div class="tx-info">
                 <h3 class="tx-title">Transaction Details</h3>
                 <div class="tx-sub">AES-256 Encrypted • Chain Verified</div>
-              </div>
+        </div>
               <div class="tx-status-badge" id="tx-status-badge">PENDING</div>
-            </div>
+      </div>
             <div class="tx-body">
               <div class="kv"><span class="k">🪙 Product</span><span id="detProduct">—</span></div>
               <div class="kv"><span class="k">💰 Amount</span><span id="detAmount">—</span></div>
@@ -389,11 +399,11 @@
               <div class="kv"><span class="k">👛 Your Wallet</span><span id="detWallet">—</span></div>
               <div class="kv"><span class="k">🏦 Deposit Address</span><span id="detDeposit">—</span></div>
               <div class="kv"><span class="k">📊 Status</span><span id="detStatus">PENDING</span></div>
-            </div>
+    </div>
             <div class="tx-footer">
               <div class="tx-progress"><div class="tx-bar"></div></div>
               <div class="tx-timestamp"><span id="tx-time">Updated: —</span></div>
-            </div>
+  </div>
           </div>
         </div>
         <div class="timeline">
@@ -423,6 +433,59 @@
     </div>
   </main>
 
+  <!-- FOOTER -->
+  <footer style="padding:40px 0;margin-top:80px;border-top:none;background:rgba(15,23,42,0.05);backdrop-filter:blur(2px);position:relative;z-index:1;">
+    <div class="wrap" style="max-width:1400px;margin:0 auto;padding:0 40px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:40px;margin-bottom:30px;">
+        <div>
+          <div class="logo-main" style="margin-bottom:12px;">AnalyticaX</div>
+          <p style="color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:16px;">
+            AI-powered cryptocurrency chart analysis platform. Part of the CyberEx ecosystem.
+          </p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;">
+            <a href="https://cyberex.com.tr" target="_blank" style="color:var(--cyan);text-decoration:none;font-size:12px;padding:6px 12px;border:1px solid rgba(0,240,255,0.3);border-radius:6px;transition:all 0.3s;">CyberEx Platform</a>
+            <a href="https://cyberex.com.tr/web3wallet" target="_blank" style="color:var(--vio);text-decoration:none;font-size:12px;padding:6px 12px;border:1px solid rgba(91,44,255,0.3);border-radius:6px;transition:all 0.3s;">CyberEx Web3 Wallet</a>
+            <a href="https://cyberex.com.tr/web3extension" target="_blank" style="color:#14f195;text-decoration:none;font-size:12px;padding:6px 12px;border:1px solid rgba(20,241,149,0.3);border-radius:6px;transition:all 0.3s;">CyberEx Extension</a>
+            <a href="https://cyberex.com.tr/web3app" target="_blank" style="color:#627eea;text-decoration:none;font-size:12px;padding:6px 12px;border:1px solid rgba(98,126,234,0.3);border-radius:6px;transition:all 0.3s;">CyberEx Web3 App</a>
+          </div>
+        </div>
+        <div>
+          <h4 style="font-size:14px;margin-bottom:16px;color:#fff;">Quick Links</h4>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="index.html#how" style="color:var(--muted);text-decoration:none;font-size:13px;transition:color 0.3s;">How it works</a>
+            <a href="index.html#features" style="color:var(--muted);text-decoration:none;font-size:13px;transition:color 0.3s;">Features</a>
+            <a href="index.html#pricing" style="color:var(--muted);text-decoration:none;font-size:13px;transition:color 0.3s;">Pricing</a>
+            <a href="dashboard.html" style="color:var(--muted);text-decoration:none;font-size:13px;transition:color 0.3s;">Dashboard</a>
+            <a href="analyze.html" style="color:var(--muted);text-decoration:none;font-size:13px;transition:color 0.3s;">Analyze</a>
+          </div>
+        </div>
+        <div>
+          <h4 style="font-size:14px;margin-bottom:16px;color:#fff;">Legal</h4>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="terms-of-service.html" style="color:var(--muted);text-decoration:none;font-size:13px;transition:color 0.3s;">Terms of Service</a>
+            <a href="privacy-policy.html" style="color:var(--muted);text-decoration:none;font-size:13px;transition:color 0.3s;">Privacy Policy</a>
+            <a href="disclaimer.html" style="color:var(--muted);text-decoration:none;font-size:13px;transition:color 0.3s;">Disclaimer</a>
+            <a href="refund-policy.html" style="color:var(--muted);text-decoration:none;font-size:13px;transition:color 0.3s;">Refund Policy</a>
+            <a href="cookie-policy.html" style="color:var(--muted);text-decoration:none;font-size:13px;transition:color 0.3s;">Cookie Policy</a>
+          </div>
+        </div>
+        <div>
+          <h4 style="font-size:14px;margin-bottom:16px;color:#fff;">Connect</h4>
+          <p style="color:var(--muted);font-size:12px;line-height:1.6;margin-bottom:12px;">
+            Payments powered by CyberEx Platform and CyberEx Wallet. Secure, fast, and reliable crypto transactions.
+          </p>
+          <p style="color:var(--muted);font-size:12px;">
+            Support: <a href="mailto:support@AnalyticaX.com.tr" style="color:var(--cyan);text-decoration:none;">support@AnalyticaX.com.tr</a>
+          </p>
+        </div>
+      </div>
+      <div style="padding-top:24px;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+        <span style="color:var(--muted);font-size:12px;">© <span id="footerYear">2025</span> AnalyticaX • All rights reserved.</span>
+        <span style="color:var(--muted);font-size:12px;">Analysis only • No investment advice • Powered by <a href="https://cyberex.com.tr" target="_blank" style="color:var(--cyan);text-decoration:none;">CyberEx</a></span>
+      </div>
+    </div>
+  </footer>
+
   <div class="loading-overlay" id="loadingOverlay">
     <div class="loader"></div>
     <div class="loading-text" id="loadingText">Verifying Transaction...</div>
@@ -436,9 +499,9 @@
       {id:"BEP20-USDT", name:"BEP20 (BSC)", desc:"USDT • Low gas on BSC", icon:"🟡", status:"live", img:"assets/bep20.png"},
       {id:"USDC-ERC20", name:"USDC (BEP20-ERC20)", desc:"Same address for both", icon:"💵", status:"new", img:"assets/usdc.png"},
       {id:"BTC", name:"BTC (Bitcoin)", desc:"Native Bitcoin network", icon:"₿", status:"new", img:"assets/btc.png"},
-      {id:"OXAPAY", name:"Oxapay Gateway", desc:"Multi-coin crypto gateway", icon:"🔵", status:"live", img:"assets/oxapay.svg", url:"https://pay.oxapay.com/13369911"},
-      {id:"SHOPIER", name:"Shopier (Secure Payment)", desc:"Credit / debit card", icon:"💳", status:"live", img:"assets/shopier.png", url:"https://www.shopier.com/creditusd"},
-      {id:"BINANCE-PAY", name:"Binance Pay", desc:"Pay directly from Binance", icon:"🔶", status:"live", img:"assets/binance.png"},
+      {id:"OXAPAY", name:"Oxapay Gateway", desc:"Multi-coin crypto gateway", icon:"🔵", status:"live", img:"assets/oxapay.png", url:"https://pay.oxapay.com/13369911"},
+      {id:"SHOPIER", name:"Shopier (Secure Payment)", desc:"Credit / debit card", icon:"💳", status:"closed", img:"assets/shopier.png", url:"https://www.shopier.com/creditusd"},
+      {id:"BINANCE-PAY", name:"Binance Pay", desc:"Pay directly from Binance", icon:"🔶", status:"closed", img:"assets/binance.png"},
       {id:"OKX-PAY", name:"OKX Pay", desc:"OKX payment gateway", icon:"⚫", status:"closed", img:"assets/okx.png"}
     ];
 
@@ -481,17 +544,11 @@
       updateSteps();
       initParticles();
       
-      if(selectedMethod) {
-        setTimeout(() => {
-          const methodCard = document.querySelector(`[data-method="${selectedMethod}"]`);
-          if(methodCard) {
-            methodCard.classList.add("active");
-            if(currentStep === 1) {
-              nextStep();
-            }
-          }
-        }, 200);
-      }
+      // Set footer year
+      document.getElementById("footerYear").textContent = new Date().getFullYear();
+      
+      // Always show Step 1 (Order Summary) first - don't auto-skip
+      // User must click "Continue to Wallet" to proceed
     }
 
     function renderMethods(){
@@ -528,11 +585,13 @@
           card.classList.add("active");
           selectedMethod = method.id;
           
-          // Open gateway URLs in new tab
-          if(method.url && (method.id === "OXAPAY" || method.id === "SHOPIER")) {
-            if(!window[method.id.toLowerCase() + "Opened"]) {
-              window.open(method.url, "_blank");
-              window[method.id.toLowerCase() + "Opened"] = true;
+          // Open gateway URLs in new tab (only for OxaPay, and build URL with price)
+          if(method.id === "OXAPAY" && method.url) {
+            // Build OxaPay URL with dynamic price - OxaPay uses merchant ID and amount
+            const oxapayUrl = `${method.url}?amount=${selectedPlan.price}&currency=USD&description=${encodeURIComponent(selectedPlan.name + ' - ' + selectedPlan.credits + ' Credits')}`;
+            if(!window.oxapayOpened) {
+              window.open(oxapayUrl, "_blank");
+              window.oxapayOpened = true;
             }
           }
         });
@@ -587,13 +646,13 @@
 
       // Update content based on step
       if(currentStep === 2){
-        // Hide wallet section for gateway methods
+          // Hide wallet section for gateway methods
         const walletSection = document.querySelector("#panel2 .wallet-entry");
         if(walletSection && (selectedMethod === "OXAPAY" || selectedMethod === "SHOPIER" || selectedMethod === "BINANCE-PAY")) {
-          walletSection.style.display = "none";
+              walletSection.style.display = "none";
           document.querySelector("#panel2 .wallet-grid").style.gridTemplateColumns = "1fr";
         } else if(walletSection) {
-          walletSection.style.display = "block";
+              walletSection.style.display = "block";
           document.querySelector("#panel2 .wallet-grid").style.gridTemplateColumns = "1fr 1fr";
         }
       } else if(currentStep === 4){
@@ -636,22 +695,22 @@
     });
 
     document.getElementById("btnContinue3")?.addEventListener("click", () => {
-      if(!selectedMethod){
-        alert("Please select a payment method");
-        return;
-      }
+        if(!selectedMethod){
+          alert("Please select a payment method");
+          return;
+        }
       if(selectedMethod === "OXAPAY" || selectedMethod === "SHOPIER" || selectedMethod === "BINANCE-PAY"){
-        localStorage.setItem("selectedPlanName", selectedPlan.name);
-        localStorage.setItem("selectedPlanPrice", selectedPlan.price);
-        localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
-        localStorage.setItem("selectedPaymentMethod", selectedMethod);
+          localStorage.setItem("selectedPlanName", selectedPlan.name);
+          localStorage.setItem("selectedPlanPrice", selectedPlan.price);
+          localStorage.setItem("selectedPlanCredits", selectedPlan.credits);
+          localStorage.setItem("selectedPaymentMethod", selectedMethod);
       }
-      nextStep();
-    });
+        nextStep();
+      });
 
     document.getElementById("btnMadePayment")?.addEventListener("click", () => {
-      nextStep();
-    });
+        nextStep();
+      });
 
     document.getElementById("btnVerify")?.addEventListener("click", async () => {
       const txid = document.getElementById("txidInput").value.trim();
@@ -686,7 +745,8 @@
             planName: selectedPlan.name,
             amount: selectedPlan.price,
             credits: selectedPlan.credits,
-            method: selectedMethod || "TRC20-USDT"
+            method: selectedMethod || "TRC20-USDT",
+            wallet: document.getElementById("walletAddress")?.value || null
           })
         });
 
@@ -694,18 +754,29 @@
         overlay.classList.remove("active");
         
         if(data.ok){
+          // Show success page briefly before Step 6
+          if(data.status === "pending") {
+            // Show success.html briefly (payment submitted, pending approval)
+            window.location.href = "success.html?pending=1";
+            return;
+          }
+          
           // Update Step 6 with transaction details
+          const status = data.status || "pending";
+          const statusColor = status === "approved" ? "#16d18a" : status === "pending" ? "#ffcc4d" : "#ff4b9f";
+          const statusText = status.toUpperCase();
+          
           document.getElementById("detProduct").textContent = selectedPlan.name;
           document.getElementById("detAmount").textContent = `${selectedPlan.credits} Credits`;
           document.getElementById("detPrice").textContent = `$${selectedPlan.price}`;
           document.getElementById("detNetwork").textContent = PAYMENT_METHODS.find(m => m.id === selectedMethod)?.name || selectedMethod || "—";
           document.getElementById("detWallet").textContent = document.getElementById("walletAddress")?.value || "—";
           document.getElementById("detDeposit").textContent = PAYMENT_ADDRESSES[selectedMethod] || "—";
-          document.getElementById("detStatus").innerHTML = '<span style="color:#16d18a;font-weight:700;">APPROVED</span>';
-          document.getElementById("tx-status-badge").textContent = "APPROVED";
-          document.getElementById("tx-status-badge").style.background = "rgba(22,209,138,.1)";
-          document.getElementById("tx-status-badge").style.color = "#16d18a";
-          document.getElementById("tx-status-badge").style.borderColor = "rgba(22,209,138,.25)";
+          document.getElementById("detStatus").innerHTML = `<span style="color:${statusColor};font-weight:700;">${statusText}</span>`;
+          document.getElementById("tx-status-badge").textContent = statusText;
+          document.getElementById("tx-status-badge").style.background = status === "approved" ? "rgba(22,209,138,.1)" : "rgba(255,204,77,.1)";
+          document.getElementById("tx-status-badge").style.color = statusColor;
+          document.getElementById("tx-status-badge").style.borderColor = status === "approved" ? "rgba(22,209,138,.25)" : "rgba(255,204,77,.25)";
           document.getElementById("tx-time").textContent = "Updated: " + new Date().toLocaleString();
           
           document.getElementById("productDetailsText").innerHTML = `
@@ -713,21 +784,25 @@
             <p><b>Amount:</b> ${selectedPlan.credits} Credits</p>
             <p><b>Price:</b> $${selectedPlan.price}</p>
             <p><b>Network:</b> ${PAYMENT_METHODS.find(m => m.id === selectedMethod)?.name || selectedMethod}</p>
-            <p><b>Status:</b> <span style="color:#16d18a;">APPROVED</span></p>
+            <p><b>Status:</b> <span style="color:${statusColor};">${statusText}</span></p>
           `;
           
-          // Update timeline
-          document.querySelectorAll(".tstep").forEach(s => {
+          // Update timeline based on status
+          document.querySelectorAll(".tstep").forEach((s, idx) => {
             s.classList.remove("active", "done", "error");
-            s.classList.add("done");
-            s.querySelector(".tbadge").classList.remove("dim");
+            if(status === "approved" && idx < 3) {
+              s.classList.add("done");
+              s.querySelector(".tbadge").classList.remove("dim");
+            } else if(status === "pending" && idx === 0) {
+              s.classList.add("active");
+            }
           });
           
           nextStep();
           
-          // Update credits
-          if(data.credits) {
-            const meRes = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/auth/me`, {
+          // Update credits if approved
+          if(status === "approved" && data.credits) {
+            const meRes = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/auth/me`, {
               headers: {
                 "Authorization": "Bearer " + token,
                 "x-device-id": localStorage.getItem("ax_device_id"),
@@ -740,7 +815,8 @@
             }
           }
         } else {
-          alert("❌ Verification failed: " + (data.error || data.message || "Please check your TXID"));
+          // Show fail.html on error
+          window.location.href = "fail.html?error=" + encodeURIComponent(data.error || data.message || "Verification failed");
         }
       } catch(err){
         overlay.classList.remove("active");

@@ -12,6 +12,7 @@ const fetch = (...args) =>
 const authRoutes = require("./routes/auth");
 const analysisRoutes = require("./routes/analysis");
 const paymentRoutes = require("./routes/paymentRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
@@ -134,6 +135,7 @@ app.use("/api/*", (req, res, next) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/analysis", analysisRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/admin", adminRoutes);
 
 // In production (Railway), frontend is served by GitHub Pages
 // Backend only serves API endpoints

@@ -53,12 +53,23 @@ canvas#p{position:fixed;inset:0;z-index:-3;}
   <div class="icon">✓</div>
 
   <div class="title">Payment Successful</div>
-  <div class="desc">
+  <div class="desc" id="successDesc">
     Your credits have been delivered to your AnalyticaX account.<br>
     You can now continue analyzing charts.
   </div>
 
   <button class="btn" onclick="window.location.href='dashboard.html'">Go to Dashboard</button>
+  
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get("pending") === "1") {
+      document.querySelector(".title").textContent = "Payment Submitted";
+      document.getElementById("successDesc").innerHTML = 
+        "Your payment has been submitted successfully!<br>" +
+        "Your transaction is pending admin approval.<br>" +
+        "You will receive credits once approved.";
+    }
+  </script>
 </div>
 
 <script>

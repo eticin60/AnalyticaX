@@ -147,6 +147,7 @@ tr:hover td{background:rgba(255,255,255,.04);}
   </nav>
 
   <div class="nav-admin" id="adminName">Admin</div>
+  <a href="#" onclick="localStorage.removeItem('ax_admin_token');location.reload();" style="color:#ff9bbf;text-decoration:none;font-size:12px;padding:6px 14px;border-radius:999px;background:rgba(255,155,191,.1);border:1px solid rgba(255,155,191,.3);">Logout</a>
 </header>
 
 <!-- PAGE -->
@@ -272,15 +273,67 @@ function showTab(name){
   document.querySelector(`.tab[onclick="showTab('${name}')"]`).classList.add("active");
 }
 
+/* ADMIN LOGIN CHECK */
+let adminToken = localStorage.getItem("ax_admin_token");
+
+// Check if logged in
+if(!adminToken) {
+  // Show login form
+  document.body.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:radial-gradient(circle at top,#071526 0,#020617 45%,#000 100%);">
+      <div style="background:rgba(15,23,42,.96);padding:32px;border-radius:24px;border:1px solid rgba(148,163,184,.35);max-width:420px;width:90%;">
+        <h1 style="text-align:center;margin-bottom:8px;font-size:22px;">Admin Login</h1>
+        <p style="text-align:center;color:var(--text-soft);margin-bottom:24px;font-size:13px;">Secure • AES-256 • Session Protected</p>
+        <input type="text" id="adminUsername" placeholder="Username" style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(148,163,184,.5);background:rgba(0,0,0,.4);color:#fff;margin-bottom:12px;outline:none;">
+        <input type="password" id="adminPassword" placeholder="Password" style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(148,163,184,.5);background:rgba(0,0,0,.4);color:#fff;margin-bottom:16px;outline:none;">
+        <button onclick="adminLogin()" style="width:100%;padding:14px;border-radius:999px;border:none;background:linear-gradient(90deg,var(--neon),var(--magenta));color:#020617;font-weight:600;cursor:pointer;">Login</button>
+        <div id="adminError" style="color:#ff4b9f;margin-top:12px;text-align:center;font-size:12px;display:none;"></div>
+      </div>
+    </div>
+  `;
+  
+  window.adminLogin = async function() {
+    const username = document.getElementById("adminUsername").value;
+    const password = document.getElementById("adminPassword").value;
+    const errorDiv = document.getElementById("adminError");
+    
+    try {
+      const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+      
+      const data = await res.json();
+      if(data.ok) {
+        localStorage.setItem("ax_admin_token", data.token);
+        location.reload();
+      } else {
+        errorDiv.textContent = data.message || "Invalid credentials";
+        errorDiv.style.display = "block";
+      }
+    } catch(err) {
+      errorDiv.textContent = "Login error: " + err.message;
+      errorDiv.style.display = "block";
+    }
+  };
+} else {
+  // Already logged in, continue with normal admin panel
+
 /* ADMIN TOKEN */
-const token = localStorage.getItem("ax_admin_token");
+const token = adminToken;
 
 /* LOAD USERS */
 async function loadUsers(){
-  const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/users",{
+  const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/users`,{
     headers:{Authorization:"Bearer "+token}
   });
-  const list = await res.json();
+  const data = await res.json();
+  if(!data.ok) {
+    console.error("Load users error:", data);
+    return;
+  }
+  const list = data.users || [];
 
   const box=document.getElementById("userList");
   box.innerHTML="";
@@ -306,24 +359,50 @@ async function loadUsers(){
 
 /* LOAD PAYMENTS */
 async function loadPayments(){
-  const res = await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/payments",{
+  const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/payments`,{
     headers:{Authorization:"Bearer "+token}
   });
-  const list = await res.json();
+  const data = await res.json();
+  if(!data.ok) {
+    console.error("Load payments error:", data);
+    return;
+  }
+  const list = data.payments || [];
 
   const box=document.getElementById("payList");
   box.innerHTML="";
 
+  if(list.length === 0) {
+    box.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-soft);padding:20px;">No payments found.</td></tr>`;
+    return;
+  }
+
   list.forEach(p=>{
+    const statusColors = {
+      pending: "#ffcc4d",
+      processing: "#80d0ff",
+      approved: "#16d18a",
+      rejected: "#ff4b9f",
+      delivered: "#93ffb0"
+    };
+    const statusColor = statusColors[p.status] || "#ffcc4d";
     box.innerHTML+=`
       <tr>
-        <td>${p.userEmail}</td>
-        <td>${p.amount}</td>
-        <td>${p.method}</td>
-        <td>${p.txid}</td>
-        <td>${p.approved?"Approved":"Pending"}</td>
-        <td>${new Date(p.date).toLocaleString()}</td>
-        <td><button class="action-btn" onclick="approvePay('${p._id}')">Approve</button></td>
+        <td>${p.userEmail || "Unknown"}</td>
+        <td>$${p.amount}</td>
+        <td>${p.method || "manual"}</td>
+        <td style="font-family:monospace;font-size:11px;max-width:200px;overflow:hidden;text-overflow:ellipsis;">${p.txid || "—"}</td>
+        <td><span style="color:${statusColor};font-weight:700;">${(p.status || "pending").toUpperCase()}</span></td>
+        <td>${new Date(p.createdAt).toLocaleString()}</td>
+        <td>
+          <select class="statusSel" onchange="updatePaymentStatus('${p._id}', this.value)" style="height:32px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.06);color:#fff;font-size:11px;">
+            <option value="pending" ${p.status === "pending" ? "selected" : ""}>Pending</option>
+            <option value="processing" ${p.status === "processing" ? "selected" : ""}>Processing</option>
+            <option value="approved" ${p.status === "approved" ? "selected" : ""}>Approved</option>
+            <option value="rejected" ${p.status === "rejected" ? "selected" : ""}>Rejected</option>
+            <option value="delivered" ${p.status === "delivered" ? "selected" : ""}>Delivered</option>
+          </select>
+        </td>
       </tr>
     `;
   });
@@ -388,13 +467,25 @@ async function deleteUser(id){
   loadUsers();
 }
 
-async function approvePay(id){
-  await fetch(`${window.API_BASE || 'https://analyticax.com.tr'}/api/admin/payment/approve",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json", Authorization:"Bearer "+token },
-    body:JSON.stringify({payId:id})
-  });
-  loadPayments();
+async function updatePaymentStatus(paymentId, status){
+  try {
+    const res = await fetch(`${window.API_BASE || 'https://analyticax-production.up.railway.app'}/api/admin/payment/update`, {
+      method:"POST",
+      headers:{ 
+        "Content-Type": "application/json", 
+        Authorization:"Bearer "+token 
+      },
+      body:JSON.stringify({paymentId, status})
+    });
+    const data = await res.json();
+    if(data.ok) {
+      loadPayments();
+    } else {
+      alert("Error: " + (data.error || data.message));
+    }
+  } catch(err) {
+    alert("Error: " + err.message);
+  }
 }
 
 /* SEARCH FILTER */
@@ -406,9 +497,12 @@ function filterTable(){
 }
 
 /* INITIAL LOAD */
-loadUsers();
-loadPayments();
-loadLogs();
+if(adminToken) {
+  loadUsers();
+  loadPayments();
+  loadLogs();
+}
+}
 
 </script>
 
