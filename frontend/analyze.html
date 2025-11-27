@@ -1342,6 +1342,19 @@ button:active {
 </style>
   <script src="js/api-config.js"></script>
   <script src="js/maintenance-check.js"></script>
+  <!-- Analyze Page Maintenance Mode - Temporary -->
+  <script>
+    // Analyze page is currently under maintenance
+    // Remove this script when maintenance is complete
+    (function() {
+      // Check if we should redirect to maintenance
+      const analyzeMaintenance = true; // Set to false to re-enable analyze page
+      
+      if (analyzeMaintenance) {
+        window.location.href = "maintenance.html";
+      }
+    })();
+  </script>
 </head>
 
 <body>
